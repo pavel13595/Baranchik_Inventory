@@ -1,0 +1,21 @@
+{
+  "name": "Baranchik Inventory",
+  "short_name": "Inventory",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "description": "Инвентаризация Baranchik",
+  "icons": [
+    {
+      "src": "https://cdn-media.choiceqr.com/prod-eat-baranchik-kremenchuk/logo/thumbnail_ucqRJfB-iEFVQfJ-kPyPiOl_R-W-i.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-media.choiceqr.com/prod-eat-baranchik-kremenchuk/logo/thumbnail_ucqRJfB-iEFVQfJ-kPyPiOl_R-W-i.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="https://cdn-media.choiceqr.com/prod-eat-baranchik-kremenchuk/logo/thumbnail_ucqRJfB-iEFVQfJ-kPyPiOl_R-W-i.png" />
+    <link rel="apple-touch-icon" href="https://cdn-media.choiceqr.com/prod-eat-baranchik-kremenchuk/logo/thumbnail_ucqRJfB-iEFVQfJ-kPyPiOl_R-W-i.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Baranchik Inventory</title>
+    <!-- PWA manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    <!-- Android: цвет статус-бара -->
+    <meta name="theme-color" content="#ffffff" />
+    <!-- iOS: запускать как приложение -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Baranchik Inventory" />
+    <script type="module" crossorigin src="/assets/index-CuyS2Z3I.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C4B69k-y.css">
+  </head>
+  <body class="h-full min-h-screen">
+    <div id="root"></div>
+    <script src="https://cdn.jsdelivr.net/npm/heroui-chat-script@0/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heroui-chat-script@beta/dist/select-and-edit-utils.global.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(function(registration) {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
