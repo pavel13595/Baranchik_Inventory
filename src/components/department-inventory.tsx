@@ -185,17 +185,6 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
     }
   };
 
-  // Массив для массового добавления
-  const handleAddItemList = () => {
-    const names = newItemList
-      .split(/\n|,/)
-      .map(s => s.trim())
-      .filter(Boolean);
-    names.forEach(name => addNewItem(name));
-    setNewItemList("");
-    onClose();
-  };
-
   // Для long press
   let longPressTimer: number | null = null;
   const handleRowMouseDown = (itemId: string) => {
@@ -384,15 +373,6 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                   onValueChange={setNewItemName}
                   autoFocus
                 />
-                <div className="mt-4">
-                  <label className="block text-sm font-medium mb-1">Список позиций (по одной в строке или через запятую)</label>
-                  <textarea
-                    className="w-full border rounded p-2 text-sm min-h-[80px]"
-                    placeholder="Позиция 1\nПозиция 2\nПозиция 3"
-                    value={newItemList}
-                    onChange={e => setNewItemList(e.target.value)}
-                  />
-                </div>
               </ModalBody>
               <ModalFooter>
                 <Button 
@@ -407,15 +387,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                   onPress={handleAddItem}
                   isDisabled={!newItemName.trim()}
                 >
-                  Добавить одну
-                </Button>
-                <Button
-                  color="primary"
-                  variant="bordered"
-                  onPress={handleAddItemList}
-                  isDisabled={!newItemList.trim()}
-                >
-                  Добавить список
+                  Добавить
                 </Button>
               </ModalFooter>
             </>
