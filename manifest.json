@@ -8,14 +8,14 @@
   "description": "Инвентаризация Baranchik",
   "icons": [
     {
-      "src": "vite.svg",
+      "src": "https://cdn-media.choiceqr.com/prod-eat-baranchik-kremenchuk/logo/thumbnail_ucqRJfB-iEFVQfJ-kPyPiOl_R-W-i.png",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/png"
     },
     {
-      "src": "vite.svg",
+      "src": "https://cdn-media.choiceqr.com/prod-eat-baranchik-kremenchuk/logo/thumbnail_ucqRJfB-iEFVQfJ-kPyPiOl_R-W-i.png",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/png"
     }
   ]
 }
