@@ -232,9 +232,8 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                           <Icon icon="lucide:minus" className="w-4 h-4" />
                         </Button>
                         <Input
-                          type={department.id === "dept-2" ? "number" : "text"}
+                          type="text"
                           inputMode={department.id === "dept-2" ? "decimal" : (department.id === "dept-1" || department.id === "dept-3" ? "numeric" : "decimal")}
-                          step={department.id === "dept-2" ? "0.01" : undefined}
                           min="0"
                           value={typeof count === 'number' ? 
                             (count === 0 ? "0" : 
