@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import { DepartmentInventory } from "./department-inventory";
 import { useInventoryData } from "../hooks/use-inventory-data";
 import { exportToExcel } from "../utils/excel-export";
+import type { Item } from "../types/inventory";
 
 export const InventoryManagement: React.FC = () => {
   const { 
