@@ -30,6 +30,7 @@ interface DepartmentInventoryProps {
   updateItemCount: (departmentId: string, itemId: string, count: number) => void;
   resetDepartmentCounts: () => void;
   addNewItem: (name: string) => void;
+  deleteItem: (itemId: string, departmentId: string) => void;
   globalSearchQuery: string;
   setGlobalSearchQuery: (query: string) => void;
 }
@@ -41,6 +42,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   updateItemCount,
   resetDepartmentCounts,
   addNewItem,
+  deleteItem,
   globalSearchQuery,
   setGlobalSearchQuery
 }) => {
@@ -50,6 +52,9 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   const [searchQuery, setSearchQuery] = React.useState(globalSearchQuery);
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
   const [inputValues, setInputValues] = React.useState<{[itemId: string]: string}>({});
+  const [deleteModal, setDeleteModal] = React.useState(false);
+  const [deleteSearch, setDeleteSearch] = React.useState("");
+  const [deleteSelected, setDeleteSelected] = React.useState<string | null>(null);
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
 
@@ -181,9 +186,19 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
     }
   };
 
+  // Фильтр для поиска в модальном окне удаления
+  const deleteFilteredItems = items.filter(item =>
+    item.name.toLowerCase().includes(deleteSearch.toLowerCase())
+  );
+
   return (
     <div className="py-4">
       <div className="flex flex-col gap-4 mb-4">
+        <div className="w-full flex justify-end">
+          <Button color="danger" variant="flat" onPress={() => setDeleteModal(true)}>
+            <Icon icon="lucide:trash" className="mr-1" /> Удалить
+          </Button>
+        </div>
         <div className="w-full">
           <Autocomplete
             defaultItems={autocompleteItems}
@@ -401,6 +416,52 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                 >
                   Сбросить
                 </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+      {/* Delete item modal */}
+      <Modal isOpen={deleteModal} onOpenChange={setDeleteModal}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>Удалить позицию</ModalHeader>
+              <ModalBody>
+                <Input
+                  label="Поиск по наименованию"
+                  placeholder="Введите название позиции"
+                  value={deleteSearch}
+                  onValueChange={setDeleteSearch}
+                  autoFocus
+                />
+                <div className="mt-2 max-h-40 overflow-y-auto">
+                  {deleteFilteredItems.length === 0 && (
+                    <div className="text-default-400 text-sm py-2 text-center">Нет совпадений</div>
+                  )}
+                  {deleteFilteredItems.map(item => (
+                    <div
+                      key={item.id}
+                      className={`cursor-pointer px-2 py-1 rounded hover:bg-default-100 ${deleteSelected === item.id ? 'bg-danger/20' : ''}`}
+                      onClick={() => setDeleteSelected(item.id)}
+                    >
+                      {item.name}
+                    </div>
+                  ))}
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button variant="flat" onPress={() => { setDeleteModal(false); setDeleteSelected(null); setDeleteSearch(""); }}>Отмена</Button>
+                <Button color="danger" isDisabled={!deleteSelected} onPress={() => {
+                  if (deleteSelected) {
+                    // Удаляем выбранную позицию
+                    const itemId = deleteSelected;
+                    // Удаляем item из массива и из остатков
+                    if (typeof deleteItem === 'function') deleteItem(itemId, department.id);
+                  }
+                  setDeleteModal(false); setDeleteSelected(null); setDeleteSearch("");
+                }}>Удалить</Button>
               </ModalFooter>
             </>
           )}
