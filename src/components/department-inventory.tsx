@@ -98,11 +98,15 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
 
   // Add function to handle input focus
   const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    // Clear the input if it's zero
+    // Всегда очищаем поле, если там 0 или 0,00
     if (e.target.value === "0" || e.target.value === "0,00") {
       e.target.value = "";
     }
-    // Select all text
+    // Если выделили поле с 0, тоже очищаем
+    if (e.target.value === "0") {
+      e.target.value = "";
+    }
+    // Выделяем весь текст
     e.target.select();
   };
 
