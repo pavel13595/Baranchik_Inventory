@@ -40,6 +40,9 @@ export const Dashboard: React.FC = () => {
       <div className="flex-grow">
         <InventoryManagement />
       </div>
+      <footer className="w-full text-center text-xs text-default-400 py-2 border-t border-default-200 bg-background">
+        © 2025
+      </footer>
     </div>
   );
 };

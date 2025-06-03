@@ -55,6 +55,8 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   const [deleteModal, setDeleteModal] = React.useState<{open: boolean, itemId: string | null}>({open: false, itemId: null});
   const [newItemList, setNewItemList] = React.useState("");
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
+
   // Sync local search with global search
   React.useEffect(() => {
     setSearchQuery(globalSearchQuery);
@@ -194,6 +196,17 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
     onClose();
   };
 
+  // Для long press
+  let longPressTimer: number | null = null;
+  const handleRowMouseDown = (itemId: string) => {
+    longPressTimer = window.setTimeout(() => {
+      setDeleteModal({ open: true, itemId });
+    }, 600);
+  };
+  const handleRowMouseUp = () => {
+    if (longPressTimer) clearTimeout(longPressTimer);
+  };
+
   return (
     <div className="py-4">
       <div className="flex flex-col gap-4 mb-4">
@@ -265,14 +278,19 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
               <TableColumn key="number" className="w-[40px]">№</TableColumn>
               <TableColumn key="name" className="w-full min-w-[120px]">Наименование</TableColumn>
               <TableColumn key="quantity" className="w-[120px] text-center">Количество</TableColumn>
-              <TableColumn key="actions" className="w-[60px] text-center">Действия</TableColumn>
+              {!isMobile && <TableColumn key="actions" className="w-[60px] text-center">Действия</TableColumn>}
             </TableHeader>
             <TableBody>
               {filteredItems.map((item, index) => {
                 const count = inventoryData[department.id]?.[item.id] || 0;
 
                 return (
-                  <TableRow key={`item-row-${item.id}`}>
+                  <TableRow key={`item-row-${item.id}`}
+                    onMouseDown={() => isMobile && handleRowMouseDown(item.id)}
+                    onMouseUp={() => isMobile && handleRowMouseUp()}
+                    onTouchStart={() => isMobile && handleRowMouseDown(item.id)}
+                    onTouchEnd={() => isMobile && handleRowMouseUp()}
+                  >
                     <TableCell className="w-[40px]">{index + 1}</TableCell>
                     <TableCell className="max-w-[150px] sm:max-w-none truncate">
                       {item.name}
@@ -332,11 +350,13 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                         </Button>
                       </div>
                     </TableCell>
-                    <TableCell className="w-[60px] text-center">
-                      <Button color="danger" size="sm" isIconOnly variant="flat" onPress={() => setDeleteModal({open: true, itemId: item.id})}>
-                        <Icon icon="lucide:trash" />
-                      </Button>
-                    </TableCell>
+                    {!isMobile && (
+                      <TableCell className="w-[60px] text-center">
+                        <Button color="danger" size="sm" isIconOnly variant="flat" onPress={() => setDeleteModal({open: true, itemId: item.id})}>
+                          <Icon icon="lucide:trash" />
+                        </Button>
+                      </TableCell>
+                    )}
                   </TableRow>
                 );
               })}
