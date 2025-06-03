@@ -49,6 +49,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   const [newItemName, setNewItemName] = React.useState("");
   const [searchQuery, setSearchQuery] = React.useState(globalSearchQuery);
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
+  const [inputValues, setInputValues] = React.useState<{[itemId: string]: string}>({});
 
   // Sync local search with global search
   React.useEffect(() => {
@@ -58,6 +59,21 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   React.useEffect(() => {
     setGlobalSearchQuery(searchQuery);
   }, [searchQuery, setGlobalSearchQuery]);
+
+  // ИНИЦИАЛИЗАЦИЯ inputValues при изменении inventoryData
+  React.useEffect(() => {
+    const newValues: {[itemId: string]: string} = {};
+    items.forEach(item => {
+      const count = inventoryData[department.id]?.[item.id] ?? 0;
+      if (department.id === "dept-1" || department.id === "dept-3") {
+        newValues[item.id] = String(Math.floor(Number(count)));
+      } else {
+        newValues[item.id] = Number(count).toFixed(2).replace('.', ',');
+      }
+    });
+    setInputValues(newValues);
+  // eslint-disable-next-line
+  }, [inventoryData, department.id, items]);
 
   // Add a function to handle input value changes
   const handleValueChange = (itemId: string, value: string) => {
@@ -127,6 +143,38 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   const handleResetConfirm = () => {
     resetDepartmentCounts();
     resetModalDisclosure.onClose();
+  };
+
+  // ОБНОВЛЕНИЕ inputValues при вводе
+  const handleInputChange = (itemId: string, value: string) => {
+    setInputValues(prev => ({ ...prev, [itemId]: value }));
+  };
+
+  // ОБНОВЛЕНИЕ inventoryData только при блюре или валидном числе
+  const handleInputBlur = (itemId: string) => {
+    const value = inputValues[itemId] ?? "";
+    let numericValue: number | null = null;
+    if (department.id === "dept-1" || department.id === "dept-3") {
+      // Только целые числа
+      if (/^\d+$/.test(value)) {
+        numericValue = parseInt(value, 10);
+      }
+    } else {
+      // Дробные значения, поддержка запятой и точки
+      const normalized = value.replace(',', '.');
+      if (/^\d+(\.|,)?\d*$/.test(value) && !isNaN(Number(normalized))) {
+        numericValue = Number(Number(normalized).toFixed(2));
+      }
+    }
+    if (numericValue !== null && !isNaN(numericValue)) {
+      updateItemCount(department.id, itemId, numericValue);
+    } else if (value === "") {
+      // Если поле очищено — обнуляем
+      updateItemCount(department.id, itemId, 0);
+    } else {
+      // Некорректное значение — не обновляем
+      setInputValues(prev => ({ ...prev, [itemId]: "" }));
+    }
   };
 
   return (
@@ -235,15 +283,9 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                           type="text"
                           inputMode={department.id === "dept-2" ? "decimal" : (department.id === "dept-1" || department.id === "dept-3" ? "numeric" : "decimal")}
                           min="0"
-                          value={typeof count === 'number' ? 
-                            (count === 0 ? "0" : 
-                              (department.id === "dept-1" || department.id === "dept-3" ? 
-                                Math.floor(count).toString() : 
-                                count.toFixed(2).replace('.', ',')
-                              )
-                            ) : '0'
-                          }
-                          onValueChange={(value) => handleValueChange(item.id, value)}
+                          value={inputValues[item.id] ?? ""}
+                          onValueChange={(value) => handleInputChange(item.id, value)}
+                          onBlur={() => handleInputBlur(item.id)}
                           onFocus={handleInputFocus}
                           className="w-14"
                           classNames={{
