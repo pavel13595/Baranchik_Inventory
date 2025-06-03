@@ -75,95 +75,42 @@ export const useInventoryData = () => {
     }
   }, []);
 
+  // Универсальное сохранение данных после каждого изменения
   React.useEffect(() => {
     try {
-      // For iOS, use a more reliable approach
-      if (isIOS) {
-        // Use a single storage key for all data to minimize write operations
-        const allData = {
-          departments,
-          items,
-          inventoryData,
-          history,
-          lastUpdated: new Date().toISOString()
-        };
-        localStorage.setItem("inventoryAppData", JSON.stringify(allData));
-      } else {
-        // For other platforms, use separate keys
-        localStorage.setItem("departments", JSON.stringify(departments));
-        localStorage.setItem("items", JSON.stringify(items));
-        localStorage.setItem("inventoryData", JSON.stringify(inventoryData));
-        localStorage.setItem("inventoryHistory", JSON.stringify(history));
-      }
-      
-      // Show success status briefly when data is saved
-      setSyncStatus("success");
-      setTimeout(() => setSyncStatus("idle"), 1000);
+      const allData = {
+        departments,
+        items,
+        inventoryData,
+        history,
+        lastUpdated: new Date().toISOString()
+      };
+      localStorage.setItem("inventoryAppData", JSON.stringify(allData));
+      // Для десктопа сохраняем и по старым ключам для обратной совместимости
+      localStorage.setItem("departments", JSON.stringify(departments));
+      localStorage.setItem("items", JSON.stringify(items));
+      localStorage.setItem("inventoryData", JSON.stringify(inventoryData));
+      localStorage.setItem("inventoryHistory", JSON.stringify(history));
     } catch (error) {
       console.error("Error saving data to localStorage:", error);
-      setSyncStatus("error");
     }
-  }, [departments, items, inventoryData, history, isIOS]);
+  }, [departments, items, inventoryData, history]);
+
+  const isFirstRender = React.useRef(true);
 
   React.useEffect(() => {
-    if (!isIOS) return;
-    
-    const saveAllData = () => {
-      try {
-        const allData = {
-          departments,
-          items,
-          inventoryData,
-          history,
-          lastUpdated: new Date().toISOString()
-        };
-        localStorage.setItem("inventoryAppData", JSON.stringify(allData));
-      } catch (error) {
-        console.error("Error saving data on visibility change:", error);
-      }
-    };
-    
-    // Save when page becomes hidden (user switches apps or tabs)
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") {
-        saveAllData();
-      }
-    };
-    
-    // Save before page unload
-    const handleBeforeUnload = () => {
-      saveAllData();
-    };
-    
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    
-    // Also save periodically (every 10 seconds)
-    const intervalId = setInterval(saveAllData, 10000);
-    
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      clearInterval(intervalId);
-    };
-  }, [departments, items, inventoryData, history, isIOS]);
-
-  React.useEffect(() => {
-    if (!isIOS) return;
-    
-    try {
-      const savedData = localStorage.getItem("inventoryAppData");
-      if (savedData) {
-        const parsedData = JSON.parse(savedData);
-        if (parsedData.departments) setDepartments(parsedData.departments);
-        if (parsedData.items) setItems(parsedData.items);
-        if (parsedData.inventoryData) setInventoryData(parsedData.inventoryData);
-        if (parsedData.history) setHistory(parsedData.history);
-      }
-    } catch (error) {
-      console.error("Error loading combined data from localStorage:", error);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
     }
-  }, [isIOS]);
+    // Синхронизация с Google Sheets при первом подключении онлайн
+    if (isOnline) {
+      const spreadsheetId = localStorage.getItem("spreadsheetId") || "";
+      if (spreadsheetId) {
+        syncWithGoogleSheets(spreadsheetId, departments, items, inventoryData);
+      }
+    }
+  }, [isOnline, departments, items, inventoryData, history]);
 
   const updateItemCount = (departmentId: string, itemId: string, count: number) => {
     setInventoryData(prev => {
