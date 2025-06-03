@@ -30,7 +30,6 @@ interface DepartmentInventoryProps {
   updateItemCount: (departmentId: string, itemId: string, count: number) => void;
   resetDepartmentCounts: () => void;
   addNewItem: (name: string) => void;
-  deleteItem: (itemId: string, departmentId: string) => void;
   globalSearchQuery: string;
   setGlobalSearchQuery: (query: string) => void;
 }
@@ -42,7 +41,6 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   updateItemCount,
   resetDepartmentCounts,
   addNewItem,
-  deleteItem,
   globalSearchQuery,
   setGlobalSearchQuery
 }) => {
@@ -52,8 +50,6 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   const [searchQuery, setSearchQuery] = React.useState(globalSearchQuery);
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
   const [inputValues, setInputValues] = React.useState<{[itemId: string]: string}>({});
-  const [deleteModal, setDeleteModal] = React.useState<{open: boolean, itemId: string | null}>({open: false, itemId: null});
-  const [newItemList, setNewItemList] = React.useState("");
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
 
@@ -185,17 +181,6 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
     }
   };
 
-  // Для long press
-  let longPressTimer: number | null = null;
-  const handleRowMouseDown = (itemId: string) => {
-    longPressTimer = window.setTimeout(() => {
-      setDeleteModal({ open: true, itemId });
-    }, 600);
-  };
-  const handleRowMouseUp = () => {
-    if (longPressTimer) clearTimeout(longPressTimer);
-  };
-
   return (
     <div className="py-4">
       <div className="flex flex-col gap-4 mb-4">
@@ -267,19 +252,13 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
               <TableColumn key="number" className="w-[40px]">№</TableColumn>
               <TableColumn key="name" className="w-full min-w-[120px]">Наименование</TableColumn>
               <TableColumn key="quantity" className="w-[120px] text-center">Количество</TableColumn>
-              {!isMobile && <TableColumn key="actions" className="w-[60px] text-center">Действия</TableColumn>}
             </TableHeader>
             <TableBody>
               {filteredItems.map((item, index) => {
                 const count = inventoryData[department.id]?.[item.id] || 0;
 
                 return (
-                  <TableRow key={`item-row-${item.id}`}
-                    onMouseDown={() => isMobile && handleRowMouseDown(item.id)}
-                    onMouseUp={() => isMobile && handleRowMouseUp()}
-                    onTouchStart={() => isMobile && handleRowMouseDown(item.id)}
-                    onTouchEnd={() => isMobile && handleRowMouseUp()}
-                  >
+                  <TableRow key={`item-row-${item.id}`}>
                     <TableCell className="w-[40px]">{index + 1}</TableCell>
                     <TableCell className="max-w-[150px] sm:max-w-none truncate">
                       {item.name}
@@ -339,13 +318,6 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                         </Button>
                       </div>
                     </TableCell>
-                    {!isMobile && (
-                      <TableCell className="w-[60px] text-center">
-                        <Button color="danger" size="sm" isIconOnly variant="flat" onPress={() => setDeleteModal({open: true, itemId: item.id})}>
-                          <Icon icon="lucide:trash" />
-                        </Button>
-                      </TableCell>
-                    )}
                   </TableRow>
                 );
               })}
@@ -429,28 +401,6 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                 >
                   Сбросить
                 </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-
-      {/* Delete item modal */}
-      <Modal isOpen={deleteModal.open} onOpenChange={() => setDeleteModal({open: false, itemId: null})}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader>Удалить позицию?</ModalHeader>
-              <ModalBody>
-                <p>Вы уверены, что хотите удалить эту позицию?</p>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" onPress={() => {
-                  if (deleteModal.itemId) deleteItem(deleteModal.itemId, department.id);
-                  setDeleteModal({open: false, itemId: null});
-                  onClose();
-                }}>Удалить</Button>
-                <Button variant="flat" onPress={onClose}>Отмена</Button>
               </ModalFooter>
             </>
           )}
