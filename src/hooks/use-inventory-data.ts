@@ -186,6 +186,17 @@ export const useInventoryData = () => {
     setDepartments(prev => [...prev, newDepartment]);
   };
 
+  const deleteItem = (itemId: string, departmentId: string) => {
+    setItems(prev => prev.filter(item => item.id !== itemId));
+    setInventoryData(prev => {
+      const newData = { ...prev };
+      if (newData[departmentId]) {
+        delete newData[departmentId][itemId];
+      }
+      return newData;
+    });
+  };
+
   return {
     departments,
     items,
@@ -194,6 +205,7 @@ export const useInventoryData = () => {
     resetDepartmentCounts,
     addNewItem,
     addNewDepartment,
+    deleteItem,
     history,
     isOnline,
     syncStatus,

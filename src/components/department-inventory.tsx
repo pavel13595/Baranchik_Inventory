@@ -30,6 +30,7 @@ interface DepartmentInventoryProps {
   updateItemCount: (departmentId: string, itemId: string, count: number) => void;
   resetDepartmentCounts: () => void;
   addNewItem: (name: string) => void;
+  deleteItem: (itemId: string, departmentId: string) => void;
   globalSearchQuery: string;
   setGlobalSearchQuery: (query: string) => void;
 }
@@ -41,6 +42,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   updateItemCount,
   resetDepartmentCounts,
   addNewItem,
+  deleteItem,
   globalSearchQuery,
   setGlobalSearchQuery
 }) => {
@@ -50,6 +52,8 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   const [searchQuery, setSearchQuery] = React.useState(globalSearchQuery);
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
   const [inputValues, setInputValues] = React.useState<{[itemId: string]: string}>({});
+  const [deleteModal, setDeleteModal] = React.useState<{open: boolean, itemId: string | null}>({open: false, itemId: null});
+  const [newItemList, setNewItemList] = React.useState("");
 
   // Sync local search with global search
   React.useEffect(() => {
@@ -179,6 +183,17 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
     }
   };
 
+  // Массив для массового добавления
+  const handleAddItemList = () => {
+    const names = newItemList
+      .split(/\n|,/)
+      .map(s => s.trim())
+      .filter(Boolean);
+    names.forEach(name => addNewItem(name));
+    setNewItemList("");
+    onClose();
+  };
+
   return (
     <div className="py-4">
       <div className="flex flex-col gap-4 mb-4">
@@ -250,6 +265,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
               <TableColumn key="number" className="w-[40px]">№</TableColumn>
               <TableColumn key="name" className="w-full min-w-[120px]">Наименование</TableColumn>
               <TableColumn key="quantity" className="w-[120px] text-center">Количество</TableColumn>
+              <TableColumn key="actions" className="w-[60px] text-center">Действия</TableColumn>
             </TableHeader>
             <TableBody>
               {filteredItems.map((item, index) => {
@@ -316,6 +332,11 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                         </Button>
                       </div>
                     </TableCell>
+                    <TableCell className="w-[60px] text-center">
+                      <Button color="danger" size="sm" isIconOnly variant="flat" onPress={() => setDeleteModal({open: true, itemId: item.id})}>
+                        <Icon icon="lucide:trash" />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -343,6 +364,15 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                   onValueChange={setNewItemName}
                   autoFocus
                 />
+                <div className="mt-4">
+                  <label className="block text-sm font-medium mb-1">Список позиций (по одной в строке или через запятую)</label>
+                  <textarea
+                    className="w-full border rounded p-2 text-sm min-h-[80px]"
+                    placeholder="Позиция 1\nПозиция 2\nПозиция 3"
+                    value={newItemList}
+                    onChange={e => setNewItemList(e.target.value)}
+                  />
+                </div>
               </ModalBody>
               <ModalFooter>
                 <Button 
@@ -355,8 +385,17 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                 <Button 
                   color="primary" 
                   onPress={handleAddItem}
+                  isDisabled={!newItemName.trim()}
                 >
-                  Добавить
+                  Добавить одну
+                </Button>
+                <Button
+                  color="primary"
+                  variant="bordered"
+                  onPress={handleAddItemList}
+                  isDisabled={!newItemList.trim()}
+                >
+                  Добавить список
                 </Button>
               </ModalFooter>
             </>
@@ -398,6 +437,28 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                 >
                   Сбросить
                 </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+      {/* Delete item modal */}
+      <Modal isOpen={deleteModal.open} onOpenChange={() => setDeleteModal({open: false, itemId: null})}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>Удалить позицию?</ModalHeader>
+              <ModalBody>
+                <p>Вы уверены, что хотите удалить эту позицию?</p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" onPress={() => {
+                  if (deleteModal.itemId) deleteItem(deleteModal.itemId, department.id);
+                  setDeleteModal({open: false, itemId: null});
+                  onClose();
+                }}>Удалить</Button>
+                <Button variant="flat" onPress={onClose}>Отмена</Button>
               </ModalFooter>
             </>
           )}

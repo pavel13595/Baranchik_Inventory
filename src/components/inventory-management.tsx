@@ -13,6 +13,7 @@ export const InventoryManagement: React.FC = () => {
     updateItemCount, 
     resetDepartmentCounts,
     addNewItem,
+    deleteItem,
     history,
     isOnline,
     syncStatus,
@@ -173,11 +174,10 @@ export const InventoryManagement: React.FC = () => {
                   department={department}
                   items={items.filter(item => item.category === department.id)}
                   inventoryData={inventoryData}
-                  updateItemCount={(departmentId, itemId, count) => 
-                    updateItemCount(departmentId, itemId, count)
-                  }
+                  updateItemCount={updateItemCount}
                   resetDepartmentCounts={() => resetDepartmentCounts(department.id)}
                   addNewItem={(name) => addNewItem(name, department.id)}
+                  deleteItem={deleteItem}
                   globalSearchQuery={globalSearchQuery}
                   setGlobalSearchQuery={setGlobalSearchQuery}
                 />
