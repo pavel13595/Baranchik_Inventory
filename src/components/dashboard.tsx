@@ -1,14 +1,10 @@
 import React from "react";
-import { Card, CardBody, CardHeader, CardFooter, Button, Divider, Navbar, NavbarBrand, NavbarContent, NavbarItem, Avatar, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
+import { Card, CardBody, CardHeader, CardFooter, Button, Divider, Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/auth-context";
 import { ThemeToggle } from "./theme-toggle";
 import { InventoryManagement } from "./inventory-management";
 
 export const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
-  
   // Keep zoom prevention effect
   React.useEffect(() => {
     const handleTouchMove = (e: TouchEvent) => {
