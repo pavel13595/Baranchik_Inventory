@@ -33,6 +33,16 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     localStorage.setItem("theme", theme);
     document.documentElement.classList.toggle("dark", theme === "dark");
+    // Меняем цвет статус-бара для PWA
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', theme === 'dark' ? '#18181b' : '#ffffff');
+    }
+    // Для iOS (Safari)
+    const appleStatusBar = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+    if (appleStatusBar) {
+      appleStatusBar.setAttribute('content', theme === 'dark' ? 'black-translucent' : 'default');
+    }
   }, [theme]);
 
   const toggleTheme = () => {
