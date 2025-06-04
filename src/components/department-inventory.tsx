@@ -211,7 +211,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   return (
     <div className="py-4">
       <div className="flex flex-row gap-2 mb-4 w-full justify-start">
-        <Button color="primary" onPress={onOpen}>
+        <Button color="primary" variant="flat" onPress={onOpen}>
           <Icon icon="lucide:plus" className="mr-1" /> Добавить
         </Button>
         <Button color="danger" variant="flat" onPress={() => setDeleteModal(true)}>
