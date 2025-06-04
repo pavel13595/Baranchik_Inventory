@@ -55,6 +55,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [deleteSearch, setDeleteSearch] = React.useState("");
   const [deleteSelected, setDeleteSelected] = React.useState<string | null>(null);
+  const [showZeroOnly, setShowZeroOnly] = React.useState(false);
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
 
@@ -191,6 +192,14 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
     item.name.toLowerCase().includes(deleteSearch.toLowerCase())
   );
 
+  // Фильтрация по количеству 0, если фильтр активен
+  const filteredByZero = showZeroOnly
+    ? filteredItems.filter(item => {
+        const count = inventoryData[department.id]?.[item.id] ?? 0;
+        return Number(count) === 0;
+      })
+    : filteredItems;
+
   return (
     <div className="py-4">
       <div className="flex flex-row gap-2 mb-4 w-full justify-start">
@@ -253,10 +262,15 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
             <TableHeader>
               <TableColumn key="number" className="w-[40px]">№</TableColumn>
               <TableColumn key="name" className="w-full min-w-[120px]">Наименование</TableColumn>
-              <TableColumn key="quantity" className="w-[120px] text-center">Количество</TableColumn>
+              <TableColumn key="quantity" className="w-[120px] text-center cursor-pointer select-none" onClick={() => setShowZeroOnly(v => !v)}>
+                <span className="inline-flex items-center gap-1 justify-center">
+                  Количество
+                  <Icon icon="lucide:filter" className={showZeroOnly ? "text-primary" : "text-default-400"} width={18} height={18} />
+                </span>
+              </TableColumn>
             </TableHeader>
             <TableBody>
-              {filteredItems.map((item, index) => {
+              {filteredByZero.map((item, index) => {
                 const count = inventoryData[department.id]?.[item.id] || 0;
 
                 return (
