@@ -193,63 +193,49 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
 
   return (
     <div className="py-4">
-      <div className="flex flex-col gap-4 mb-4">
-        <div className="w-full flex justify-end">
-          <Button color="danger" variant="flat" onPress={() => setDeleteModal(true)}>
-            <Icon icon="lucide:trash" className="mr-1" /> Удалить
-          </Button>
-        </div>
-        <div className="w-full">
-          <Autocomplete
-            defaultItems={autocompleteItems}
-            label="Поиск позиций"
-            placeholder="Введите название позиции"
-            className="w-full"
-            inputValue={searchQuery}
-            onInputChange={setSearchQuery}
-            selectedKey={selectedItem}
-            onSelectionChange={(key) => {
-              if (key) {
-                setSelectedItem(key.toString());
-                setSearchQuery(items.find(item => item.id === key)?.name || "");
-              }
-            }}
-            clearButtonProps={{
-              "aria-label": "Очистить поиск",
-              onPress: () => {
-                setSearchQuery("");
-                setSelectedItem(null);
-              }
-            }}
-          >
-            {(item) => (
-              <AutocompleteItem key={item.key}>
-                {item.label}
-              </AutocompleteItem>
-            )}
-          </Autocomplete>
-        </div>
-        <div className="flex flex-wrap gap-2 justify-between w-full">
-          <div className="flex gap-2">
-            <Button 
-              color="secondary" 
-              variant="flat" 
-              startContent={<Icon icon="lucide:list-plus" />}
-              onPress={onOpen}
-              size="sm"
-            >
-              Добавить
-            </Button>
-            <Button 
-              color="danger" 
-              variant="flat" 
-              startContent={<Icon icon="lucide:refresh-cw" />}
-              onPress={resetModalDisclosure.onOpen}
-              size="sm"
-            >
-              Сбросить
-            </Button>
-          </div>
+      <div className="flex flex-row gap-2 mb-4 w-full justify-end">
+        <Button color="primary" onPress={onOpen}>
+          <Icon icon="lucide:plus" className="mr-1" /> Добавить
+        </Button>
+        <Button color="danger" variant="flat" onPress={() => setDeleteModal(true)}>
+          <Icon icon="lucide:trash" className="mr-1" /> Удалить
+        </Button>
+        <Button color="warning" variant="flat" onPress={resetModalDisclosure.onOpen}>
+          <Icon icon="lucide:refresh-cw" className="mr-1" /> Сбросить
+        </Button>
+      </div>
+      <div className="w-full">
+        <Autocomplete
+          defaultItems={autocompleteItems}
+          label="Поиск позиций"
+          placeholder="Введите название позиции"
+          className="w-full"
+          inputValue={searchQuery}
+          onInputChange={setSearchQuery}
+          selectedKey={selectedItem}
+          onSelectionChange={(key) => {
+            if (key) {
+              setSelectedItem(key.toString());
+              setSearchQuery(items.find(item => item.id === key)?.name || "");
+            }
+          }}
+          clearButtonProps={{
+            "aria-label": "Очистить поиск",
+            onPress: () => {
+              setSearchQuery("");
+              setSelectedItem(null);
+            }
+          }}
+        >
+          {(item) => (
+            <AutocompleteItem key={item.key}>
+              {item.label}
+            </AutocompleteItem>
+          )}
+        </Autocomplete>
+      </div>
+      <div className="flex flex-wrap gap-2 justify-between w-full">
+        <div className="flex gap-2">
         </div>
       </div>
 
@@ -457,7 +443,6 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                   if (deleteSelected) {
                     // Удаляем выбранную позицию
                     const itemId = deleteSelected;
-                    // Удаляем item из массива и из остатков
                     if (typeof deleteItem === 'function') deleteItem(itemId, department.id);
                   }
                   setDeleteModal(false); setDeleteSelected(null); setDeleteSearch("");
