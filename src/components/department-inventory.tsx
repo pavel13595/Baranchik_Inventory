@@ -201,11 +201,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
 
   // Сортировка: если активна, строки с количеством 0 наверху, остальные внизу (без сортировки между ними)
   const sortedRows = sortZeroToBottom
-    ? [...itemsWithCount].sort((a, b) => {
-        if (a.count === 0 && b.count !== 0) return -1;
-        if (a.count !== 0 && b.count === 0) return 1;
-        return 0;
-      })
+    ? itemsWithCount.filter(row => row.count === 0).concat(itemsWithCount.filter(row => row.count !== 0))
     : itemsWithCount;
 
   return (
