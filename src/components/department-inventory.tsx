@@ -193,16 +193,20 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
     item.name.toLowerCase().includes(deleteSearch.toLowerCase())
   );
 
-  // Сортировка: если активна, строки с количеством 0 наверху, остальные внизу (без сортировки по значению)
-  const sortedItems = sortZeroToBottom
-    ? [...filteredItems].sort((a, b) => {
-        const countA = Number(inventoryData[department.id]?.[a.id] ?? 0);
-        const countB = Number(inventoryData[department.id]?.[b.id] ?? 0);
-        if (countA === 0 && countB !== 0) return -1;
-        if (countA !== 0 && countB === 0) return 1;
+  // Для сортировки всей строки: формируем массив объектов {item, count}
+  const itemsWithCount = filteredItems.map(item => ({
+    item,
+    count: Number(inventoryData[department.id]?.[item.id] ?? 0)
+  }));
+
+  // Сортировка: если активна, строки с количеством 0 наверху, остальные внизу (без сортировки между ними)
+  const sortedRows = sortZeroToBottom
+    ? [...itemsWithCount].sort((a, b) => {
+        if (a.count === 0 && b.count !== 0) return -1;
+        if (a.count !== 0 && b.count === 0) return 1;
         return 0;
       })
-    : filteredItems;
+    : itemsWithCount;
 
   return (
     <div className="py-4">
@@ -274,73 +278,69 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
               </TableColumn>
             </TableHeader>
             <TableBody>
-              {sortedItems.map((item, idx) => {
-                const count = inventoryData[department.id]?.[item.id] || 0;
-
-                return (
-                  <TableRow key={`item-row-${item.id}`}>
-                    <TableCell className="w-[40px]">{idx + 1}</TableCell>
-                    <TableCell className="max-w-[150px] sm:max-w-none truncate">
-                      {item.name}
-                    </TableCell>
-                    <TableCell className="w-[120px] text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <Button 
-                          isIconOnly 
-                          size="sm" 
-                          variant="flat"
-                          onPress={() => {
-                            let newValue;
-                            if (department.id === "dept-1" || department.id === "dept-3") { // Посуда и Упаковка - only whole numbers
-                              newValue = Math.max(0, (typeof count === 'number' ? Math.floor(count) : 0) - 1);
-                            } else {
-                              newValue = Math.max(0, (typeof count === 'number' ? count : 0) - 0.1);
-                              newValue = Number(newValue.toFixed(2));
-                            }
-                            updateItemCount(department.id, item.id, newValue);
-                          }}
-                          className="min-w-[30px] w-[30px] h-[30px]"
-                        >
-                          <Icon icon="lucide:minus" className="w-4 h-4" />
-                        </Button>
-                        <Input
-                          type="text"
-                          inputMode={department.id === "dept-2" ? "decimal" : (department.id === "dept-1" || department.id === "dept-3" ? "numeric" : "decimal")}
-                          min="0"
-                          value={inputValues[item.id] ?? ""}
-                          onValueChange={(value) => handleInputChange(item.id, value)}
-                          onBlur={() => handleInputBlur(item.id)}
-                          onFocus={handleInputFocus}
-                          className="w-14"
-                          classNames={{
-                            input: "text-center px-0",
-                            inputWrapper: "px-1"
-                          }}
-                          size="sm"
-                        />
-                        <Button 
-                          isIconOnly 
-                          size="sm" 
-                          variant="flat"
-                          onPress={() => {
-                            let newValue;
-                            if (department.id === "dept-1" || department.id === "dept-3") { // Посуда и Упаковка - only whole numbers
-                              newValue = (typeof count === 'number' ? Math.floor(count) : 0) + 1;
-                            } else {
-                              newValue = (typeof count === 'number' ? count : 0) + 0.1;
-                              newValue = Number(newValue.toFixed(2));
-                            }
-                            updateItemCount(department.id, item.id, newValue);
-                          }}
-                          className="min-w-[30px] w-[30px] h-[30px]"
-                        >
-                          <Icon icon="lucide:plus" className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              {sortedRows.map(({item, count}, idx) => (
+                <TableRow key={`item-row-${item.id}`}>
+                  <TableCell className="w-[40px]">{idx + 1}</TableCell>
+                  <TableCell className="max-w-[150px] sm:max-w-none truncate">
+                    {item.name}
+                  </TableCell>
+                  <TableCell className="w-[120px] text-center">
+                    <div className="flex items-center justify-center gap-1">
+                      <Button 
+                        isIconOnly 
+                        size="sm" 
+                        variant="flat"
+                        onPress={() => {
+                          let newValue;
+                          if (department.id === "dept-1" || department.id === "dept-3") { // Посуда и Упаковка - only whole numbers
+                            newValue = Math.max(0, (typeof count === 'number' ? Math.floor(count) : 0) - 1);
+                          } else {
+                            newValue = Math.max(0, (typeof count === 'number' ? count : 0) - 0.1);
+                            newValue = Number(newValue.toFixed(2));
+                          }
+                          updateItemCount(department.id, item.id, newValue);
+                        }}
+                        className="min-w-[30px] w-[30px] h-[30px]"
+                      >
+                        <Icon icon="lucide:minus" className="w-4 h-4" />
+                      </Button>
+                      <Input
+                        type="text"
+                        inputMode={department.id === "dept-2" ? "decimal" : (department.id === "dept-1" || department.id === "dept-3" ? "numeric" : "decimal")}
+                        min="0"
+                        value={inputValues[item.id] ?? ""}
+                        onValueChange={(value) => handleInputChange(item.id, value)}
+                        onBlur={() => handleInputBlur(item.id)}
+                        onFocus={handleInputFocus}
+                        className="w-14"
+                        classNames={{
+                          input: "text-center px-0",
+                          inputWrapper: "px-1"
+                        }}
+                        size="sm"
+                      />
+                      <Button 
+                        isIconOnly 
+                        size="sm" 
+                        variant="flat"
+                        onPress={() => {
+                          let newValue;
+                          if (department.id === "dept-1" || department.id === "dept-3") { // Посуда и Упаковка - only whole numbers
+                            newValue = (typeof count === 'number' ? Math.floor(count) : 0) + 1;
+                          } else {
+                            newValue = (typeof count === 'number' ? count : 0) + 0.1;
+                            newValue = Number(newValue.toFixed(2));
+                          }
+                          updateItemCount(department.id, item.id, newValue);
+                        }}
+                        className="min-w-[30px] w-[30px] h-[30px]"
+                      >
+                        <Icon icon="lucide:plus" className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </div>
