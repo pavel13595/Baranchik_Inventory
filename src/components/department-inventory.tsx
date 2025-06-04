@@ -274,12 +274,12 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
               </TableColumn>
             </TableHeader>
             <TableBody>
-              {sortedItems.map((item, index) => {
+              {sortedItems.map((item, idx) => {
                 const count = inventoryData[department.id]?.[item.id] || 0;
 
                 return (
                   <TableRow key={`item-row-${item.id}`}>
-                    <TableCell className="w-[40px]">{index + 1}</TableCell>
+                    <TableCell className="w-[40px]">{idx + 1}</TableCell>
                     <TableCell className="max-w-[150px] sm:max-w-none truncate">
                       {item.name}
                     </TableCell>
