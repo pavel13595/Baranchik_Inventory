@@ -104,24 +104,6 @@ export const InventoryManagement: React.FC = () => {
     checkOnlineStatus();
   };
 
-  // --- Пересчет: отдельный список позиций ---
-  const [recountItems, setRecountItems] = React.useState<Item[]>([]);
-  const [recountInput, setRecountInput] = React.useState("");
-
-  const handleAddRecountItem = () => {
-    if (recountInput.trim()) {
-      setRecountItems(prev => [
-        ...prev,
-        { id: `recount-${Date.now()}`, name: recountInput.trim(), category: "recount" }
-      ]);
-      setRecountInput("");
-    }
-  };
-  const handleDeleteRecountItem = (id: string) => {
-    setRecountItems(prev => prev.filter(item => item.id !== id));
-  };
-  const handleClearRecount = () => setRecountItems([]);
-
   return (
     <div className="container mx-auto px-0 sm:px-4 py-2 sm:py-8">
       <Card className="shadow-md">
@@ -202,49 +184,6 @@ export const InventoryManagement: React.FC = () => {
                 />
               </Tab>
             ))}
-            <Tab key="recount" title="Пересчет">
-              <div className="py-4">
-                <div className="flex flex-row gap-2 mb-4 w-full justify-start">
-                  <Input
-                    placeholder="Добавить позицию пересчета"
-                    value={recountInput}
-                    onValueChange={setRecountInput}
-                    onKeyDown={e => { if (e.key === 'Enter') handleAddRecountItem(); }}
-                    className="max-w-xs"
-                  />
-                  <Button color="primary" onPress={handleAddRecountItem} isDisabled={!recountInput.trim()}>
-                    <Icon icon="lucide:plus" className="mr-1" /> Добавить
-                  </Button>
-                  <Button color="danger" variant="flat" onPress={handleClearRecount} isDisabled={recountItems.length === 0}>
-                    <Icon icon="lucide:trash" className="mr-1" /> Удалить все
-                  </Button>
-                </div>
-                {recountItems.length > 0 ? (
-                  <Table className="min-w-full">
-                    <TableHeader>
-                      <TableColumn className="w-[40px]">№</TableColumn>
-                      <TableColumn>Наименование</TableColumn>
-                      <TableColumn className="w-[60px] text-center">Действия</TableColumn>
-                    </TableHeader>
-                    <TableBody>
-                      {recountItems.map((item, idx) => (
-                        <TableRow key={item.id}>
-                          <TableCell>{idx + 1}</TableCell>
-                          <TableCell>{item.name}</TableCell>
-                          <TableCell className="text-center">
-                            <Button isIconOnly size="sm" variant="flat" color="danger" onPress={() => handleDeleteRecountItem(item.id)}>
-                              <Icon icon="lucide:trash" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                ) : (
-                  <div className="text-default-400 text-center py-8">Список пересчета пуст</div>
-                )}
-              </div>
-            </Tab>
           </Tabs>
         </CardBody>
         <CardFooter className="flex justify-between px-2 sm:px-6">
