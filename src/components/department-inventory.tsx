@@ -193,7 +193,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
 
   return (
     <div className="py-4">
-      <div className="flex flex-row gap-2 mb-4 w-full justify-end">
+      <div className="flex flex-row gap-2 mb-4 w-full justify-start">
         <Button color="primary" onPress={onOpen}>
           <Icon icon="lucide:plus" className="mr-1" /> Добавить
         </Button>
@@ -234,6 +234,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
           )}
         </Autocomplete>
       </div>
+      <div className="mb-4" />
       <div className="flex flex-wrap gap-2 justify-between w-full">
         <div className="flex gap-2">
         </div>
