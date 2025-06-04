@@ -193,24 +193,16 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
     item.name.toLowerCase().includes(deleteSearch.toLowerCase())
   );
 
-  // Фильтрация по количеству 0, если фильтр активен
-  const filteredByZero = showZeroOnly
-    ? filteredItems.filter(item => {
-        const count = inventoryData[department.id]?.[item.id] ?? 0;
-        return Number(count) === 0;
-      })
-    : filteredItems;
-
   // Сортировка: если активна, строки с количеством 0 внизу
   const sortedItems = sortZeroToBottom
-    ? [...filteredByZero].sort((a, b) => {
+    ? [...filteredItems].sort((a, b) => {
         const countA = Number(inventoryData[department.id]?.[a.id] ?? 0);
         const countB = Number(inventoryData[department.id]?.[b.id] ?? 0);
         if (countA === 0 && countB !== 0) return 1;
         if (countA !== 0 && countB === 0) return -1;
         return 0;
       })
-    : filteredByZero;
+    : filteredItems;
 
   return (
     <div className="py-4">
