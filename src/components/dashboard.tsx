@@ -22,7 +22,7 @@ export const Dashboard: React.FC = () => {
   
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar isBordered maxWidth="xl">
+      <Navbar isBordered maxWidth="xl" className="">
         <NavbarBrand>
           <div className="flex items-center gap-2">
             <Icon icon="lucide:clipboard-list" className="text-primary text-xl" />
