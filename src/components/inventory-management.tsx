@@ -132,22 +132,24 @@ export const InventoryManagement: React.FC = () => {
           <div className="flex flex-wrap gap-2 w-full">
             <Button 
               color="primary" 
-              startContent={<Icon icon="lucide:file-spreadsheet" />}
+              startContent={<Icon icon="lucide:file-spreadsheet" />} 
               onPress={() => handleExportToExcel(false)}
               fullWidth={true}
               className="sm:w-auto"
               size="sm"
+              variant="flat"
             >
               Скачать
             </Button>
             
             <Button 
               color="secondary" 
-              startContent={<Icon icon="logos:telegram" />}
+              startContent={<Icon icon="logos:telegram" />} 
               onPress={() => handleExportToExcel(true)}
               fullWidth={true}
               className="sm:w-auto"
               size="sm"
+              variant="flat"
             >
               Отправить
             </Button>
