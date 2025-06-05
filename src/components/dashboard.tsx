@@ -34,6 +34,17 @@ export const Dashboard: React.FC = () => {
           <NavbarItem>
             <ThemeToggle />
           </NavbarItem>
+          <NavbarItem>
+            <Button
+              isIconOnly
+              variant="flat"
+              size="sm"
+              aria-label="Наверх"
+              onPress={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
+              <Icon icon="lucide:chevron-up" className="text-xl" />
+            </Button>
+          </NavbarItem>
         </NavbarContent>
       </Navbar>
       
