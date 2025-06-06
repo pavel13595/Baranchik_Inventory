@@ -32,7 +32,9 @@ export const Dashboard: React.FC = () => {
         <NavbarBrand>
           <div className="flex items-center gap-2">
             <Icon icon="lucide:clipboard-list" className="text-primary text-xl" />
-            <span className="font-bold text-inherit" style={{ minWidth: 180 }}>{cityLabel}</span>
+            <span className="font-bold text-inherit flex items-center gap-2" style={{ minWidth: 180 }}>
+              Инвентаризация
+            </span>
           </div>
         </NavbarBrand>
         <NavbarContent justify="end">

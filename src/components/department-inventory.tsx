@@ -287,7 +287,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                   <TableCell className="max-w-[150px] sm:max-w-none truncate">
                     {item.name}
                   </TableCell>
-                  <TableCell className="w-[120px] text-center">
+                  <TableCell className="w-[120px] text-center align-middle">
                     <div className="flex items-center justify-center gap-1">
                       <Button 
                         isIconOnly
@@ -307,12 +307,13 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                       <Input
                         type="text"
                         variant="bordered"
-                        className="w-[80px] text-center"
+                        className="w-[60px] text-center font-bold"
                         value={inputValues[item.id] ?? ""}
                         onFocus={handleInputFocus}
                         onChange={(e) => handleInputChange(item.id, e.target.value)}
                         onBlur={() => handleInputBlur(item.id)}
                         aria-label={`Количество для ${item.name}`}
+                        classNames={{ input: "text-center font-bold" }}
                       />
                       <Button 
                         isIconOnly
