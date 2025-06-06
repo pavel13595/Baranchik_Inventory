@@ -24,7 +24,7 @@ export const Dashboard: React.FC = () => {
   // const cities = [ ... ];
   // const [selectedCity, setSelectedCity] = useState(cities[0].key);
   // Удаляем выбор города, оставляем только один город
-  const cityLabel = "Той Самий Баранчик Кременчук";
+  const cityLabel = "Инвентаризация";
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

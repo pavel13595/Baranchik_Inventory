@@ -302,7 +302,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                         }}
                         aria-label="Уменьшить количество"
                       >
-                        <Icon icon="lucide:minimize" width={16} height={16} />
+                        <Icon icon="lucide:minus" width={16} height={16} />
                       </Button>
                       <Input
                         type="text"
