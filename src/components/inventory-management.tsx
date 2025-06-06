@@ -104,13 +104,20 @@ export const InventoryManagement: React.FC<{ selectedCity: string }> = ({ select
     checkOnlineStatus();
   };
 
+  // --- Города для заголовка ---
+  const cities = [
+    { key: "kremenchuk", label: "Той Самий Баранчик Кременчук" },
+    { key: "kharkiv", label: "Той Самий Баранчик Харьков" },
+    { key: "lviv", label: "Той Самий Баранчик Львов" }
+  ];
+
   return (
     <div className="container mx-auto px-0 sm:px-4 py-2 sm:py-8">
       <Card className="shadow-md">
         <CardHeader className="flex flex-col justify-between items-start gap-4 px-2 sm:px-6">
           <div className="flex justify-between w-full items-center">
             <h1 className="text-lg sm:text-2xl font-semibold">
-              Той Самий Баранчик Кременчук
+              {cities.find(city => city.key === selectedCity)?.label || ''}
             </h1>
             {/* Status indicator - make it clickable to check online status */}
             <Button
