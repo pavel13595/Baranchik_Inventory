@@ -35,7 +35,7 @@ interface DepartmentInventoryProps {
   setGlobalSearchQuery: (query: string) => void;
 }
 
-export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
+export const DepartmentInventory: React.FC<DepartmentInventoryProps & { cityLabel: string }> = ({
   department,
   items,
   inventoryData,
@@ -44,7 +44,8 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   addNewItem,
   deleteItem,
   globalSearchQuery,
-  setGlobalSearchQuery
+  setGlobalSearchQuery,
+  cityLabel
 }) => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const resetModalDisclosure = useDisclosure();
@@ -210,6 +211,9 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
 
   return (
     <div className="py-4">
+      <h1 className="text-lg sm:text-2xl font-semibold mb-4" data-locator="src/components/department-inventory.tsx:h1:custom">
+        {cityLabel}
+      </h1>
       <div className="flex flex-row gap-2 mb-4 w-full justify-start">
         <Button color="primary" variant="flat" onPress={onOpen}>
           <Icon icon="lucide:plus" className="mr-1" /> Добавить
@@ -287,55 +291,44 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                   <TableCell className="w-[120px] text-center">
                     <div className="flex items-center justify-center gap-1">
                       <Button 
-                        isIconOnly 
-                        size="sm" 
-                        variant="flat"
+                        isIconOnly
+                        variant="bordered"
+                        color="default"
+                        className="p-0.5 rounded-full"
                         onPress={() => {
-                          let newValue;
-                          if (department.id === "dept-1" || department.id === "dept-3") { // Посуда и Упаковка - only whole numbers
-                            newValue = Math.max(0, (typeof count === 'number' ? Math.floor(count) : 0) - 1);
-                          } else {
-                            newValue = Math.max(0, (typeof count === 'number' ? count : 0) - 0.1);
-                            newValue = Number(newValue.toFixed(2));
-                          }
+                          // Удаляем один товар
+                          const currentValue = inventoryData[department.id]?.[item.id] ?? 0;
+                          const newValue = Math.max(0, Number(currentValue) - 1);
                           updateItemCount(department.id, item.id, newValue);
                         }}
-                        className="min-w-[30px] w-[30px] h-[30px]"
+                        aria-label="Уменьшить количество"
                       >
-                        <Icon icon="lucide:minus" className="w-4 h-4" />
+                        <Icon icon="lucide:minimize" width={16} height={16} />
                       </Button>
                       <Input
                         type="text"
-                        inputMode={department.id === "dept-2" ? "decimal" : (department.id === "dept-1" || department.id === "dept-3" ? "numeric" : "decimal")}
-                        min="0"
+                        variant="bordered"
+                        className="w-[80px] text-center"
                         value={inputValues[item.id] ?? ""}
-                        onValueChange={(value) => handleInputChange(item.id, value)}
-                        onBlur={() => handleInputBlur(item.id)}
                         onFocus={handleInputFocus}
-                        className="w-14"
-                        classNames={{
-                          input: "text-center px-0",
-                          inputWrapper: "px-1"
-                        }}
-                        size="sm"
+                        onChange={(e) => handleInputChange(item.id, e.target.value)}
+                        onBlur={() => handleInputBlur(item.id)}
+                        aria-label={`Количество для ${item.name}`}
                       />
                       <Button 
-                        isIconOnly 
-                        size="sm" 
-                        variant="flat"
+                        isIconOnly
+                        variant="bordered"
+                        color="default"
+                        className="p-0.5 rounded-full"
                         onPress={() => {
-                          let newValue;
-                          if (department.id === "dept-1" || department.id === "dept-3") { // Посуда и Упаковка - only whole numbers
-                            newValue = (typeof count === 'number' ? Math.floor(count) : 0) + 1;
-                          } else {
-                            newValue = (typeof count === 'number' ? count : 0) + 0.1;
-                            newValue = Number(newValue.toFixed(2));
-                          }
+                          // Увеличиваем один товар
+                          const currentValue = inventoryData[department.id]?.[item.id] ?? 0;
+                          const newValue = Number(currentValue) + 1;
                           updateItemCount(department.id, item.id, newValue);
                         }}
-                        className="min-w-[30px] w-[30px] h-[30px]"
+                        aria-label="Увеличить количество"
                       >
-                        <Icon icon="lucide:plus" className="w-4 h-4" />
+                        <Icon icon="lucide:plus" width={16} height={16} />
                       </Button>
                     </div>
                   </TableCell>
@@ -345,130 +338,156 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
           </Table>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center p-8 border border-default-200 rounded-medium">
-          <Icon icon="lucide:search-x" className="w-12 h-12 text-default-300 mb-4" />
-          <p className="text-default-500">Нет позиций для отображения</p>
+        <div className="text-center text-default-500 py-4">
+          Нет позиций для отображения
         </div>
       )}
 
-      {/* Add item modal */}
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader>Добавить новую позицию в {department.name}</ModalHeader>
-              <ModalBody>
-                <Input
-                  label="Наименование"
-                  placeholder="Введите наименование позиции"
-                  value={newItemName}
-                  onValueChange={setNewItemName}
-                  autoFocus
-                />
-              </ModalBody>
-              <ModalFooter>
-                <Button 
-                  color="danger" 
-                  variant="flat" 
-                  onPress={onClose}
-                >
-                  Отмена
-                </Button>
-                <Button 
-                  color="primary" 
-                  onPress={handleAddItem}
-                  isDisabled={!newItemName.trim()}
-                >
-                  Добавить
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-
-      {/* Reset confirmation modal */}
-      <Modal 
-        isOpen={resetModalDisclosure.isOpen} 
-        onOpenChange={resetModalDisclosure.onOpenChange}
+      {/* Модальное окно добавления нового товара */}
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        aria-label="Добавить новый товар"
       >
         <ModalContent>
-          {(onModalClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Подтверждение</ModalHeader>
-              <ModalBody>
-                <p>
-                  Вы уверены, что хотите сбросить все значения для категории "{department.name}"?
-                </p>
-                <p className="text-danger">
-                  Это действие нельзя отменить.
-                </p>
-              </ModalBody>
-              <ModalFooter>
-                <Button 
-                  color="default" 
-                  variant="flat" 
-                  onPress={onModalClose}
-                >
-                  Отмена
-                </Button>
-                <Button 
-                  color="danger" 
-                  onPress={() => {
-                    resetDepartmentCounts();
-                    onModalClose();
-                  }}
-                >
-                  Сбросить
-                </Button>
-              </ModalFooter>
-            </>
-          )}
+          <ModalHeader>
+            <div className="flex items-center">
+              <Icon icon="lucide:plus" className="mr-2" />
+              <h2 className="text-lg font-semibold">Добавить новый товар</h2>
+            </div>
+          </ModalHeader>
+          <ModalBody>
+            <div className="flex flex-col gap-4">
+              <Input
+                placeholder="Название товара"
+                value={newItemName}
+                onChange={(e) => setNewItemName(e.target.value)}
+                aria-label="Название нового товара"
+              />
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button 
+              color="primary" 
+              onPress={handleAddItem}
+              disabled={!newItemName.trim()}
+            >
+              Добавить
+            </Button>
+            <Button 
+              variant="bordered" 
+              onPress={onClose}
+              className="ml-2"
+            >
+              Отмена
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
 
-      {/* Delete item modal */}
-      <Modal isOpen={deleteModal} onOpenChange={setDeleteModal}>
+      {/* Модальное окно подтверждения сброса */}
+      <Modal
+        isOpen={resetModalDisclosure.isOpen}
+        onOpenChange={resetModalDisclosure.onOpen}
+        aria-label="Подтверждение сброса"
+      >
         <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader>Удалить позицию</ModalHeader>
-              <ModalBody>
-                <Input
-                  label="Поиск по наименованию"
-                  placeholder="Введите название позиции"
-                  value={deleteSearch}
-                  onValueChange={setDeleteSearch}
-                  autoFocus
-                />
-                <div className="mt-2 max-h-40 overflow-y-auto">
-                  {deleteFilteredItems.length === 0 && (
-                    <div className="text-default-400 text-sm py-2 text-center">Нет совпадений</div>
-                  )}
+          <ModalHeader>
+            <div className="flex items-center">
+              <Icon icon="lucide:refresh-cw" className="mr-2" />
+              <h2 className="text-lg font-semibold">Сбросить количество товаров?</h2>
+            </div>
+          </ModalHeader>
+          <ModalBody>
+            <p className="text-default-600">
+              Вы уверены, что хотите сбросить количество всех товаров в этом отделе до 0? Это действие нельзя будет отменить.
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button 
+              color="danger" 
+              onPress={handleResetConfirm}
+            >
+              Сбросить
+            </Button>
+            <Button 
+              variant="bordered" 
+              onPress={resetModalDisclosure.onClose}
+              className="ml-2"
+            >
+              Отмена
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Модальное окно удаления товара */}
+      <Modal
+        isOpen={deleteModal}
+        onOpenChange={setDeleteModal}
+        aria-label="Удалить товар"
+      >
+        <ModalContent>
+          <ModalHeader>
+            <div className="flex items-center">
+              <Icon icon="lucide:trash" className="mr-2" />
+              <h2 className="text-lg font-semibold">Удалить товар</h2>
+            </div>
+          </ModalHeader>
+          <ModalBody>
+            <div className="flex flex-col gap-4">
+              <Input
+                placeholder="Поиск товара для удаления"
+                value={deleteSearch}
+                onChange={(e) => setDeleteSearch(e.target.value)}
+                aria-label="Поиск товара для удаления"
+              />
+              {deleteFilteredItems.length > 0 ? (
+                <div className="max-h-[200px] overflow-y-auto">
                   {deleteFilteredItems.map(item => (
-                    <div
-                      key={item.id}
-                      className={`cursor-pointer px-2 py-1 rounded hover:bg-default-100 ${deleteSelected === item.id ? 'bg-danger/20' : ''}`}
+                    <div 
+                      key={item.id} 
+                      className={`p-2 rounded cursor-pointer transition-all flex items-center gap-2 ${
+                        deleteSelected === item.id 
+                          ? "bg-danger-500 text-white" 
+                          : "bg-default-100 hover:bg-default-200"
+                      }`}
                       onClick={() => setDeleteSelected(item.id)}
                     >
-                      {item.name}
+                      <Icon icon="lucide:trash-2" className="w-5 h-5" />
+                      <span className="text-sm font-medium">{item.name}</span>
                     </div>
                   ))}
                 </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button variant="flat" onPress={() => { setDeleteModal(false); setDeleteSelected(null); setDeleteSearch(""); }}>Отмена</Button>
-                <Button color="danger" isDisabled={!deleteSelected} onPress={() => {
-                  if (deleteSelected) {
-                    // Удаляем выбранную позицию
-                    const itemId = deleteSelected;
-                    if (typeof deleteItem === 'function') deleteItem(itemId, department.id);
-                  }
-                  setDeleteModal(false); setDeleteSelected(null); setDeleteSearch("");
-                }}>Удалить</Button>
-              </ModalFooter>
-            </>
-          )}
+              ) : (
+                <div className="text-center text-default-500 py-4">
+                  Нет позиций для удаления
+                </div>
+              )}
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button 
+              color="danger" 
+              onPress={() => {
+                if (deleteSelected) {
+                  deleteItem(deleteSelected, department.id);
+                  setDeleteSelected(null);
+                  setDeleteModal(false);
+                }
+              }}
+              disabled={!deleteSelected}
+            >
+              Удалить
+            </Button>
+            <Button 
+              variant="bordered" 
+              onPress={() => setDeleteModal(false)}
+              className="ml-2"
+            >
+              Отмена
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </div>

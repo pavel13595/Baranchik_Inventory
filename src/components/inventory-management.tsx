@@ -190,6 +190,7 @@ export const InventoryManagement: React.FC<{ selectedCity: string }> = ({ select
                   deleteItem={deleteItem}
                   globalSearchQuery={globalSearchQuery}
                   setGlobalSearchQuery={setGlobalSearchQuery}
+                  cityLabel={cities.find(city => city.key === selectedCity)?.label || ''}
                 />
               </Tab>
             ))}
