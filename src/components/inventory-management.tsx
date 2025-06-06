@@ -6,7 +6,7 @@ import { useInventoryData } from "../hooks/use-inventory-data";
 import { exportToExcel } from "../utils/excel-export";
 import type { Item } from "../types/inventory";
 
-export const InventoryManagement: React.FC<{ selectedCity: string }> = ({ selectedCity }) => {
+export const InventoryManagement: React.FC = () => {
   const { 
     departments, 
     items, 
@@ -104,20 +104,13 @@ export const InventoryManagement: React.FC<{ selectedCity: string }> = ({ select
     checkOnlineStatus();
   };
 
-  // --- Города для заголовка ---
-  const cities = [
-    { key: "kremenchuk", label: "Той Самий Баранчик Кременчук" },
-    { key: "kharkiv", label: "Той Самий Баранчик Харьков" },
-    { key: "lviv", label: "Той Самий Баранчик Львов" }
-  ];
-
   return (
     <div className="container mx-auto px-0 sm:px-4 py-2 sm:py-8">
       <Card className="shadow-md">
         <CardHeader className="flex flex-col justify-between items-start gap-4 px-2 sm:px-6">
           <div className="flex justify-between w-full items-center">
             <h1 className="text-lg sm:text-2xl font-semibold">
-              {cities.find(city => city.key === selectedCity)?.label || ''}
+              Той Самий Баранчик Кременчук
             </h1>
             {/* Status indicator - make it clickable to check online status */}
             <Button
@@ -182,7 +175,7 @@ export const InventoryManagement: React.FC<{ selectedCity: string }> = ({ select
               <Tab key={department.id} title={department.name}>
                 <DepartmentInventory
                   department={department}
-                  items={selectedCity === 'kremenchuk' ? items.filter(item => item.category === department.id) : []}
+                  items={items.filter(item => item.category === department.id)}
                   inventoryData={inventoryData}
                   updateItemCount={updateItemCount}
                   resetDepartmentCounts={() => resetDepartmentCounts(department.id)}
@@ -190,7 +183,7 @@ export const InventoryManagement: React.FC<{ selectedCity: string }> = ({ select
                   deleteItem={deleteItem}
                   globalSearchQuery={globalSearchQuery}
                   setGlobalSearchQuery={setGlobalSearchQuery}
-                  cityLabel={cities.find(city => city.key === selectedCity)?.label || ''}
+                  cityLabel={'Той Самий Баранчик Кременчук'}
                 />
               </Tab>
             ))}

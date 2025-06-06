@@ -35,7 +35,7 @@ interface DepartmentInventoryProps {
   setGlobalSearchQuery: (query: string) => void;
 }
 
-export const DepartmentInventory: React.FC<DepartmentInventoryProps & { cityLabel: string }> = ({
+export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   department,
   items,
   inventoryData,
@@ -44,8 +44,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps & { cityLabe
   addNewItem,
   deleteItem,
   globalSearchQuery,
-  setGlobalSearchQuery,
-  cityLabel
+  setGlobalSearchQuery
 }) => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const resetModalDisclosure = useDisclosure();
@@ -212,7 +211,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps & { cityLabe
   return (
     <div className="py-4">
       <h1 className="text-lg sm:text-2xl font-semibold mb-4" data-locator="src/components/department-inventory.tsx:h1:custom">
-        {cityLabel}
+        {department.name}
       </h1>
       <div className="flex flex-row gap-2 mb-4 w-full justify-start">
         <Button color="primary" variant="flat" onPress={onOpen}>
