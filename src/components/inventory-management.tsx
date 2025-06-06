@@ -6,7 +6,7 @@ import { useInventoryData } from "../hooks/use-inventory-data";
 import { exportToExcel } from "../utils/excel-export";
 import type { Item } from "../types/inventory";
 
-export const InventoryManagement: React.FC = () => {
+export const InventoryManagement: React.FC<{ selectedCity: string }> = ({ selectedCity }) => {
   const { 
     departments, 
     items, 
@@ -175,7 +175,7 @@ export const InventoryManagement: React.FC = () => {
               <Tab key={department.id} title={department.name}>
                 <DepartmentInventory
                   department={department}
-                  items={items.filter(item => item.category === department.id)}
+                  items={selectedCity === 'kremenchuk' ? items.filter(item => item.category === department.id) : []}
                   inventoryData={inventoryData}
                   updateItemCount={updateItemCount}
                   resetDepartmentCounts={() => resetDepartmentCounts(department.id)}
