@@ -31,7 +31,7 @@ export const Dashboard: React.FC = () => {
       <Navbar isBordered maxWidth="xl" className="">
         <NavbarBrand>
           <div className="flex items-center gap-2">
-            <Icon icon="lucide:clipboard-list" className="text-primary text-xl" />
+            <Icon icon="lucide:clipboard-list" className="text-primary text-2xl sm:text-3xl" style={{ minWidth: 32, minHeight: 32 }} />
             <span className="font-bold text-inherit flex items-center gap-2" style={{ minWidth: 180 }}>
               Инвентаризация
             </span>
