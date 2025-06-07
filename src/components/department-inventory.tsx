@@ -210,9 +210,6 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
 
   return (
     <div className="py-4">
-      <h1 className="text-lg sm:text-2xl font-semibold mb-4" data-locator="src/components/department-inventory.tsx:h1:custom">
-        {department.name}
-      </h1>
       <div className="flex flex-row gap-2 mb-4 w-full justify-start">
         <Button color="primary" variant="flat" onPress={onOpen}>
           <Icon icon="lucide:plus" className="mr-1" /> Добавить
@@ -307,7 +304,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                       <Input
                         type="text"
                         variant="bordered"
-                        style={{ minWidth: '1.4em', maxWidth: '5em', width: `calc(${Math.max(1.4, String(inputValues[item.id] ?? '').length * 1.1)}em + 2px)`, textAlign: 'center', fontWeight: 600 }}
+                        style={{ minWidth: '1.4em', maxWidth: '3.2em', width: `calc(${Math.max(1.4, Math.min(3.2, String(inputValues[item.id] ?? '').length * 1.1))}em + 2px)`, textAlign: 'center', fontWeight: 600 }}
                         className="text-center font-semibold"
                         value={inputValues[item.id] ?? ""}
                         onFocus={handleInputFocus}
