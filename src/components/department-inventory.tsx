@@ -307,13 +307,13 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                       <Input
                         type="text"
                         variant="bordered"
-                        className="w-[60px] text-center font-bold"
+                        className="w-[60px] text-center font-semibold"
                         value={inputValues[item.id] ?? ""}
                         onFocus={handleInputFocus}
                         onChange={(e) => handleInputChange(item.id, e.target.value)}
                         onBlur={() => handleInputBlur(item.id)}
                         aria-label={`Количество для ${item.name}`}
-                        classNames={{ input: "text-center font-bold" }}
+                        classNames={{ input: "text-center font-semibold" }}
                       />
                       <Button 
                         isIconOnly
