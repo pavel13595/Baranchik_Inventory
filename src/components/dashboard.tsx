@@ -29,7 +29,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar isBordered maxWidth="xl" className="">
+      <Navbar isBordered maxWidth="xl" className="fixed top-0 left-0 w-full z-50 bg-background">
         <NavbarBrand>
           <div className="flex items-center gap-2">
             <Icon icon="lucide:clipboard-list" className="text-primary text-2xl sm:text-3xl" style={{ minWidth: 32, minHeight: 32 }} />
@@ -44,7 +44,7 @@ export const Dashboard: React.FC = () => {
           </NavbarItem>
         </NavbarContent>
       </Navbar>
-      <div className="flex-grow">
+      <div className="flex-grow pt-16">
         <InventoryManagement />
       </div>
       <footer className="w-full text-center text-xs text-default-400 py-2 border-t border-default-200 bg-background">
