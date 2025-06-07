@@ -259,12 +259,12 @@ const updateSummarySheet = async (
             ? inventoryData[d.id]?.[item.id] as number
             : 0;
           
-          row.push(count);
+          row.push(count.toString());
           totalCount += count;
         });
         
         // Add total count for the item
-        row.push(totalCount);
+        row.push(totalCount.toString());
         
         allRows.push(row);
       });
@@ -288,12 +288,12 @@ const updateSummarySheet = async (
       });
       
       departmentTotals.push(deptTotal);
-      totalsRow.push(deptTotal);
+      totalsRow.push(deptTotal.toString());
     });
     
     // Add grand total
     const grandTotal = departmentTotals.reduce((sum, current) => sum + current, 0);
-    totalsRow.push(grandTotal);
+    totalsRow.push(grandTotal.toString());
     
     allRows.push(totalsRow);
     

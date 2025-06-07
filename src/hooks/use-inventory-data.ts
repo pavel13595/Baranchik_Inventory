@@ -2,7 +2,6 @@ import React from "react";
 import { Department, Item, InventoryData, InventoryHistory } from "../types/inventory";
 import { initialDepartments, initialItems } from "../data/initial-data";
 import { syncWithGoogleSheets } from "../utils/google-sheets";
-import { db } from "../firebase-config";
 
 export const useInventoryData = () => {
   const [departments, setDepartments] = React.useState<Department[]>(initialDepartments);
@@ -41,10 +40,6 @@ export const useInventoryData = () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, []);
-
-  const isIOS = React.useMemo(() => {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
   }, []);
 
   React.useEffect(() => {

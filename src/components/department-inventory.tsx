@@ -22,6 +22,7 @@ import {
 import { Icon } from "@iconify/react";
 import { Department, Item, InventoryData } from "../types/inventory";
 import { parseDecimalInput } from "../utils/number-helpers";
+import { FixedSizeList as List } from "react-window";
 
 interface DepartmentInventoryProps {
   department: Department;
@@ -35,7 +36,7 @@ interface DepartmentInventoryProps {
   setGlobalSearchQuery: (query: string) => void;
 }
 
-export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
+export const DepartmentInventory = React.memo(({
   department,
   items,
   inventoryData,
@@ -45,7 +46,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   deleteItem,
   globalSearchQuery,
   setGlobalSearchQuery
-}) => {
+}: DepartmentInventoryProps) => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const resetModalDisclosure = useDisclosure();
   const [newItemName, setNewItemName] = React.useState("");
@@ -201,14 +202,16 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
     count: Number(inventoryData[item.id] ?? 0)
   }));
 
-  // Сортировка: если активна, строки с количеством 0 наверху, остальные внизу (без сортировки между ними)
-  const sortedRows = sortZeroToBottom
-    ? [...itemsWithCount].sort((a, b) => {
-        if (a.count === 0 && b.count !== 0) return -1;
-        if (a.count !== 0 && b.count === 0) return 1;
-        return 0;
-      })
-    : itemsWithCount;
+  // Мемоизация sortedRows для предотвращения лишних пересчетов
+  const sortedRows = React.useMemo(() => (
+    sortZeroToBottom
+      ? [...itemsWithCount].sort((a, b) => {
+          if (a.count === 0 && b.count !== 0) return -1;
+          if (a.count !== 0 && b.count === 0) return 1;
+          return 0;
+        })
+      : itemsWithCount
+  ), [sortZeroToBottom, itemsWithCount]);
 
   return (
     <div className="py-4">
@@ -261,87 +264,187 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
 
       {filteredItems.length > 0 ? (
         <div className="overflow-x-hidden">
-          <Table 
-            aria-label={`Inventory for ${department.name}`}
-            removeWrapper
-            className="min-h-[400px] min-w-full"
-            shadow="none"
-            isStriped
-            selectionMode="none"
-          >
-            <TableHeader>
-              <TableColumn key="number" className="w-[40px]">№</TableColumn>
-              <TableColumn key="name" className="w-full min-w-[120px]">Наименование</TableColumn>
-              <TableColumn key="quantity" className="w-[120px] text-center cursor-pointer select-none" onClick={() => setSortZeroToBottom(v => !v)}>
-                <span className="inline-flex items-center gap-1 justify-center">
-                  Количество
-                  <Icon icon="lucide:arrow-down-up" className={sortZeroToBottom ? "text-primary" : "text-default-400"} width={18} height={18} />
-                </span>
-              </TableColumn>
-            </TableHeader>
-            <TableBody>
-              {sortedRows.map(({item, count}, idx) => (
-                <TableRow key={`item-row-${item.id}`}>
-                  <TableCell className="w-[40px]">{idx + 1}</TableCell>
-                  <TableCell className="max-w-[150px] sm:max-w-none truncate">
-                    {item.name}
-                  </TableCell>
-                  <TableCell className="w-[120px] text-center align-middle">
-                    <div className="flex items-center justify-center gap-1">
-                      <Button 
-                        isIconOnly
-                        variant="bordered"
-                        color="default"
-                        className="p-0.5 rounded-full"
-                        onPress={() => {
-                          // Удаляем один товар
-                          const currentValue = Number(inputValues[item.id] ?? 0);
-                          const newValue = Math.max(0, currentValue - 1);
-                          setInputValues(prev => ({ ...prev, [item.id]: String(newValue) }));
-                          updateItemCount(department.id, item.id, newValue);
-                        }}
-                        aria-label="Уменьшить количество"
-                      >
-                        <Icon icon="lucide:minus" width={16} height={16} />
-                      </Button>
-                      <Input
-                        type={department.id === "dept-1" || department.id === "dept-3" ? "number" : "text"}
-                        inputMode={department.id === "dept-1" || department.id === "dept-3" ? "numeric" : "decimal"}
-                        pattern={department.id === "dept-1" || department.id === "dept-3" ? "[0-9]*" : "[0-9.,]*"}
-                        variant="bordered"
-                        style={{ width: '2.5em', minWidth: '2.5em', maxWidth: '2.5em', textAlign: 'center', fontWeight: 600, textAlignLast: 'center' }}
-                        className="text-center font-semibold"
-                        value={inputValues[item.id] ?? ""}
-                        onFocus={handleInputFocus}
-                        onChange={(e) => handleInputChange(item.id, e.target.value)}
-                        onBlur={() => handleInputBlur(item.id)}
-                        aria-label={`Количество для ${item.name}`}
-                        classNames={{ input: "text-center font-semibold" }}
-                        min={0}
-                        step={department.id === "dept-1" || department.id === "dept-3" ? 1 : 0.01}
-                      />
-                      <Button 
-                        isIconOnly
-                        variant="bordered"
-                        color="default"
-                        className="p-0.5 rounded-full"
-                        onPress={() => {
-                          // Увеличиваем один товар
-                          const currentValue = Number(inputValues[item.id] ?? 0);
-                          const newValue = currentValue + 1;
-                          setInputValues(prev => ({ ...prev, [item.id]: String(newValue) }));
-                          updateItemCount(department.id, item.id, newValue);
-                        }}
-                        aria-label="Увеличить количество"
-                      >
-                        <Icon icon="lucide:plus" width={16} height={16} />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          {/* Виртуализация таблицы для длинных списков */}
+          {sortedRows.length > 20 ? (
+            <Table 
+              aria-label={`Inventory for ${department.name}`}
+              removeWrapper
+              className="min-h-[400px] min-w-full"
+              shadow="none"
+              isStriped
+              selectionMode="none"
+            >
+              <TableHeader>
+                <TableColumn key="number" className="w-[40px]">№</TableColumn>
+                <TableColumn key="name" className="w-full min-w-[120px]">Наименование</TableColumn>
+                <TableColumn key="quantity" className="w-[120px] text-center cursor-pointer select-none" onClick={() => setSortZeroToBottom(v => !v)}>
+                  <span className="inline-flex items-center gap-1 justify-center">
+                    Количество
+                    <Icon icon="lucide:arrow-down-up" className={sortZeroToBottom ? "text-primary" : "text-default-400"} width={18} height={18} />
+                  </span>
+                </TableColumn>
+              </TableHeader>
+              <TableBody>
+                <List
+                  height={400}
+                  itemCount={sortedRows.length}
+                  itemSize={48}
+                  width={"100%"}
+                  itemData={{
+                    sortedRows,
+                    inputValues,
+                    handleInputFocus,
+                    handleInputChange,
+                    handleInputBlur,
+                    department,
+                    setInputValues,
+                    updateItemCount,
+                    Icon,
+                  }}
+                >
+                  {({ index, style, data }) => {
+                    const { sortedRows, inputValues, handleInputFocus, handleInputChange, handleInputBlur, department, setInputValues, updateItemCount, Icon } = data;
+                    const { item } = sortedRows[index];
+                    return (
+                      <TableRow key={`item-row-${item.id}`} style={style}>
+                        <TableCell className="w-[40px]">{index + 1}</TableCell>
+                        <TableCell className="max-w-[150px] sm:max-w-none truncate">{item.name}</TableCell>
+                        <TableCell className="w-[120px] text-center align-middle">
+                          <div className="flex items-center justify-center gap-1">
+                            <Button 
+                              isIconOnly
+                              variant="bordered"
+                              color="default"
+                              className="p-0.5 rounded-full"
+                              onPress={() => {
+                                const currentValue = Number(inputValues[item.id] ?? 0);
+                                const newValue = Math.max(0, currentValue - 1);
+                                setInputValues((prev: any) => ({ ...prev, [item.id]: String(newValue) }));
+                                updateItemCount(department.id, item.id, newValue);
+                              }}
+                              aria-label="Уменьшить количество"
+                            >
+                              <Icon icon="lucide:minus" width={16} height={16} />
+                            </Button>
+                            <Input
+                              type={department.id === "dept-1" || department.id === "dept-3" ? "number" : "text"}
+                              inputMode={department.id === "dept-1" || department.id === "dept-3" ? "numeric" : "decimal"}
+                              pattern={department.id === "dept-1" || department.id === "dept-3" ? "[0-9]*" : "[0-9.,]*"}
+                              variant="bordered"
+                              style={{ width: '2.5em', minWidth: '2.5em', maxWidth: '2.5em', textAlign: 'center', fontWeight: 600, textAlignLast: 'center' }}
+                              className="text-center font-semibold"
+                              value={inputValues[item.id] ?? ""}
+                              onFocus={handleInputFocus}
+                              onChange={(e) => handleInputChange(item.id, e.target.value)}
+                              onBlur={() => handleInputBlur(item.id)}
+                              aria-label={`Количество для ${item.name}`}
+                              classNames={{ input: "text-center font-semibold" }}
+                              min={0}
+                              step={department.id === "dept-1" || department.id === "dept-3" ? 1 : 0.01}
+                            />
+                            <Button 
+                              isIconOnly
+                              variant="bordered"
+                              color="default"
+                              className="p-0.5 rounded-full"
+                              onPress={() => {
+                                const currentValue = Number(inputValues[item.id] ?? 0);
+                                const newValue = currentValue + 1;
+                                setInputValues((prev: any) => ({ ...prev, [item.id]: String(newValue) }));
+                                updateItemCount(department.id, item.id, newValue);
+                              }}
+                              aria-label="Увеличить количество"
+                            >
+                              <Icon icon="lucide:plus" width={16} height={16} />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  }}
+                </List>
+              </TableBody>
+            </Table>
+          ) : (
+            // Обычный рендер для коротких списков
+            <Table 
+              aria-label={`Inventory for ${department.name}`}
+              removeWrapper
+              className="min-h-[400px] min-w-full"
+              shadow="none"
+              isStriped
+              selectionMode="none"
+            >
+              <TableHeader>
+                <TableColumn key="number" className="w-[40px]">№</TableColumn>
+                <TableColumn key="name" className="w-full min-w-[120px]">Наименование</TableColumn>
+                <TableColumn key="quantity" className="w-[120px] text-center cursor-pointer select-none" onClick={() => setSortZeroToBottom(v => !v)}>
+                  <span className="inline-flex items-center gap-1 justify-center">
+                    Количество
+                    <Icon icon="lucide:arrow-down-up" className={sortZeroToBottom ? "text-primary" : "text-default-400"} width={18} height={18} />
+                  </span>
+                </TableColumn>
+              </TableHeader>
+              <TableBody>
+                {sortedRows.map(({item, count}, idx) => (
+                  <TableRow key={`item-row-${item.id}`}>
+                    <TableCell className="w-[40px]">{idx + 1}</TableCell>
+                    <TableCell className="max-w-[150px] sm:max-w-none truncate">{item.name}</TableCell>
+                    <TableCell className="w-[120px] text-center align-middle">
+                      <div className="flex items-center justify-center gap-1">
+                        <Button 
+                          isIconOnly
+                          variant="bordered"
+                          color="default"
+                          className="p-0.5 rounded-full"
+                          onPress={() => {
+                            const currentValue = Number(inputValues[item.id] ?? 0);
+                            const newValue = Math.max(0, currentValue - 1);
+                            setInputValues(prev => ({ ...prev, [item.id]: String(newValue) }));
+                            updateItemCount(department.id, item.id, newValue);
+                          }}
+                          aria-label="Уменьшить количество"
+                        >
+                          <Icon icon="lucide:minus" width={16} height={16} />
+                        </Button>
+                        <Input
+                          type={department.id === "dept-1" || department.id === "dept-3" ? "number" : "text"}
+                          inputMode={department.id === "dept-1" || department.id === "dept-3" ? "numeric" : "decimal"}
+                          pattern={department.id === "dept-1" || department.id === "dept-3" ? "[0-9]*" : "[0-9.,]*"}
+                          variant="bordered"
+                          style={{ width: '2.5em', minWidth: '2.5em', maxWidth: '2.5em', textAlign: 'center', fontWeight: 600, textAlignLast: 'center' }}
+                          className="text-center font-semibold"
+                          value={inputValues[item.id] ?? ""}
+                          onFocus={handleInputFocus}
+                          onChange={(e) => handleInputChange(item.id, e.target.value)}
+                          onBlur={() => handleInputBlur(item.id)}
+                          aria-label={`Количество для ${item.name}`}
+                          classNames={{ input: "text-center font-semibold" }}
+                          min={0}
+                          step={department.id === "dept-1" || department.id === "dept-3" ? 1 : 0.01}
+                        />
+                        <Button 
+                          isIconOnly
+                          variant="bordered"
+                          color="default"
+                          className="p-0.5 rounded-full"
+                          onPress={() => {
+                            const currentValue = Number(inputValues[item.id] ?? 0);
+                            const newValue = currentValue + 1;
+                            setInputValues(prev => ({ ...prev, [item.id]: String(newValue) }));
+                            updateItemCount(department.id, item.id, newValue);
+                          }}
+                          aria-label="Увеличить количество"
+                        >
+                          <Icon icon="lucide:plus" width={16} height={16} />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </div>
       ) : (
         <div className="text-center text-default-500 py-4">
@@ -507,4 +610,6 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
       </Modal>
     </div>
   );
-};
+});
+
+DepartmentInventory.displayName = "DepartmentInventory";
