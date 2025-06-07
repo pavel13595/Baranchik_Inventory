@@ -354,6 +354,8 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         aria-label="Добавить новый товар"
+        className="flex items-center justify-center min-h-screen"
+        placement="center"
       >
         <ModalContent>
           <ModalHeader>
@@ -396,6 +398,8 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
         isOpen={resetModalDisclosure.isOpen}
         onOpenChange={resetModalDisclosure.onOpen}
         aria-label="Подтверждение сброса"
+        className="flex items-center justify-center min-h-screen"
+        placement="center"
       >
         <ModalContent>
           <ModalHeader>
@@ -432,6 +436,8 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
         isOpen={deleteModal}
         onOpenChange={setDeleteModal}
         aria-label="Удалить товар"
+        className="flex items-center justify-center min-h-screen"
+        placement="center"
       >
         <ModalContent>
           <ModalHeader>
