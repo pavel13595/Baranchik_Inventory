@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import { Card, CardBody, CardHeader, CardFooter, Button, Tabs, Tab, Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Input, Badge, Switch, Select, SelectItem, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { DepartmentInventory } from "./department-inventory";
@@ -9,7 +9,7 @@ import type { Item } from "../types/inventory";
 import { useTheme } from "../contexts/theme-context";
 import { BurgerMenu } from "./burger-menu";
 
-export const InventoryManagement: React.FC = () => {
+export const InventoryManagement = forwardRef((props, ref) => {
   const { 
     departments, 
     inventoryData, 
@@ -111,6 +111,13 @@ export const InventoryManagement: React.FC = () => {
   const addModalRef = React.useRef<{ open: () => void }>(null);
   const deleteModalRef = React.useRef<{ open: () => void }>(null);
   const resetModalRef = React.useRef<{ open: () => void }>(null);
+
+  useImperativeHandle(ref, () => ({
+    handleExportToExcel,
+    openAddModal: () => addModalRef.current?.open(),
+    openDeleteModal: () => deleteModalRef.current?.open(),
+    openResetModal: () => resetModalRef.current?.open()
+  }));
 
   return (
     <div className="container mx-auto px-0 sm:px-4 py-2 sm:py-8">
@@ -222,4 +229,6 @@ export const InventoryManagement: React.FC = () => {
       )}
     </div>
   );
-};
+});
+
+InventoryManagement.displayName = "InventoryManagement";
