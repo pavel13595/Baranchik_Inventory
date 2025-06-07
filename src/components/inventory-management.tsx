@@ -127,17 +127,7 @@ export const InventoryManagement = forwardRef((props, ref) => {
             Той Самий Баранчик Кременчук
           </h1>
           <div className="flex w-full items-center gap-2 justify-between">
-            {/* Бургер-меню только на мобильных */}
-            <div className="block sm:hidden ml-auto">
-              <BurgerMenu
-                onDownload={() => handleExportToExcel(false)}
-                onSend={() => handleExportToExcel(true)}
-                onAdd={() => addModalRef.current?.open()}
-                onDelete={() => deleteModalRef.current?.open()}
-                onReset={() => resetModalRef.current?.open()}
-              />
-            </div>
-            {/* Старые кнопки только на десктопе */}
+            {/* Удалён бургер-меню из CardHeader */}
             <div className="hidden sm:flex flex-wrap gap-2 w-full justify-center">
               <Button 
                 color="primary" 
