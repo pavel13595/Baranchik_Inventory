@@ -302,9 +302,9 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                         <Icon icon="lucide:minus" width={16} height={16} />
                       </Button>
                       <Input
-                        type="number"
-                        inputMode="decimal"
-                        pattern="[0-9.,]*"
+                        type={department.id === "dept-1" || department.id === "dept-3" ? "number" : "text"}
+                        inputMode={department.id === "dept-1" || department.id === "dept-3" ? "numeric" : "decimal"}
+                        pattern={department.id === "dept-1" || department.id === "dept-3" ? "[0-9]*" : "[0-9.,]*"}
                         variant="bordered"
                         style={{ width: '2.5em', minWidth: '2.5em', maxWidth: '2.5em', textAlign: 'center', fontWeight: 600, textAlignLast: 'center' }}
                         className="text-center font-semibold"
