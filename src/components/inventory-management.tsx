@@ -116,6 +116,7 @@ export const InventoryManagement: React.FC = () => {
           <div className="flex justify-between w-full items-center gap-2">
             <div className="flex items-center gap-2">
             </div>
+            {/* Кнопка проверки подключения удалена */}
           </div>
           <div className="flex flex-col w-full gap-2">
             <div className="flex flex-wrap gap-2 w-full justify-center">
@@ -128,7 +129,7 @@ export const InventoryManagement: React.FC = () => {
                 size="sm"
                 variant="flat"
               >
-                Скачать
+                Завантажити
               </Button>
               <Button 
                 color="secondary" 
@@ -139,7 +140,7 @@ export const InventoryManagement: React.FC = () => {
                 size="sm"
                 variant="flat"
               >
-                Отправить
+                Відправити
               </Button>
             </div>
           </div>

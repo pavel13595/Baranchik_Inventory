@@ -216,20 +216,20 @@ export const DepartmentInventory = React.memo(({
     <div className="py-4">
       <div className="flex flex-row gap-2 mb-4 w-full justify-start">
         <Button color="primary" variant="flat" onPress={onOpen}>
-          <Icon icon="lucide:plus" className="mr-1" /> Добавить
+          <Icon icon="lucide:plus" className="mr-1" /> Додати
         </Button>
         <Button color="danger" variant="flat" onPress={() => setDeleteModal(true)}>
-          <Icon icon="lucide:trash" className="mr-1" /> Удалить
+          <Icon icon="lucide:trash" className="mr-1" /> Видалити
         </Button>
         <Button color="warning" variant="flat" onPress={resetModalDisclosure.onOpen}>
-          <Icon icon="lucide:refresh-cw" className="mr-1" /> Сбросить
+          <Icon icon="lucide:refresh-cw" className="mr-1" /> Скинути
         </Button>
       </div>
       <div className="w-full">
         <Autocomplete
           defaultItems={autocompleteItems}
-          label="Поиск позиций"
-          placeholder="Введите название позиции"
+          label="Пошук позицій"
+          placeholder="Введіть назву позиції"
           className="w-full"
           inputValue={searchQuery}
           onInputChange={setSearchQuery}
@@ -241,7 +241,7 @@ export const DepartmentInventory = React.memo(({
             }
           }}
           clearButtonProps={{
-            "aria-label": "Очистить поиск",
+            "aria-label": "Очистити пошук",
             onPress: () => {
               setSearchQuery("");
               setSelectedItem(null);
@@ -273,10 +273,10 @@ export const DepartmentInventory = React.memo(({
           >
             <TableHeader>
               <TableColumn key="number" className="w-[40px]">№</TableColumn>
-              <TableColumn key="name" className="w-full min-w-[120px]">Наименование</TableColumn>
+              <TableColumn key="name" className="w-full min-w-[120px]">Найменування</TableColumn>
               <TableColumn key="quantity" className="w-[120px] text-center cursor-pointer select-none" onClick={() => setSortZeroToBottom(v => !v)}>
                 <span className="inline-flex items-center gap-1 justify-center">
-                  Количество
+                  Кількість
                   <Icon icon="lucide:arrow-down-up" className={sortZeroToBottom ? "text-primary" : "text-default-400"} width={18} height={18} />
                 </span>
               </TableColumn>
@@ -343,15 +343,15 @@ export const DepartmentInventory = React.memo(({
         </div>
       ) : (
         <div className="text-center text-default-500 py-4">
-          Нет позиций для отображения
+          Немає позицій для відображення
         </div>
       )}
 
-      {/* Модальное окно добавления нового товара */}
+      {/* Модальне вікно додавання нового товару */}
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        aria-label="Добавить новый товар"
+        aria-label="Додати новий товар"
         placement="bottom"
         className=""
         style={{}}
@@ -360,16 +360,16 @@ export const DepartmentInventory = React.memo(({
           <ModalHeader>
             <div className="flex items-center">
               <Icon icon="lucide:plus" className="mr-2" />
-              <h2 className="text-lg font-semibold">Добавить новый товар</h2>
+              <h2 className="text-lg font-semibold">Додати новий товар</h2>
             </div>
           </ModalHeader>
           <ModalBody>
             <div className="flex flex-col gap-4">
               <Input
-                placeholder="Название товара"
+                placeholder="Назва товару"
                 value={newItemName}
                 onChange={(e) => setNewItemName(e.target.value)}
-                aria-label="Название нового товара"
+                aria-label="Назва нового товару"
               />
             </div>
           </ModalBody>
@@ -379,24 +379,24 @@ export const DepartmentInventory = React.memo(({
               onPress={handleAddItem}
               disabled={!newItemName.trim()}
             >
-              Добавить
+              Додати
             </Button>
             <Button 
               variant="bordered" 
               onPress={onClose}
               className="ml-2"
             >
-              Отмена
+              Відміна
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
 
-      {/* Модальное окно подтверждения сброса */}
+      {/* Модальне вікно підтвердження скидання */}
       <Modal
         isOpen={resetModalDisclosure.isOpen}
         onOpenChange={resetModalDisclosure.onOpen}
-        aria-label="Подтверждение сброса"
+        aria-label="Підтвердження скидання"
         placement="bottom"
         className=""
         style={{}}
@@ -405,12 +405,12 @@ export const DepartmentInventory = React.memo(({
           <ModalHeader>
             <div className="flex items-center">
               <Icon icon="lucide:refresh-cw" className="mr-2" />
-              <h2 className="text-lg font-semibold">Сбросить количество товаров?</h2>
+              <h2 className="text-lg font-semibold">Скинути кількість товарів?</h2>
             </div>
           </ModalHeader>
           <ModalBody>
             <p className="text-default-600">
-              Вы уверены, что хотите сбросить количество всех товаров в этом отделе до 0? Это действие нельзя будет отменить.
+              Ви впевнені, що хочете скинути кількість усіх товарів у цьому відділі до 0? Це дію не можна буде скасувати.
             </p>
           </ModalBody>
           <ModalFooter>
@@ -418,24 +418,24 @@ export const DepartmentInventory = React.memo(({
               color="danger" 
               onPress={handleResetConfirm}
             >
-              Сбросить
+              Скинути
             </Button>
             <Button 
               variant="bordered" 
               onPress={resetModalDisclosure.onClose}
               className="ml-2"
             >
-              Отмена
+              Відміна
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
 
-      {/* Модальное окно удаления товара */}
+      {/* Модальне вікно видалення товару */}
       <Modal
         isOpen={deleteModal}
         onOpenChange={setDeleteModal}
-        aria-label="Удалить товар"
+        aria-label="Видалити товар"
         placement="bottom"
         className=""
         style={{}}
@@ -444,16 +444,16 @@ export const DepartmentInventory = React.memo(({
           <ModalHeader>
             <div className="flex items-center">
               <Icon icon="lucide:trash" className="mr-2" />
-              <h2 className="text-lg font-semibold">Удалить товар</h2>
+              <h2 className="text-lg font-semibold">Видалити товар</h2>
             </div>
           </ModalHeader>
           <ModalBody>
             <div className="flex flex-col gap-4">
               <Input
-                placeholder="Поиск товара для удаления"
+                placeholder="Пошук товару для видалення"
                 value={deleteSearch}
                 onChange={(e) => setDeleteSearch(e.target.value)}
-                aria-label="Поиск товара для удаления"
+                aria-label="Пошук товару для видалення"
               />
               {deleteFilteredItems.length > 0 ? (
                 <div className="max-h-[200px] overflow-y-auto">
@@ -474,7 +474,7 @@ export const DepartmentInventory = React.memo(({
                 </div>
               ) : (
                 <div className="text-center text-default-500 py-4">
-                  Нет позиций для удаления
+                  Немає позицій для видалення
                 </div>
               )}
             </div>
@@ -491,14 +491,14 @@ export const DepartmentInventory = React.memo(({
               }}
               disabled={!deleteSelected}
             >
-              Удалить
+              Видалити
             </Button>
             <Button 
               variant="bordered" 
               onPress={() => setDeleteModal(false)}
               className="ml-2"
             >
-              Отмена
+              Відміна
             </Button>
           </ModalFooter>
         </ModalContent>
