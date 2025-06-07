@@ -110,28 +110,12 @@ export const InventoryManagement: React.FC = () => {
     <div className="container mx-auto px-0 sm:px-4 py-2 sm:py-8">
       <Card className="shadow-md">
         <CardHeader className="flex flex-col justify-between items-start gap-4 px-2 sm:px-6">
-          <h1 className="text-2xl sm:text-4xl font-bold text-center mb-2 mt-1" data-locator="src/components/inventory-management.tsx:h1:112:12">
+          <h1 className="text-2xl sm:text-4xl font-bold text-center mb-4 w-full" data-locator="src/components/inventory-management.tsx:h1:112:12">
             Той Самий Баранчик Кременчук
           </h1>
           <div className="flex justify-between w-full items-center gap-2">
             <div className="flex items-center gap-2">
             </div>
-            {/* Status indicator - make it clickable to check online status */}
-            <Button
-              isIconOnly
-              size="sm"
-              variant="light"
-              className="min-w-0 w-8 h-8 p-0"
-              onPress={handleStatusClick}
-              aria-label="Проверить подключение"
-            >
-              <div className={`w-3 h-3 rounded-full ${
-                syncStatus === 'syncing' ? 'bg-primary animate-pulse' : 
-                syncStatus === 'success' ? 'bg-success' : 
-                syncStatus === 'error' ? 'bg-danger' : 
-                isOnline ? 'bg-success' : 'bg-danger'
-              }`} />
-            </Button>
           </div>
           <div className="flex flex-col w-full gap-2">
             <div className="flex flex-wrap gap-2 w-full justify-center">
