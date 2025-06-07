@@ -29,7 +29,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar isBordered maxWidth="xl" className={isMobile ? 'hidden' : ''}>
+      <Navbar isBordered maxWidth="xl" className="">
         <NavbarBrand>
           <div className="flex items-center gap-2">
             <Icon icon="lucide:clipboard-list" className="text-primary text-2xl sm:text-3xl" style={{ minWidth: 32, minHeight: 32 }} />
