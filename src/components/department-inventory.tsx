@@ -159,16 +159,6 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   // ОБНОВЛЕНИЕ inputValues при вводе
   const handleInputChange = (itemId: string, value: string) => {
     setInputValues(prev => ({ ...prev, [itemId]: value }));
-    // Сохраняем значение сразу при вводе (для мгновенного обновления)
-    let numericValue: number;
-    if (department.id === "dept-1" || department.id === "dept-3") {
-      numericValue = parseInt(value.replace(/[^\d]/g, "")) || 0;
-    } else {
-      const normalizedValue = value.replace(",", ".");
-      numericValue = parseFloat(normalizedValue) || 0;
-      numericValue = Number(numericValue.toFixed(2));
-    }
-    updateItemCount(department.id, itemId, numericValue);
   };
 
   // ОБНОВЛЕНИЕ inventoryData только при блюре или валидном числе
