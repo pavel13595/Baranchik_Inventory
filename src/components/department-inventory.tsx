@@ -356,6 +356,8 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
         aria-label="Добавить новый товар"
         className="flex items-center justify-center min-h-screen"
         placement="center"
+        size="md"
+        style={{ maxWidth: 380, width: '90%' }}
       >
         <ModalContent>
           <ModalHeader>
@@ -400,6 +402,8 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
         aria-label="Подтверждение сброса"
         className="flex items-center justify-center min-h-screen"
         placement="center"
+        size="md"
+        style={{ maxWidth: 380, width: '90%' }}
       >
         <ModalContent>
           <ModalHeader>
@@ -438,6 +442,8 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
         aria-label="Удалить товар"
         className="flex items-center justify-center min-h-screen"
         placement="center"
+        size="md"
+        style={{ maxWidth: 380, width: '90%' }}
       >
         <ModalContent>
           <ModalHeader>
