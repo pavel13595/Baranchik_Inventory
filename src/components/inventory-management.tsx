@@ -130,37 +130,38 @@ export const InventoryManagement: React.FC = () => {
               }`} />
             </Button>
           </div>
-          <div className="flex flex-wrap gap-2 w-full">
-            <Button 
-              color="primary" 
-              startContent={<Icon icon="lucide:file-spreadsheet" />} 
-              onPress={() => handleExportToExcel(false)}
-              fullWidth={true}
-              className="sm:w-auto"
-              size="sm"
-              variant="flat"
-            >
-              Скачать
-            </Button>
-            
-            <Button 
-              color="secondary" 
-              startContent={<Icon icon="logos:telegram" />} 
-              onPress={() => handleExportToExcel(true)}
-              fullWidth={true}
-              className="sm:w-auto"
-              size="sm"
-              variant="flat"
-            >
-              Отправить
-            </Button>
+          <div className="flex flex-col w-full gap-2">
+            <h1 className="text-2xl sm:text-4xl font-bold text-center" data-locator="src/components/inventory-management.tsx:h1:112:12">
+              Той Самий Баранчик Кременчук
+            </h1>
+            <div className="flex flex-wrap gap-2 w-full justify-center">
+              <Button 
+                color="primary" 
+                startContent={<Icon icon="lucide:file-spreadsheet" />} 
+                onPress={() => handleExportToExcel(false)}
+                fullWidth={true}
+                className="sm:w-auto"
+                size="sm"
+                variant="flat"
+              >
+                Скачать
+              </Button>
+              <Button 
+                color="secondary" 
+                startContent={<Icon icon="logos:telegram" />} 
+                onPress={() => handleExportToExcel(true)}
+                fullWidth={true}
+                className="sm:w-auto"
+                size="sm"
+                variant="flat"
+              >
+                Отправить
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <Divider />
         <CardBody className="px-1 sm:px-6">
-          <h1 className="text-2xl sm:text-4xl font-bold" data-locator="src/components/inventory-management.tsx:h1:112:12">
-            Той Самий Баранчик Кременчук
-          </h1>
           <Tabs 
             aria-label="Departments" 
             className="w-full"
