@@ -108,6 +108,9 @@ export const InventoryManagement: React.FC = () => {
 
   return (
     <div className="container mx-auto px-0 sm:px-4 py-2 sm:py-8">
+      <h1 className="text-2xl sm:text-4xl font-bold text-center mb-4" data-locator="src/components/inventory-management.tsx:h1:112:12">
+        Той Самий Баранчик Кременчук
+      </h1>
       <Card className="shadow-md">
         <CardHeader className="flex flex-col justify-between items-start gap-4 px-2 sm:px-6">
           <div className="flex justify-between w-full items-center gap-2">
@@ -131,9 +134,6 @@ export const InventoryManagement: React.FC = () => {
             </Button>
           </div>
           <div className="flex flex-col w-full gap-2">
-            <h1 className="text-2xl sm:text-4xl font-bold text-center" data-locator="src/components/inventory-management.tsx:h1:112:12">
-              Той Самий Баранчик Кременчук
-            </h1>
             <div className="flex flex-wrap gap-2 w-full justify-center">
               <Button 
                 color="primary" 
