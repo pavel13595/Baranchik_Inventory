@@ -4,12 +4,12 @@ import { Icon } from "@iconify/react";
 import { DepartmentInventory } from "./department-inventory";
 import { useInventoryData } from "../hooks/use-inventory-data";
 import { exportToExcel } from "../utils/excel-export";
+import { initialItemsByCity } from "../data/initial-data";
 import type { Item } from "../types/inventory";
 
 export const InventoryManagement: React.FC = () => {
   const { 
     departments, 
-    items, 
     inventoryData, 
     updateItemCount, 
     resetDepartmentCounts,
@@ -41,10 +41,10 @@ export const InventoryManagement: React.FC = () => {
   const itemsByCategory = React.useMemo(() => {
     const grouped: {[key: string]: Item[]} = {};
     departments.forEach(dept => {
-      grouped[dept.id] = items.filter(item => item.category === dept.id);
+      grouped[dept.id] = initialItemsByCity[selectedCity].filter(item => item.category === dept.id);
     });
     return grouped;
-  }, [departments, items]);
+  }, [departments, selectedCity]);
 
   // Check if device supports sharing files - fix the error with navigator.canShare
   React.useEffect(() => {
@@ -80,7 +80,7 @@ export const InventoryManagement: React.FC = () => {
       if (selectedDepartment) {
         exportToExcel(
           [selectedDepartment],
-          items,
+          initialItemsByCity[selectedCity],
           inventoryData[selectedCity] || {},
           sendToTelegram
         );
@@ -195,7 +195,7 @@ export const InventoryManagement: React.FC = () => {
               <Tab key={department.id} title={department.name}>
                 <DepartmentInventory
                   department={department}
-                  items={items.filter(item => item.category === department.id)}
+                  items={initialItemsByCity[selectedCity].filter(item => item.category === department.id)}
                   inventoryData={inventoryData[selectedCity]?.[department.id] || {}}
                   updateItemCount={(deptId, itemId, count) => updateItemCount(selectedCity, deptId, itemId, count)}
                   resetDepartmentCounts={() => resetDepartmentCounts(selectedCity, department.id)}
