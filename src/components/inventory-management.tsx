@@ -6,6 +6,7 @@ import { useInventoryData } from "../hooks/use-inventory-data";
 import { exportToExcel } from "../utils/excel-export";
 import { initialItemsByCity } from "../data/initial-data";
 import type { Item } from "../types/inventory";
+import { useTheme } from "../contexts/theme-context";
 
 export const InventoryManagement: React.FC = () => {
   const { 
@@ -21,6 +22,8 @@ export const InventoryManagement: React.FC = () => {
     checkOnlineStatus
   } = useInventoryData();
   
+  const { theme } = useTheme();
+
   const [globalSearchQuery, setGlobalSearchQuery] = React.useState("");
   const [selectedTabKey, setSelectedTabKey] = React.useState<string | null>(null);
   const [supportsSharing, setSupportsSharing] = React.useState<boolean>(false);
@@ -122,13 +125,16 @@ export const InventoryManagement: React.FC = () => {
           <div className="flex justify-between w-full items-center gap-2">
             <div className="flex items-center gap-2">
               <select
-                className="bg-transparent font-semibold text-lg sm:text-2xl outline-none border-none cursor-pointer"
+                className={
+                  `bg-transparent font-semibold text-lg sm:text-2xl outline-none border-none cursor-pointer transition-colors duration-200 ` +
+                  (theme === 'dark' ? 'text-white bg-neutral-800' : 'text-black bg-transparent')
+                }
                 value={selectedCity}
                 onChange={e => setSelectedCity(e.target.value)}
                 style={{ minWidth: 180 }}
               >
                 {cities.map(city => (
-                  <option key={city.key} value={city.key}>{city.label}</option>
+                  <option key={city.key} value={city.key} className={theme === 'dark' ? 'bg-neutral-800 text-white' : ''}>{city.label}</option>
                 ))}
               </select>
             </div>
