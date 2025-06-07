@@ -112,15 +112,14 @@ export const useInventoryData = () => {
     }
   }, [isOnline, departments, items, inventoryData, history]);
 
-  const updateItemCount = (cityKey: string, departmentId: string, itemId: string, count: number) => {
+  const updateItemCount = (departmentId: string, itemId: string, count: number) => {
     setInventoryData(prev => {
       const newData = { ...prev };
-      if (!newData[cityKey]) newData[cityKey] = {};
-      if (!newData[cityKey][departmentId]) newData[cityKey][departmentId] = {};
-      const oldValue = newData[cityKey][departmentId][itemId] || 0;
+      if (!newData[departmentId]) newData[departmentId] = {};
+      const oldValue = newData[departmentId][itemId] || 0;
       if (oldValue !== count) {
-        newData[cityKey][departmentId][itemId] = count;
-        newData[cityKey][departmentId][`${itemId}_timestamp`] = Date.now();
+        (newData[departmentId] as any)[itemId] = count;
+        (newData[departmentId] as any)[`${itemId}_timestamp`] = Date.now();
         const itemObj = items.find(i => i.id === itemId);
         const deptObj = departments.find(d => d.id === departmentId);
         if (itemObj && deptObj) {
@@ -143,16 +142,15 @@ export const useInventoryData = () => {
     });
   };
 
-  const resetDepartmentCounts = (cityKey: string, departmentId: string) => {
+  const resetDepartmentCounts = (departmentId: string) => {
     setInventoryData(prev => {
       const newData = { ...prev };
-      if (!newData[cityKey]) newData[cityKey] = {};
-      newData[cityKey][departmentId] = {};
+      newData[departmentId] = {};
       return newData;
     });
   };
 
-  const addNewItem = (cityKey: string, name: string, categoryId: string) => {
+  const addNewItem = (name: string, categoryId: string) => {
     const newItem: Item = {
       id: `item-${Date.now()}`,
       name,
@@ -161,21 +159,12 @@ export const useInventoryData = () => {
     setItems(prev => [...prev, newItem]);
   };
 
-  const addNewDepartment = (name: string) => {
-    const newDepartment: Department = {
-      id: `dept-${Date.now()}`,
-      name
-    };
-
-    setDepartments(prev => [...prev, newDepartment]);
-  };
-
-  const deleteItem = (cityKey: string, itemId: string, departmentId: string) => {
+  const deleteItem = (itemId: string, departmentId: string) => {
     setItems(prev => prev.filter(item => item.id !== itemId));
     setInventoryData(prev => {
       const newData = { ...prev };
-      if (newData[cityKey] && newData[cityKey][departmentId]) {
-        delete newData[cityKey][departmentId][itemId];
+      if (newData[departmentId]) {
+        delete (newData[departmentId] as any)[itemId];
       }
       return newData;
     });
@@ -188,7 +177,6 @@ export const useInventoryData = () => {
     updateItemCount,
     resetDepartmentCounts,
     addNewItem,
-    addNewDepartment,
     deleteItem,
     history,
     isOnline,

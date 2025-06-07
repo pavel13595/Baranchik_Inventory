@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import { DepartmentInventory } from "./department-inventory";
 import { useInventoryData } from "../hooks/use-inventory-data";
 import { exportToExcel } from "../utils/excel-export";
-import { initialItemsByCity } from "../data/initial-data";
+import { initialDepartments, initialItems } from "../data/initial-data";
 import type { Item } from "../types/inventory";
 import { useTheme } from "../contexts/theme-context";
 
@@ -28,26 +28,14 @@ export const InventoryManagement: React.FC = () => {
   const [selectedTabKey, setSelectedTabKey] = React.useState<string | null>(null);
   const [supportsSharing, setSupportsSharing] = React.useState<boolean>(false);
   const [showScrollTop, setShowScrollTop] = React.useState(false);
-  const [selectedCity, setSelectedCity] = React.useState('kremenchuk');
-  const cities = [
-    { key: 'kremenchuk', label: 'Той Самий Баранчик Кременчук' },
-    { key: 'kharkiv', label: 'Той Самий Баранчик Харків' },
-    { key: 'lviv', label: 'Той Самий Баранчик Львів' }
-  ];
 
   // Set default tab without user role check
   React.useEffect(() => {
     setSelectedTabKey(departments[0]?.id || null);
   }, [departments]);
 
-  // Group items by category
-  const itemsByCategory = React.useMemo(() => {
-    const grouped: {[key: string]: Item[]} = {};
-    departments.forEach(dept => {
-      grouped[dept.id] = initialItemsByCity[selectedCity].filter(item => item.category === dept.id);
-    });
-    return grouped;
-  }, [departments, selectedCity]);
+  // Используем только один список товаров (Кременчуг)
+  const items = initialItems;
 
   // Check if device supports sharing files - fix the error with navigator.canShare
   React.useEffect(() => {
@@ -83,8 +71,8 @@ export const InventoryManagement: React.FC = () => {
       if (selectedDepartment) {
         exportToExcel(
           [selectedDepartment],
-          initialItemsByCity[selectedCity],
-          inventoryData[selectedCity] || {},
+          items,
+          { [selectedDepartment.id]: inventoryData[selectedDepartment.id] || {} },
           sendToTelegram
         );
       }
@@ -124,19 +112,6 @@ export const InventoryManagement: React.FC = () => {
         <CardHeader className="flex flex-col justify-between items-start gap-4 px-2 sm:px-6">
           <div className="flex justify-between w-full items-center gap-2">
             <div className="flex items-center gap-2">
-              <select
-                className={
-                  `bg-transparent font-semibold text-lg sm:text-2xl outline-none border-none cursor-pointer transition-colors duration-200 ` +
-                  (theme === 'dark' ? 'text-white bg-neutral-800' : 'text-black bg-transparent')
-                }
-                value={selectedCity}
-                onChange={e => setSelectedCity(e.target.value)}
-                style={{ minWidth: 180 }}
-              >
-                {cities.map(city => (
-                  <option key={city.key} value={city.key} className={theme === 'dark' ? 'bg-neutral-800 text-white' : ''}>{city.label}</option>
-                ))}
-              </select>
             </div>
             {/* Status indicator - make it clickable to check online status */}
             <Button
@@ -201,12 +176,12 @@ export const InventoryManagement: React.FC = () => {
               <Tab key={department.id} title={department.name}>
                 <DepartmentInventory
                   department={department}
-                  items={initialItemsByCity[selectedCity].filter(item => item.category === department.id)}
-                  inventoryData={inventoryData[selectedCity]?.[department.id] || {}}
-                  updateItemCount={(deptId, itemId, count) => updateItemCount(selectedCity, deptId, itemId, count)}
-                  resetDepartmentCounts={() => resetDepartmentCounts(selectedCity, department.id)}
-                  addNewItem={(name) => addNewItem(selectedCity, name, department.id)}
-                  deleteItem={(itemId, deptId) => deleteItem(selectedCity, itemId, deptId)}
+                  items={items.filter(item => item.category === department.id)}
+                  inventoryData={inventoryData[department.id] || {}}
+                  updateItemCount={updateItemCount}
+                  resetDepartmentCounts={() => resetDepartmentCounts(department.id)}
+                  addNewItem={(name) => addNewItem(name, department.id)}
+                  deleteItem={deleteItem}
                   globalSearchQuery={globalSearchQuery}
                   setGlobalSearchQuery={setGlobalSearchQuery}
                 />
