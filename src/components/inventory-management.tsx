@@ -25,6 +25,12 @@ export const InventoryManagement: React.FC = () => {
   const [selectedTabKey, setSelectedTabKey] = React.useState<string | null>(null);
   const [supportsSharing, setSupportsSharing] = React.useState<boolean>(false);
   const [showScrollTop, setShowScrollTop] = React.useState(false);
+  const [selectedCity, setSelectedCity] = React.useState('kremenchuk');
+  const cities = [
+    { key: 'kremenchuk', label: 'Той Самий Баранчик Кременчук' },
+    { key: 'kharkiv', label: 'Той Самий Баранчик Харків' },
+    { key: 'lviv', label: 'Той Самий Баранчик Львів' }
+  ];
 
   // Set default tab without user role check
   React.useEffect(() => {
@@ -72,7 +78,12 @@ export const InventoryManagement: React.FC = () => {
     if (selectedTabKey) {
       const selectedDepartment = departments.find(dept => dept.id === selectedTabKey);
       if (selectedDepartment) {
-        exportToExcel([selectedDepartment], items, inventoryData, sendToTelegram);
+        exportToExcel(
+          [selectedDepartment],
+          items,
+          inventoryData[selectedCity] || {},
+          sendToTelegram
+        );
       }
     }
   };
@@ -108,10 +119,19 @@ export const InventoryManagement: React.FC = () => {
     <div className="container mx-auto px-0 sm:px-4 py-2 sm:py-8">
       <Card className="shadow-md">
         <CardHeader className="flex flex-col justify-between items-start gap-4 px-2 sm:px-6">
-          <div className="flex justify-between w-full items-center">
-            <h1 className="text-lg sm:text-2xl font-semibold">
-              Той Самий Баранчик Кременчук
-            </h1>
+          <div className="flex justify-between w-full items-center gap-2">
+            <div className="flex items-center gap-2">
+              <select
+                className="bg-transparent font-semibold text-lg sm:text-2xl outline-none border-none cursor-pointer"
+                value={selectedCity}
+                onChange={e => setSelectedCity(e.target.value)}
+                style={{ minWidth: 180 }}
+              >
+                {cities.map(city => (
+                  <option key={city.key} value={city.key}>{city.label}</option>
+                ))}
+              </select>
+            </div>
             {/* Status indicator - make it clickable to check online status */}
             <Button
               isIconOnly
@@ -176,14 +196,13 @@ export const InventoryManagement: React.FC = () => {
                 <DepartmentInventory
                   department={department}
                   items={items.filter(item => item.category === department.id)}
-                  inventoryData={inventoryData}
-                  updateItemCount={updateItemCount}
-                  resetDepartmentCounts={() => resetDepartmentCounts(department.id)}
-                  addNewItem={(name) => addNewItem(name, department.id)}
-                  deleteItem={deleteItem}
+                  inventoryData={inventoryData[selectedCity]?.[department.id] || {}}
+                  updateItemCount={(deptId, itemId, count) => updateItemCount(selectedCity, deptId, itemId, count)}
+                  resetDepartmentCounts={() => resetDepartmentCounts(selectedCity, department.id)}
+                  addNewItem={(name) => addNewItem(selectedCity, name, department.id)}
+                  deleteItem={(itemId, deptId) => deleteItem(selectedCity, itemId, deptId)}
                   globalSearchQuery={globalSearchQuery}
                   setGlobalSearchQuery={setGlobalSearchQuery}
-                  cityLabel={'Той Самий Баранчик Кременчук'}
                 />
               </Tab>
             ))}

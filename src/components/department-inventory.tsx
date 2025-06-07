@@ -26,7 +26,7 @@ import { parseDecimalInput } from "../utils/number-helpers";
 interface DepartmentInventoryProps {
   department: Department;
   items: Item[];
-  inventoryData: InventoryData;
+  inventoryData: { [itemId: string]: number | string };
   updateItemCount: (departmentId: string, itemId: string, count: number) => void;
   resetDepartmentCounts: () => void;
   addNewItem: (name: string) => void;

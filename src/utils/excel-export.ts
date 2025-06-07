@@ -5,7 +5,7 @@ import { shareTelegramMessage, createInventoryReportMessage } from "./telegram-s
 export const exportToExcel = (
   departments: Department[],
   items: Item[],
-  inventoryData: InventoryData,
+  inventoryData: { [departmentId: string]: { [itemId: string]: number | string } },
   sendToTelegram = false
 ) => {
   try {
@@ -126,7 +126,7 @@ const createSummarySheet = (
   wb: XLSX.WorkBook,
   departments: Department[],
   items: Item[],
-  inventoryData: InventoryData
+  inventoryData: { [departmentId: string]: { [itemId: string]: number | string } }
 ) => {
   // Create worksheet data
   const wsData = [
@@ -144,13 +144,12 @@ const createSummarySheet = (
       const count = typeof inventoryData[dept.id]?.[item.id] === 'number' 
         ? inventoryData[dept.id]?.[item.id] as number 
         : 0;
-      
-      row.push(count);
+      row.push(count.toString());
       totalCount += count;
     });
     
     // Add total count for the item across all departments
-    row.push(totalCount);
+    row.push(totalCount.toString());
     
     wsData.push(row);
   });
@@ -171,12 +170,12 @@ const createSummarySheet = (
     });
     
     departmentTotals.push(deptTotal);
-    totalsRow.push(deptTotal);
+    totalsRow.push(deptTotal.toString());
   });
   
   // Add grand total
   const grandTotal = departmentTotals.reduce((sum, current) => sum + current, 0);
-  totalsRow.push(grandTotal);
+  totalsRow.push(grandTotal.toString());
   
   wsData.push(totalsRow);
 
@@ -195,7 +194,7 @@ const createDepartmentSheet = (
   wb: XLSX.WorkBook,
   department: Department,
   departmentItems: Item[],
-  inventoryData: InventoryData
+  inventoryData: { [departmentId: string]: { [itemId: string]: number | string } }
 ) => {
   // Create header
   const header = [

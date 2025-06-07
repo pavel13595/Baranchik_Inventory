@@ -10,8 +10,10 @@ export interface Item {
 }
 
 export interface InventoryData {
-  [departmentId: string]: {
-    [itemId: string]: number | string;
+  [cityKey: string]: {
+    [departmentId: string]: {
+      [itemId: string]: number | string;
+    };
   };
 }
 

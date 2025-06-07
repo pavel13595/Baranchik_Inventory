@@ -112,29 +112,17 @@ export const useInventoryData = () => {
     }
   }, [isOnline, departments, items, inventoryData, history]);
 
-  const updateItemCount = (departmentId: string, itemId: string, count: number) => {
+  const updateItemCount = (cityKey: string, departmentId: string, itemId: string, count: number) => {
     setInventoryData(prev => {
       const newData = { ...prev };
-      
-      if (!newData[departmentId]) {
-        newData[departmentId] = {};
-      }
-      
-      // Get old value for history
-      const oldValue = newData[departmentId][itemId] || 0;
-      
-      // Only update if value changed
+      if (!newData[cityKey]) newData[cityKey] = {};
+      if (!newData[cityKey][departmentId]) newData[cityKey][departmentId] = {};
+      const oldValue = newData[cityKey][departmentId][itemId] || 0;
       if (oldValue !== count) {
-        // Update the value
-        newData[departmentId][itemId] = count;
-        
-        // Add timestamp
-        newData[departmentId][`${itemId}_timestamp`] = Date.now();
-        
-        // Add to history
+        newData[cityKey][departmentId][itemId] = count;
+        newData[cityKey][departmentId][`${itemId}_timestamp`] = Date.now();
         const itemObj = items.find(i => i.id === itemId);
         const deptObj = departments.find(d => d.id === departmentId);
-        
         if (itemObj && deptObj) {
           setHistory(prev => [
             {
@@ -145,35 +133,31 @@ export const useInventoryData = () => {
               itemName: itemObj.name,
               oldValue: typeof oldValue === 'number' ? oldValue : 0,
               newValue: count,
-              userName: "Система" // Default user name
+              userName: "Система"
             },
-            ...prev.slice(0, 99) // Keep last 100 entries
+            ...prev.slice(0, 99)
           ]);
         }
       }
-      
       return newData;
     });
   };
 
-  const resetDepartmentCounts = (departmentId: string) => {
+  const resetDepartmentCounts = (cityKey: string, departmentId: string) => {
     setInventoryData(prev => {
       const newData = { ...prev };
-      
-      // Create a new empty object for the department or reset existing one
-      newData[departmentId] = {};
-      
+      if (!newData[cityKey]) newData[cityKey] = {};
+      newData[cityKey][departmentId] = {};
       return newData;
     });
   };
 
-  const addNewItem = (name: string, categoryId: string) => {
+  const addNewItem = (cityKey: string, name: string, categoryId: string) => {
     const newItem: Item = {
       id: `item-${Date.now()}`,
       name,
-      category: categoryId // Make sure to set the category
+      category: categoryId
     };
-
     setItems(prev => [...prev, newItem]);
   };
 
@@ -186,12 +170,12 @@ export const useInventoryData = () => {
     setDepartments(prev => [...prev, newDepartment]);
   };
 
-  const deleteItem = (itemId: string, departmentId: string) => {
+  const deleteItem = (cityKey: string, itemId: string, departmentId: string) => {
     setItems(prev => prev.filter(item => item.id !== itemId));
     setInventoryData(prev => {
       const newData = { ...prev };
-      if (newData[departmentId]) {
-        delete newData[departmentId][itemId];
+      if (newData[cityKey] && newData[cityKey][departmentId]) {
+        delete newData[cityKey][departmentId][itemId];
       }
       return newData;
     });
