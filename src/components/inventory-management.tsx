@@ -148,7 +148,7 @@ export const InventoryManagement: React.FC = () => {
         <Divider />
         <CardBody className="px-1 sm:px-6">
           <Tabs 
-            aria-label="Departments" 
+            aria-label="Відділи" 
             className="w-full"
             selectedKey={selectedTabKey}
             onSelectionChange={(key) => setSelectedTabKey(key as string)}
@@ -162,7 +162,15 @@ export const InventoryManagement: React.FC = () => {
             size="sm"
           >
             {departments.map((department) => (
-              <Tab key={department.id} title={department.name}>
+              <Tab key={department.id} title={
+                department.id === "dept-1"
+                  ? "Посуд"
+                  : department.id === "dept-2"
+                  ? "Господарські товари"
+                  : department.id === "dept-3"
+                  ? "Упаковка"
+                  : department.name
+              }>
                 <DepartmentInventory
                   department={department}
                   items={items.filter(item => item.category === department.id)}
