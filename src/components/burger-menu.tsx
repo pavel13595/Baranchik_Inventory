@@ -37,20 +37,48 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
         <Icon icon="lucide:menu" className="text-2xl" />
       </Button>
       {open && (
-        <div className="absolute right-0 mt-2 w-56 rounded-xl shadow-lg bg-white dark:bg-zinc-900 border border-default-200 z-50 animate-fade-in flex flex-col p-2 gap-1">
-          <Button startContent={<Icon icon="lucide:file-spreadsheet" />} variant="light" onPress={() => { setOpen(false); onDownload(); }} className="justify-start">
+        <div
+          className="absolute right-0 mt-2 min-w-[220px] w-[90vw] max-w-xs rounded-2xl shadow-2xl bg-white dark:bg-zinc-900 border border-default-200 z-50 animate-fade-in flex flex-col p-3 gap-2"
+          style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)' }}
+        >
+          <Button
+            startContent={<Icon icon="lucide:file-spreadsheet" />}
+            variant="light"
+            onPress={() => { setOpen(false); onDownload(); }}
+            className="justify-start w-full text-base py-2 px-3 rounded-lg hover:bg-primary/10 transition-colors"
+          >
             Завантажити
           </Button>
-          <Button startContent={<Icon icon="logos:telegram" />} variant="light" onPress={() => { setOpen(false); onSend(); }} className="justify-start">
+          <Button
+            startContent={<Icon icon="logos:telegram" />}
+            variant="light"
+            onPress={() => { setOpen(false); onSend(); }}
+            className="justify-start w-full text-base py-2 px-3 rounded-lg hover:bg-secondary/10 transition-colors"
+          >
             Відправити
           </Button>
-          <Button startContent={<Icon icon="lucide:plus" />} variant="light" onPress={() => { setOpen(false); onAdd(); }} className="justify-start">
+          <Button
+            startContent={<Icon icon="lucide:plus" />}
+            variant="light"
+            onPress={() => { setOpen(false); onAdd(); }}
+            className="justify-start w-full text-base py-2 px-3 rounded-lg hover:bg-success/10 transition-colors"
+          >
             Додати
           </Button>
-          <Button startContent={<Icon icon="lucide:trash" />} variant="light" onPress={() => { setOpen(false); onDelete(); }} className="justify-start">
+          <Button
+            startContent={<Icon icon="lucide:trash" />}
+            variant="light"
+            onPress={() => { setOpen(false); onDelete(); }}
+            className="justify-start w-full text-base py-2 px-3 rounded-lg hover:bg-danger/10 transition-colors"
+          >
             Видалити
           </Button>
-          <Button startContent={<Icon icon="lucide:refresh-cw" />} variant="light" onPress={() => { setOpen(false); onReset(); }} className="justify-start">
+          <Button
+            startContent={<Icon icon="lucide:refresh-cw" />}
+            variant="light"
+            onPress={() => { setOpen(false); onReset(); }}
+            className="justify-start w-full text-base py-2 px-3 rounded-lg hover:bg-warning/10 transition-colors"
+          >
             Скинути
           </Button>
         </div>
