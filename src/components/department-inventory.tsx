@@ -295,8 +295,9 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                         className="p-0.5 rounded-full"
                         onPress={() => {
                           // Удаляем один товар
-                          const currentValue = inventoryData[department.id]?.[item.id] ?? 0;
-                          const newValue = Math.max(0, Number(currentValue) - 1);
+                          const currentValue = Number(inputValues[item.id] ?? 0);
+                          const newValue = Math.max(0, currentValue - 1);
+                          setInputValues(prev => ({ ...prev, [item.id]: String(newValue) }));
                           updateItemCount(department.id, item.id, newValue);
                         }}
                         aria-label="Уменьшить количество"
@@ -326,8 +327,9 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                         className="p-0.5 rounded-full"
                         onPress={() => {
                           // Увеличиваем один товар
-                          const currentValue = inventoryData[department.id]?.[item.id] ?? 0;
-                          const newValue = Number(currentValue) + 1;
+                          const currentValue = Number(inputValues[item.id] ?? 0);
+                          const newValue = currentValue + 1;
+                          setInputValues(prev => ({ ...prev, [item.id]: String(newValue) }));
                           updateItemCount(department.id, item.id, newValue);
                         }}
                         aria-label="Увеличить количество"
