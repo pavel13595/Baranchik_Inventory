@@ -214,7 +214,7 @@ export const DepartmentInventory = React.memo(({
 
   return (
     <div className="py-4">
-      <div className="flex flex-row gap-2 mb-4 w-full justify-start">
+      <div className="flex flex-row gap-2 mb-4 w-full justify-center">
         <Button color="primary" variant="flat" onPress={onOpen}>
           <Icon icon="lucide:plus" className="mr-1" /> Додати
         </Button>
