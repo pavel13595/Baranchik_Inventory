@@ -302,7 +302,9 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                         <Icon icon="lucide:minus" width={16} height={16} />
                       </Button>
                       <Input
-                        type="text"
+                        type="number"
+                        inputMode="decimal"
+                        pattern="[0-9.,]*"
                         variant="bordered"
                         style={{ minWidth: '1.4em', maxWidth: '3.2em', width: `calc(${Math.max(1.4, Math.min(3.2, String(inputValues[item.id] ?? '').length * 1.1))}em + 2px)`, textAlign: 'center', fontWeight: 600 }}
                         className="text-center font-semibold"
@@ -312,6 +314,8 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                         onBlur={() => handleInputBlur(item.id)}
                         aria-label={`Количество для ${item.name}`}
                         classNames={{ input: "text-center font-semibold" }}
+                        min={0}
+                        step={department.id === "dept-1" || department.id === "dept-3" ? 1 : 0.01}
                       />
                       <Button 
                         isIconOnly
