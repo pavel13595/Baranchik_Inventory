@@ -307,7 +307,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
                       <Input
                         type="text"
                         variant="bordered"
-                        style={{ minWidth: '2.5em', maxWidth: '5em', width: `calc(${Math.max(2.5, String(inputValues[item.id] ?? '').length * 1.1)}em + 2px)`, textAlign: 'center', fontWeight: 600 }}
+                        style={{ minWidth: '1.8em', maxWidth: '5em', width: `calc(${Math.max(1.8, String(inputValues[item.id] ?? '').length * 1.1)}em + 2px)`, textAlign: 'center', fontWeight: 600 }}
                         className="text-center font-semibold"
                         value={inputValues[item.id] ?? ""}
                         onFocus={handleInputFocus}
