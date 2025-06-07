@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import { 
   Table, 
   TableHeader, 
@@ -33,19 +33,26 @@ interface DepartmentInventoryProps {
   deleteItem: (itemId: string, departmentId: string) => void;
   globalSearchQuery: string;
   setGlobalSearchQuery: (query: string) => void;
+  addModalRef?: React.Ref<{ open: () => void }>;
+  deleteModalRef?: React.Ref<{ open: () => void }>;
+  resetModalRef?: React.Ref<{ open: () => void }>;
 }
 
-export const DepartmentInventory = React.memo(({
-  department,
-  items,
-  inventoryData,
-  updateItemCount,
-  resetDepartmentCounts,
-  addNewItem,
-  deleteItem,
-  globalSearchQuery,
-  setGlobalSearchQuery
-}: DepartmentInventoryProps) => {
+export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, ref) => {
+  const {
+    department,
+    items,
+    inventoryData,
+    updateItemCount,
+    resetDepartmentCounts,
+    addNewItem,
+    deleteItem,
+    globalSearchQuery,
+    setGlobalSearchQuery,
+    addModalRef,
+    deleteModalRef,
+    resetModalRef
+  } = props;
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const resetModalDisclosure = useDisclosure();
   const [newItemName, setNewItemName] = React.useState("");
@@ -211,6 +218,10 @@ export const DepartmentInventory = React.memo(({
         })
       : itemsWithCount
   ), [sortZeroToBottom, itemsWithCount]);
+
+  useImperativeHandle(addModalRef, () => ({ open: onOpen }), [onOpen]);
+  useImperativeHandle(deleteModalRef, () => ({ open: () => setDeleteModal(true) }), []);
+  useImperativeHandle(resetModalRef, () => ({ open: resetModalDisclosure.onOpen }), [resetModalDisclosure]);
 
   return (
     <div className="py-4">

@@ -7,6 +7,7 @@ import { exportToExcel } from "../utils/excel-export";
 import { initialDepartments, initialItems } from "../data/initial-data";
 import type { Item } from "../types/inventory";
 import { useTheme } from "../contexts/theme-context";
+import { BurgerMenu } from "./burger-menu";
 
 export const InventoryManagement: React.FC = () => {
   const { 
@@ -106,20 +107,31 @@ export const InventoryManagement: React.FC = () => {
     checkOnlineStatus();
   };
 
+  // Управление модалками для добавления, удаления, сброса
+  const addModalRef = React.useRef<{ open: () => void }>(null);
+  const deleteModalRef = React.useRef<{ open: () => void }>(null);
+  const resetModalRef = React.useRef<{ open: () => void }>(null);
+
   return (
     <div className="container mx-auto px-0 sm:px-4 py-2 sm:py-8">
       <Card className="shadow-md">
         <CardHeader className="flex flex-col justify-between items-start gap-4 px-2 sm:px-6">
-          <h1 className="text-2xl sm:text-4xl font-bold text-center mb-4 w-full" data-locator="src/components/inventory-management.tsx:h1:112:12">
+          <h1 className="text-2xl sm:text-4xl font-bold text-center mb-4 w-full">
             Той Самий Баранчик Кременчук
           </h1>
-          <div className="flex justify-between w-full items-center gap-2">
-            <div className="flex items-center gap-2">
+          <div className="flex w-full items-center gap-2 justify-between">
+            {/* Бургер-меню только на мобильных */}
+            <div className="block sm:hidden ml-auto">
+              <BurgerMenu
+                onDownload={() => handleExportToExcel(false)}
+                onSend={() => handleExportToExcel(true)}
+                onAdd={() => addModalRef.current?.open()}
+                onDelete={() => deleteModalRef.current?.open()}
+                onReset={() => resetModalRef.current?.open()}
+              />
             </div>
-            {/* Кнопка проверки подключения удалена */}
-          </div>
-          <div className="flex flex-col w-full gap-2">
-            <div className="flex flex-wrap gap-2 w-full justify-center">
+            {/* Старые кнопки только на десктопе */}
+            <div className="hidden sm:flex flex-wrap gap-2 w-full justify-center">
               <Button 
                 color="primary" 
                 startContent={<Icon icon="lucide:file-spreadsheet" />} 
@@ -181,6 +193,9 @@ export const InventoryManagement: React.FC = () => {
                   deleteItem={deleteItem}
                   globalSearchQuery={globalSearchQuery}
                   setGlobalSearchQuery={setGlobalSearchQuery}
+                  addModalRef={addModalRef}
+                  deleteModalRef={deleteModalRef}
+                  resetModalRef={resetModalRef}
                 />
               </Tab>
             ))}
