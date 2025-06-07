@@ -73,7 +73,8 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   React.useEffect(() => {
     const newValues: {[itemId: string]: string} = {};
     items.forEach(item => {
-      const count = inventoryData[department.id]?.[item.id] ?? 0;
+      // Исправлено: inventoryData теперь по item.id, а не по department.id
+      const count = inventoryData[item.id] ?? 0;
       if (department.id === "dept-1" || department.id === "dept-3") {
         newValues[item.id] = String(Math.floor(Number(count)));
       } else {
@@ -135,8 +136,9 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
 
   // Calculate department total
   const departmentTotal = items.reduce((sum, item) => {
-    const count = typeof inventoryData[department.id]?.[item.id] === 'number' 
-      ? inventoryData[department.id]?.[item.id] as number 
+    // Исправлено: inventoryData теперь по item.id, а не по department.id
+    const count = typeof inventoryData[item.id] === 'number' 
+      ? inventoryData[item.id] as number 
       : 0;
     return sum + count;
   }, 0);
@@ -196,7 +198,7 @@ export const DepartmentInventory: React.FC<DepartmentInventoryProps> = ({
   // Для сортировки всей строки: формируем массив объектов {item, count}
   const itemsWithCount = filteredItems.map(item => ({
     item,
-    count: Number(inventoryData[department.id]?.[item.id] ?? 0)
+    count: Number(inventoryData[item.id] ?? 0)
   }));
 
   // Сортировка: если активна, строки с количеством 0 наверху, остальные внизу (без сортировки между ними)
