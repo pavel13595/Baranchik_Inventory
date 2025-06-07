@@ -158,6 +158,9 @@ export const InventoryManagement: React.FC = () => {
         </CardHeader>
         <Divider />
         <CardBody className="px-1 sm:px-6">
+          <h1 className="text-lg sm:text-2xl font-semibold" data-locator="src/components/inventory-management.tsx:h1:112:12">
+            Той Самий Баранчик Кременчук
+          </h1>
           <Tabs 
             aria-label="Departments" 
             className="w-full"
