@@ -67,7 +67,17 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
   const [showZeroOnly, setShowZeroOnly] = React.useState(false);
   const [sortZeroToBottom, setSortZeroToBottom] = React.useState(false);
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
+  // Показывать кнопки только если НЕ мобильное устройство и НЕ showBurgerMenu
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Sync local search with global search
   React.useEffect(() => {
@@ -235,7 +245,7 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
 
   return (
     <div className="py-4">
-      {!showBurgerMenu && !isMobile && (
+      {(!isMobile && !showBurgerMenu) && (
         <div className="flex flex-row gap-2 mb-4 w-full justify-center">
           <Button color="primary" variant="flat" onPress={onOpen}>
             <Icon icon="lucide:plus" className="mr-1" /> Додати

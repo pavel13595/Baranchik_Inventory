@@ -158,13 +158,13 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
         <Divider />
         <CardBody className="px-1 sm:px-6">
           <Tabs 
-            aria-label="Відділи" 
-            className="w-full"
+            aria-label="Відділи"
+            className="w-full flex justify-center"
             selectedKey={selectedTabKey}
             onSelectionChange={(key) => setSelectedTabKey(key as string)}
             variant="underlined"
             classNames={{
-              tabList: "overflow-x-auto flex-nowrap",
+              tabList: "overflow-x-auto flex-nowrap justify-center items-center flex gap-2 w-full", // центрируем табы
               tab: "whitespace-nowrap px-2 sm:px-4",
               cursor: "w-full",
               panel: "px-0"
