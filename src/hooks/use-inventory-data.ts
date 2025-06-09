@@ -1,6 +1,6 @@
 import React from "react";
 import { Department, Item, InventoryData, InventoryHistory } from "../types/inventory";
-import { initialDepartments, initialItems } from "../data/initial-data";
+import { initialDepartments, initialItems, lvivInitialItems } from "../data/initial-data";
 import { syncWithGoogleSheets } from "../utils/google-sheets";
 
 export const useInventoryData = (city: string = "Кременчук") => {
@@ -20,8 +20,23 @@ export const useInventoryData = (city: string = "Кременчук") => {
   // При смене города инициализируем пустыми, если нет
   React.useEffect(() => {
     setAllInventoryData(prev => prev[city] ? prev : { ...prev, [city]: {} });
-    setAllItems(prev => prev[city] ? prev : { ...prev, [city]: [] });
     setAllHistory(prev => prev[city] ? prev : { ...prev, [city]: [] });
+    setAllItems(prev => {
+      if (prev[city]) return prev;
+      // Для Львова — стартовый список только при первом входе
+      if (city === "Львів") {
+        // Проверяем, был ли уже инициализирован Львів в localStorage
+        const allItemsRaw = localStorage.getItem("allItems");
+        if (allItemsRaw) {
+          const allItemsParsed = JSON.parse(allItemsRaw);
+          if (allItemsParsed && allItemsParsed[city] && allItemsParsed[city].length > 0) {
+            return prev; // Уже есть данные — не перезаписываем
+          }
+        }
+        return { ...prev, [city]: lvivInitialItems };
+      }
+      return { ...prev, [city]: [] };
+    });
   }, [city]);
 
   const [isOnline, setIsOnline] = React.useState<boolean>(navigator.onLine);
