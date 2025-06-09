@@ -95,6 +95,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
               onChange={e => {
                 setSelectedCity(e.target.value);
                 if (typeof onCityChange === 'function') onCityChange(e.target.value);
+                setOpen(false);
               }}
             >
               {cities.map(city => (
