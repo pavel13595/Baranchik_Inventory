@@ -233,7 +233,7 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
 
   return (
     <div className="py-4">
-      {!isMobile && (
+      {isMobile && (
         <div className="flex flex-row gap-2 mb-4 w-full justify-center">
           <Button color="primary" variant="flat" onPress={onOpen}>
             <Icon icon="lucide:plus" className="mr-1" /> Додати
