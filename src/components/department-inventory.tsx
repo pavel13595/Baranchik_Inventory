@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle } from "react";
+import React, { forwardRef, useImperativeHandle, useMemo, useCallback } from "react";
 import { 
   Table, 
   TableHeader, 
@@ -60,7 +60,6 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
   const [newItemName, setNewItemName] = React.useState("");
   const [searchQuery, setSearchQuery] = React.useState(globalSearchQuery);
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
-  const [inputValues, setInputValues] = React.useState<{[itemId: string]: string}>({});
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [deleteSearch, setDeleteSearch] = React.useState("");
   const [deleteSelected, setDeleteSelected] = React.useState<string | null>(null);
@@ -71,9 +70,7 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -88,23 +85,48 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
     setGlobalSearchQuery(searchQuery);
   }, [searchQuery, setGlobalSearchQuery]);
 
-  // ИНИЦИАЛИЗАЦИЯ inputValues при изменении inventoryData
-  React.useEffect(() => {
-    const newValues: {[itemId: string]: string} = {};
-    items.forEach(item => {
-      // Исправлено: inventoryData теперь по item.id, а не по department.id
+  // Мемоизация фильтрации и автокомплита
+  const filteredItems = useMemo(() =>
+    items.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase())),
+    [items, searchQuery]
+  );
+  const autocompleteItems = useMemo(() =>
+    items.map(item => ({ key: item.id, label: item.name })),
+    [items]
+  );
+
+  // Мемоизация inputValues только для видимых items
+  const inputValues = useMemo(() => {
+    const values: {[itemId: string]: string} = {};
+    filteredItems.forEach(item => {
       const count = inventoryData[item.id] ?? 0;
       if (department.id === "dept-1" || department.id === "dept-3") {
-        newValues[item.id] = String(Math.floor(Number(count)));
+        values[item.id] = String(Math.floor(Number(count)));
       } else if (department.id === "dept-2") {
-        newValues[item.id] = Number(count).toFixed(1).replace('.', ',');
+        values[item.id] = Number(count).toFixed(1).replace('.', ',');
       } else {
-        newValues[item.id] = Number(count).toFixed(2).replace('.', ',');
+        values[item.id] = Number(count).toFixed(2).replace('.', ',');
       }
     });
-    setInputValues(newValues);
-  // eslint-disable-next-line
-  }, [inventoryData, department.id, items]);
+    return values;
+  }, [filteredItems, inventoryData, department.id]);
+
+  // Для сортировки всей строки: формируем массив объектов {item, count}
+  const itemsWithCount = useMemo(() =>
+    filteredItems.map(item => ({ item, count: Number(inventoryData[item.id] ?? 0) })),
+    [filteredItems, inventoryData]
+  );
+
+  // Мемоизация sortedRows
+  const sortedRows = useMemo(() => (
+    sortZeroToBottom
+      ? [...itemsWithCount].sort((a, b) => {
+          if (a.count === 0 && b.count !== 0) return -1;
+          if (a.count !== 0 && b.count === 0) return 1;
+          return 0;
+        })
+      : itemsWithCount
+  ), [sortZeroToBottom, itemsWithCount]);
 
   // Add a function to handle input value changes
   const handleValueChange = (itemId: string, value: string) => {
@@ -146,15 +168,6 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
     return match ? match[1] : "";
   };
 
-  const filteredItems = items.filter(item => 
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const autocompleteItems = items.map(item => ({
-    key: item.id,
-    label: item.name
-  }));
-
   // Calculate department total
   const departmentTotal = items.reduce((sum, item) => {
     // Исправлено: inventoryData теперь по item.id, а не по department.id
@@ -179,28 +192,28 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
     resetModalDisclosure.onClose();
   };
 
-  // ОБНОВЛЕНИЕ inputValues при вводе
-  const handleInputChange = (itemId: string, value: string) => {
-    setInputValues(prev => ({ ...prev, [itemId]: value }));
-  };
+  // --- ОПТИМИЗАЦИЯ: удаляем лишний setInputValues, используем только локальный inputValues для отображения, а обновление inventoryData делаем через handleValueChange/handleInputBlur ---
+  // inputValues теперь вычисляется только для видимых items через useMemo выше
 
-  // ОБНОВЛЕНИЕ inventoryData только при блюре или валидном числе
-  const handleInputBlur = (itemId: string) => {
+  // handleInputChange теперь просто вызывает handleValueChange (и не вызывает setInputValues)
+  const handleInputChange = useCallback((itemId: string, value: string) => {
+    handleValueChange(itemId, value);
+  }, [handleValueChange]);
+
+  // handleInputBlur теперь не вызывает setInputValues, только обновляет inventoryData
+  const handleInputBlur = useCallback((itemId: string) => {
     const value = inputValues[itemId] ?? "";
     let numericValue: number | null = null;
     if (department.id === "dept-1" || department.id === "dept-3") {
-      // Только целые числа
       if (/^\d+$/.test(value)) {
         numericValue = parseInt(value, 10);
       }
     } else if (department.id === "dept-2") {
-      // Дробные значения, поддержка запятой и точки
       const normalized = value.replace(',', '.');
       if (/^\d+(\.|,)?\d*$/.test(value) && !isNaN(Number(normalized))) {
         numericValue = Number(Number(normalized).toFixed(1));
       }
     } else {
-      // Дробные значения, поддержка запятой и точки
       const normalized = value.replace(',', '.');
       if (/^\d+(\.|,)?\d*$/.test(value) && !isNaN(Number(normalized))) {
         numericValue = Number(Number(normalized).toFixed(2));
@@ -209,35 +222,14 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
     if (numericValue !== null && !isNaN(numericValue)) {
       updateItemCount(department.id, itemId, numericValue);
     } else if (value === "") {
-      // Если поле очищено — обнуляем
       updateItemCount(department.id, itemId, 0);
-    } else {
-      // Некорректное значение — не обновляем
-      setInputValues(prev => ({ ...prev, [itemId]: "" }));
     }
-  };
+  }, [inputValues, department.id, updateItemCount]);
 
   // Фильтр для поиска в модальном окне удаления
   const deleteFilteredItems = items.filter(item =>
     item.name.toLowerCase().includes(deleteSearch.toLowerCase())
   );
-
-  // Для сортировки всей строки: формируем массив объектов {item, count}
-  const itemsWithCount = filteredItems.map(item => ({
-    item,
-    count: Number(inventoryData[item.id] ?? 0)
-  }));
-
-  // Мемоизация sortedRows для предотвращения лишних пересчетов
-  const sortedRows = React.useMemo(() => (
-    sortZeroToBottom
-      ? [...itemsWithCount].sort((a, b) => {
-          if (a.count === 0 && b.count !== 0) return -1;
-          if (a.count !== 0 && b.count === 0) return 1;
-          return 0;
-        })
-      : itemsWithCount
-  ), [sortZeroToBottom, itemsWithCount]);
 
   useImperativeHandle(addModalRef, () => ({ open: onOpen }), [onOpen]);
   useImperativeHandle(deleteModalRef, () => ({ open: () => setDeleteModal(true) }), []);
