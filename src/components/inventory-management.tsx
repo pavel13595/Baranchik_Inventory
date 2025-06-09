@@ -9,7 +9,8 @@ import type { Item } from "../types/inventory";
 import { useTheme } from "../contexts/theme-context";
 import { BurgerMenu } from "./burger-menu";
 
-export const InventoryManagement = forwardRef((props, ref) => {
+export const InventoryManagement = forwardRef((props: any, ref) => {
+  const { city = "Кременчук", ...rest } = props;
   const { 
     departments, 
     inventoryData, 

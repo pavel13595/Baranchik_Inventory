@@ -23,7 +23,7 @@ export const Dashboard: React.FC = () => {
   
   // --- Город ---
   // const cities = [ ... ];
-  // const [selectedCity, setSelectedCity] = useState(cities[0].key);
+  const [selectedCity, setSelectedCity] = React.useState<string>("Кременчук");
   // Удаляем выбор города, оставляем только один город
   const cityLabel = "Инвентаризация";
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
@@ -53,12 +53,13 @@ export const Dashboard: React.FC = () => {
               onAdd={() => inventoryRef.current?.openAddModal?.()}
               onDelete={() => inventoryRef.current?.openDeleteModal?.()}
               onReset={() => inventoryRef.current?.openResetModal?.()}
+              onCityChange={setSelectedCity}
             />
           </NavbarItem>
         </NavbarContent>
       </Navbar>
       <div className="flex-grow pt-16">
-        <InventoryManagement ref={inventoryRef} />
+        <InventoryManagement ref={inventoryRef} city={selectedCity} />
       </div>
       <footer className="w-full text-center text-xs text-default-400 py-2 border-t border-default-200 bg-background">
         © 2025

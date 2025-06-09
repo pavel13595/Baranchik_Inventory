@@ -9,6 +9,7 @@ interface BurgerMenuProps {
   onDelete: () => void;
   onReset: () => void;
   onMenuOpenChange?: (open: boolean) => void;
+  onCityChange?: (city: string) => void;
 }
 
 export const BurgerMenu: React.FC<BurgerMenuProps> = ({
@@ -17,9 +18,12 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
   onAdd,
   onDelete,
   onReset,
-  onMenuOpenChange
+  onMenuOpenChange,
+  onCityChange
 }) => {
   const [open, setOpen] = React.useState(false);
+  const [selectedCity, setSelectedCity] = React.useState<string>("Кременчук");
+  const cities = ["Кременчук", "Харків", "Львів"];
   const menuRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -82,6 +86,22 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
           className="absolute right-0 mt-2 min-w-[180px] max-w-[90vw] w-max rounded-2xl shadow-2xl bg-white dark:bg-zinc-900 border border-default-200 z-50 animate-fade-in flex flex-col items-center px-0 py-0 gap-0 transition-all duration-200"
           style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)' }}
         >
+          <div className="w-full px-4 py-2 border-b border-default-100 flex flex-col items-center">
+            <label htmlFor="city-select" className="text-xs text-default-500 mb-1">Місто</label>
+            <select
+              id="city-select"
+              className="w-full rounded-lg border border-default-200 px-2 py-1 text-base focus:outline-none focus:ring-2 focus:ring-primary-400 bg-white dark:bg-zinc-900"
+              value={selectedCity}
+              onChange={e => {
+                setSelectedCity(e.target.value);
+                if (typeof onCityChange === 'function') onCityChange(e.target.value);
+              }}
+            >
+              {cities.map(city => (
+                <option key={city} value={city}>{city}</option>
+              ))}
+            </select>
+          </div>
           <Button
             startContent={<Icon icon="lucide:arrow-down-to-line" className="w-6 h-6" />}
             variant="light"
