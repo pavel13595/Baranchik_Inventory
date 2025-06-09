@@ -36,6 +36,7 @@ interface DepartmentInventoryProps {
   addModalRef?: React.Ref<{ open: () => void }>;
   deleteModalRef?: React.Ref<{ open: () => void }>;
   resetModalRef?: React.Ref<{ open: () => void }>;
+  showBurgerMenu?: boolean;
 }
 
 export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, ref) => {
@@ -52,6 +53,7 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
     addModalRef,
     deleteModalRef,
     resetModalRef,
+    showBurgerMenu,
   } = props;
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const resetModalDisclosure = useDisclosure();
@@ -233,7 +235,7 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
 
   return (
     <div className="py-4">
-      {!isMobile && (
+      {!showBurgerMenu && !isMobile && (
         <div className="flex flex-row gap-2 mb-4 w-full justify-center">
           <Button color="primary" variant="flat" onPress={onOpen}>
             <Icon icon="lucide:plus" className="mr-1" /> Додати

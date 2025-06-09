@@ -10,7 +10,7 @@ import { useTheme } from "../contexts/theme-context";
 import { BurgerMenu } from "./burger-menu";
 
 export const InventoryManagement = forwardRef((props: any, ref) => {
-  const { city = "Кременчук", ...rest } = props;
+  const { city = "Кременчук", showBurgerMenu = false, ...rest } = props;
   // Передаем город в useInventoryData
   const { 
     departments, 
@@ -159,12 +159,12 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
         <CardBody className="px-1 sm:px-6">
           <Tabs 
             aria-label="Відділи" 
-            className="w-full flex justify-center"
+            className="w-full"
             selectedKey={selectedTabKey}
             onSelectionChange={(key) => setSelectedTabKey(key as string)}
             variant="underlined"
             classNames={{
-              tabList: "overflow-x-auto flex-nowrap flex justify-center items-center",
+              tabList: "overflow-x-auto flex-nowrap",
               tab: "whitespace-nowrap px-2 sm:px-4",
               cursor: "w-full",
               panel: "px-0"
@@ -183,7 +183,7 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
               }>
                 <DepartmentInventory
                   department={department}
-                  items={items.filter(item => item.category === department.id)} // <-- заменено
+                  items={items.filter(item => item.category === department.id)}
                   inventoryData={inventoryData[department.id] || {}}
                   updateItemCount={updateItemCount}
                   resetDepartmentCounts={() => resetDepartmentCounts(department.id)}
@@ -194,6 +194,7 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
                   addModalRef={addModalRef}
                   deleteModalRef={deleteModalRef}
                   resetModalRef={resetModalRef}
+                  showBurgerMenu={showBurgerMenu}
                 />
               </Tab>
             ))}

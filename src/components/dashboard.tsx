@@ -10,6 +10,7 @@ export const Dashboard: React.FC = () => {
   const { cityName } = useParams<{ cityName: string }>();
   const navigate = useNavigate();
   const [selectedCity, setSelectedCity] = React.useState<string>(cityName || "Кременчук");
+  const [showBurgerMenu, setShowBurgerMenu] = React.useState(false);
 
   React.useEffect(() => {
     if (cityName && cityName !== selectedCity) setSelectedCity(cityName);
@@ -68,13 +69,14 @@ export const Dashboard: React.FC = () => {
               onDelete={() => inventoryRef.current?.openDeleteModal?.()}
               onReset={() => inventoryRef.current?.openResetModal?.()}
               onCityChange={setSelectedCity}
+              onMenuOpenChange={setShowBurgerMenu}
             />
           </NavbarItem>
         </NavbarContent>
       </Navbar>
       {/* Увеличенный отступ сверху для компенсации фиксированного Navbar и статус-бара */}
       <div className="flex-grow pt-[80px] sm:pt-16">
-        <InventoryManagement ref={inventoryRef} city={selectedCity} />
+        <InventoryManagement ref={inventoryRef} city={selectedCity} showBurgerMenu={showBurgerMenu} />
       </div>
       <footer className="w-full text-center text-xs text-default-400 py-2 border-t border-default-200 bg-background">
         © 2025
