@@ -108,63 +108,65 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
               ))}
             </select>
           </div>
-          <Button
-            startContent={<Icon icon="lucide:arrow-down-to-line" className="w-6 h-6" />}
-            variant="light"
-            onPress={() => { setOpen(false); onDownload(); }}
-            className="flex flex-row justify-start min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-primary/10 transition-colors text-left gap-2 border-b border-default-100 last:border-b-0"
-          >
-            Завантажити
-          </Button>
-          <Button
-            startContent={<Icon icon="logos:telegram" className="w-6 h-6" />}
-            variant="light"
-            onPress={() => { setOpen(false); onSend(); }}
-            className="flex flex-row justify-start min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-secondary/10 transition-colors text-left gap-2 border-b border-default-100 last:border-b-0"
-          >
-            Відправити
-          </Button>
-          <Button
-            startContent={<Icon icon="lucide:plus" className="w-6 h-6" />}
-            variant="light"
-            onPress={() => { setOpen(false); onAdd(); }}
-            className="flex flex-row justify-start min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-success/10 transition-colors text-left gap-2 border-b border-default-100 last:border-b-0"
-          >
-            Додати
-          </Button>
-          <Button
-            startContent={<Icon icon="lucide:trash" className="w-6 h-6" />}
-            variant="light"
-            onPress={() => { setOpen(false); onDelete(); }}
-            className="flex flex-row justify-start min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-danger/10 transition-colors text-left gap-2 border-b border-default-100 last:border-b-0"
-          >
-            Видалити
-          </Button>
-          <Button
-            startContent={<Icon icon="lucide:refresh-cw" className="w-6 h-6" />}
-            variant="light"
-            onPress={() => { setOpen(false); onReset(); }}
-            className="flex flex-row justify-start min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-warning/10 transition-colors text-left gap-2 last:border-b-0"
-          >
-            Скинути
-          </Button>
-          <Button
-            startContent={<Icon icon="lucide:eraser" className="w-6 h-6" />}
-            variant="light"
-            onPress={() => {
-              if (window.confirm("Очистити всі дані пам'яті для тесту? Це видалить всі інвентаризации для всіх міст!")) {
-                localStorage.clear();
-                // Попытка закрыть приложение (работает для PWA и некоторых браузеров)
-                window.location.replace("/");
-                setTimeout(() => {
-                  window.close();
-                }, 300);
-              }
-            }}
-            className="flex flex-row justify-start min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-danger/10 transition-colors text-left gap-2 border-t border-default-100 mt-2"
-          >
-            Restart
-          </Button>
+          <div className="w-full flex flex-col gap-2 px-2 py-2">
+            <Button
+              startContent={<Icon icon="lucide:arrow-down-to-line" className="w-6 h-6" />}
+              variant="light"
+              onPress={() => { setOpen(false); onDownload(); }}
+              className="flex flex-row justify-start min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-primary/10 transition-colors text-left gap-2 border-b border-default-100"
+            >
+              Завантажити
+            </Button>
+            <Button
+              startContent={<Icon icon="logos:telegram" className="w-6 h-6" />}
+              variant="light"
+              onPress={() => { setOpen(false); onSend(); }}
+              className="flex flex-row justify-start min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-secondary/10 transition-colors text-left gap-2 border-b border-default-100"
+            >
+              Відправити
+            </Button>
+            <Button
+              startContent={<Icon icon="lucide:plus" className="w-6 h-6" />}
+              variant="light"
+              onPress={() => { setOpen(false); onAdd(); }}
+              className="flex flex-row justify-start min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-success/10 transition-colors text-left gap-2 border-b border-default-100"
+            >
+              Додати
+            </Button>
+            <Button
+              startContent={<Icon icon="lucide:trash" className="w-6 h-6" />}
+              variant="light"
+              onPress={() => { setOpen(false); onDelete(); }}
+              className="flex flex-row justify-start min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-danger/10 transition-colors text-left gap-2 border-b border-default-100"
+            >
+              Видалити
+            </Button>
+            <Button
+              startContent={<Icon icon="lucide:refresh-cw" className="w-6 h-6" />}
+              variant="light"
+              onPress={() => { setOpen(false); onReset(); }}
+              className="flex flex-row justify-start min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-warning/10 transition-colors text-left gap-2 border-b border-default-100"
+            >
+              Скинути
+            </Button>
+            <div className="w-full border-t border-default-100 my-2"></div>
+            <Button
+              startContent={<Icon icon="lucide:eraser" className="w-6 h-6" />}
+              variant="light"
+              onPress={() => {
+                if (window.confirm("Очистити всі дані пам'яті? Це видалить всі інвентаризации для всіх міст!")) {
+                  localStorage.clear();
+                  window.location.replace("/");
+                  setTimeout(() => {
+                    window.close();
+                  }, 300);
+                }
+              }}
+              className="flex flex-row justify-start min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-danger/10 transition-colors text-left gap-2"
+            >
+              Restart
+            </Button>
+          </div>
         </div>
       )}
     </div>
