@@ -158,12 +158,12 @@ export const InventoryManagement = forwardRef((props, ref) => {
         <CardBody className="px-1 sm:px-6">
           <Tabs 
             aria-label="Відділи" 
-            className="w-full"
+            className="w-full flex justify-center"
             selectedKey={selectedTabKey}
             onSelectionChange={(key) => setSelectedTabKey(key as string)}
             variant="underlined"
             classNames={{
-              tabList: "overflow-x-auto flex-nowrap",
+              tabList: "overflow-x-auto flex-nowrap flex justify-center items-center",
               tab: "whitespace-nowrap px-2 sm:px-4",
               cursor: "w-full",
               panel: "px-0"
