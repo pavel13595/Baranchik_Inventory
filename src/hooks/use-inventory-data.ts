@@ -22,19 +22,13 @@ export const useInventoryData = (city: string = "Кременчук") => {
     setAllInventoryData(prev => prev[city] ? prev : { ...prev, [city]: {} });
     setAllHistory(prev => prev[city] ? prev : { ...prev, [city]: [] });
     setAllItems(prev => {
-      if (prev[city]) return prev;
-      // Для Львова — стартовый список только при первом входе
+      // Если уже есть массив для города — не трогаем
+      if (prev[city] && prev[city].length > 0) return prev;
+      // Для Львова — стартовый список только если его ещё нет
       if (city === "Львів") {
-        // Проверяем, был ли уже инициализирован Львів в localStorage
-        const allItemsRaw = localStorage.getItem("allItems");
-        if (allItemsRaw) {
-          const allItemsParsed = JSON.parse(allItemsRaw);
-          if (allItemsParsed && allItemsParsed[city] && allItemsParsed[city].length > 0) {
-            return prev; // Уже есть данные — не перезаписываем
-          }
-        }
         return { ...prev, [city]: lvivInitialItems };
       }
+      // Для других городов — пустой массив
       return { ...prev, [city]: [] };
     });
   }, [city]);
