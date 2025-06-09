@@ -9,9 +9,8 @@ import type { Item } from "../types/inventory";
 import { useTheme } from "../contexts/theme-context";
 import { BurgerMenu } from "./burger-menu";
 
-export const InventoryManagement = forwardRef((props: any, ref) => {
-  const {
-    isBurgerMenuOpen = false, // new prop for burger menu state
+export const InventoryManagement = forwardRef((props, ref) => {
+  const { 
     departments, 
     inventoryData, 
     updateItemCount, 
@@ -22,7 +21,7 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
     isOnline,
     syncStatus,
     checkOnlineStatus
-  } = props;
+  } = useInventoryData();
   
   const { theme } = useTheme();
 
@@ -194,7 +193,6 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
                   addModalRef={addModalRef}
                   deleteModalRef={deleteModalRef}
                   resetModalRef={resetModalRef}
-                  isBurgerMenuOpen={isBurgerMenuOpen}
                 />
               </Tab>
             ))}

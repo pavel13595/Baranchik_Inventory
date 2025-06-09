@@ -2,9 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="https://cdn-media.choiceqr.com/prod-eat-baranchik-kremenchuk/logo/thumbnail_ucqRJfB-iEFVQfJ-kPyPiOl_R-W-i.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://cdn-media.choiceqr.com/prod-eat-baranchik-kremenchuk/logo/thumbnail_ucqRJfB-iEFVQfJ-kPyPiOl_R-W-i.png"
+    />
     <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>Baranchik Inventory</title>
     <!-- PWA manifest -->
     <link rel="manifest" href="/manifest.json" />
@@ -12,25 +19,33 @@
     <meta name="theme-color" content="#ffffff" />
     <!-- iOS: запускать как приложение -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
     <meta name="apple-mobile-web-app-title" content="Baranchik Inventory" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <script type="module" crossorigin src="/assets/index-BDZiUb-x.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-u0A9mWaB.css">
+    <script type="module" crossorigin src="/assets/index-DFgrJvi2.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-B7ZEnKiN.css">
   </head>
   <body class="h-full min-h-screen">
     <div id="root"></div>
     <script src="https://cdn.jsdelivr.net/npm/heroui-chat-script@0/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/heroui-chat-script@beta/dist/select-and-edit-utils.global.js"></script>
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then(function(registration) {
-              console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            }, function(err) {
-              console.log('ServiceWorker registration failed: ', err);
-            });
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("/service-worker.js").then(
+            function (registration) {
+              console.log(
+                "ServiceWorker registration successful with scope: ",
+                registration.scope
+              );
+            },
+            function (err) {
+              console.log("ServiceWorker registration failed: ", err);
+            }
+          );
         });
       }
     </script>
