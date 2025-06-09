@@ -84,6 +84,8 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
       const count = inventoryData[item.id] ?? 0;
       if (department.id === "dept-1" || department.id === "dept-3") {
         newValues[item.id] = String(Math.floor(Number(count)));
+      } else if (department.id === "dept-2") {
+        newValues[item.id] = Number(count).toFixed(1).replace('.', ',');
       } else {
         newValues[item.id] = Number(count).toFixed(2).replace('.', ',');
       }
@@ -178,6 +180,12 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
       // Только целые числа
       if (/^\d+$/.test(value)) {
         numericValue = parseInt(value, 10);
+      }
+    } else if (department.id === "dept-2") {
+      // Дробные значения, поддержка запятой и точки
+      const normalized = value.replace(',', '.');
+      if (/^\d+(\.|,)?\d*$/.test(value) && !isNaN(Number(normalized))) {
+        numericValue = Number(Number(normalized).toFixed(1));
       }
     } else {
       // Дробные значения, поддержка запятой и точки
@@ -309,7 +317,12 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         onPress={() => {
                           let currentValue = Number(inputValues[item.id]);
                           if (isNaN(currentValue)) currentValue = 0;
-                          const newValue = Math.max(0, currentValue - 1);
+                          let newValue = currentValue - 1;
+                          if (department.id === "dept-1" || department.id === "dept-3") {
+                            newValue = Math.max(0, Math.round(newValue));
+                          } else if (department.id === "dept-2") {
+                            newValue = Math.max(0, Number(newValue.toFixed(1)));
+                          }
                           setInputValues(prev => ({ ...prev, [item.id]: String(newValue) }));
                           updateItemCount(department.id, item.id, newValue);
                         }}
@@ -331,7 +344,7 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         aria-label={`Количество для ${item.name}`}
                         classNames={{ input: "text-center font-semibold" }}
                         min={0}
-                        step={department.id === "dept-1" || department.id === "dept-3" ? 1 : 0.01}
+                        step={department.id === "dept-1" || department.id === "dept-3" ? 1 : 0.1}
                       />
                       <Button 
                         isIconOnly
@@ -341,7 +354,12 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         onPress={() => {
                           let currentValue = Number(inputValues[item.id]);
                           if (isNaN(currentValue)) currentValue = 0;
-                          const newValue = currentValue + 1;
+                          let newValue = currentValue + 1;
+                          if (department.id === "dept-1" || department.id === "dept-3") {
+                            newValue = Math.round(newValue);
+                          } else if (department.id === "dept-2") {
+                            newValue = Number(newValue.toFixed(1));
+                          }
                           setInputValues(prev => ({ ...prev, [item.id]: String(newValue) }));
                           updateItemCount(department.id, item.id, newValue);
                         }}
