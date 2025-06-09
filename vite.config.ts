@@ -8,5 +8,15 @@ export default defineConfig({
   plugins: [react(), vitePluginInjectDataLocator()],
   server: {
     allowedHosts: true,
+    // Добавляем fallback для SPA
+    historyApiFallback: true,
+  },
+  // Для production build (если используется netlify/vercel/static), тоже нужен fallback
+  build: {
+    rollupOptions: {
+      output: {
+        // ...existing code...
+      },
+    },
   },
 });
