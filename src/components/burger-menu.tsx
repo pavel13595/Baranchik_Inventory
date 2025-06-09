@@ -79,7 +79,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
       </Button>
       {open && (
         <div
-          className="absolute right-0 mt-2 min-w-[140px] w-max rounded-2xl shadow-2xl bg-white dark:bg-zinc-900 border border-default-200 z-50 animate-fade-in flex flex-col items-center px-0 py-0 gap-0 transition-all duration-200"
+          className="absolute right-0 mt-2 min-w-[180px] max-w-[90vw] w-max rounded-2xl shadow-2xl bg-white dark:bg-zinc-900 border border-default-200 z-50 animate-fade-in flex flex-col items-center px-0 py-0 gap-0 transition-all duration-200"
           style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)' }}
         >
           <Button
