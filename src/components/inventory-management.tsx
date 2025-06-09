@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import { DepartmentInventory } from "./department-inventory";
 import { useInventoryData } from "../hooks/use-inventory-data";
 import { exportToExcel } from "../utils/excel-export";
-import { initialDepartments, initialItems } from "../data/initial-data";
+import { initialDepartments } from "../data/initial-data";
 import type { Item } from "../types/inventory";
 import { useTheme } from "../contexts/theme-context";
 import { BurgerMenu } from "./burger-menu";
@@ -14,6 +14,7 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
   // Передаем город в useInventoryData
   const { 
     departments, 
+    items, // <-- добавлено
     inventoryData, 
     updateItemCount, 
     resetDepartmentCounts,
@@ -71,7 +72,7 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
       if (selectedDepartment) {
         exportToExcel(
           [selectedDepartment],
-          initialItems,
+          items, // <-- заменено
           { [selectedDepartment.id]: inventoryData[selectedDepartment.id] || {} },
           sendToTelegram
         );
@@ -181,7 +182,7 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
               }>
                 <DepartmentInventory
                   department={department}
-                  items={initialItems.filter(item => item.category === department.id)}
+                  items={items.filter(item => item.category === department.id)} // <-- заменено
                   inventoryData={inventoryData[department.id] || {}}
                   updateItemCount={updateItemCount}
                   resetDepartmentCounts={() => resetDepartmentCounts(department.id)}
