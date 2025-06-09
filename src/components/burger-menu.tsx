@@ -163,7 +163,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
             }}
             className="flex flex-row justify-center min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-danger/10 transition-colors text-center gap-2 border-t border-default-100 mt-2"
           >
-            Очистити пам'ять
+            Restart
           </Button>
         </div>
       )}

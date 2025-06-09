@@ -21,7 +21,7 @@ function CitySelect() {
   };
 
   React.useEffect(() => {
-    // Если город уже выбран, сразу редиректим
+    // Якщо місто вже вибрано, одразу редірект
     const saved = localStorage.getItem("selectedCity");
     if (saved && cities.includes(saved)) {
       navigate(`/city/${saved}`);
@@ -31,14 +31,14 @@ function CitySelect() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background">
       <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl p-8 flex flex-col gap-6 items-center border border-default-200">
-        <h1 className="text-2xl font-bold mb-2">Добро пожаловать!</h1>
-        <p className="text-default-600 mb-4">Выберите город для инвентаризации:</p>
+        <h1 className="text-2xl font-bold mb-2">Ласкаво просимо!</h1>
+        <p className="text-default-600 mb-4">Оберіть місто для інвентаризації:</p>
         <select
           className="w-64 rounded-lg border border-default-200 px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-primary-400 bg-white dark:bg-zinc-900"
           value={selected}
           onChange={handleSelect}
         >
-          <option value="" disabled>Выберите город...</option>
+          <option value="" disabled>Оберіть місто...</option>
           {cities.map(city => (
             <option key={city} value={city}>{city}</option>
           ))}
