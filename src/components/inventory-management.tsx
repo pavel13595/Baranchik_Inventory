@@ -74,7 +74,8 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
           [selectedDepartment],
           items, // <-- заменено
           { [selectedDepartment.id]: inventoryData[selectedDepartment.id] || {} },
-          sendToTelegram
+          sendToTelegram,
+          city
         );
       }
     }
