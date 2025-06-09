@@ -4,8 +4,22 @@ import { Icon } from "@iconify/react";
 import { ThemeToggle } from "./theme-toggle";
 import { InventoryManagement } from "./inventory-management";
 import { BurgerMenu } from "./burger-menu";
+import { useParams, useNavigate } from "react-router-dom";
 
 export const Dashboard: React.FC = () => {
+  const { cityName } = useParams<{ cityName: string }>();
+  const navigate = useNavigate();
+  const [selectedCity, setSelectedCity] = React.useState<string>(cityName || "Кременчук");
+
+  React.useEffect(() => {
+    if (cityName && cityName !== selectedCity) setSelectedCity(cityName);
+  }, [cityName]);
+
+  React.useEffect(() => {
+    if (selectedCity !== cityName) navigate(`/city/${selectedCity}`, { replace: true });
+    localStorage.setItem("selectedCity", selectedCity);
+  }, [selectedCity]);
+
   // Keep zoom prevention effect
   React.useEffect(() => {
     const handleTouchMove = (e: TouchEvent) => {
@@ -23,7 +37,7 @@ export const Dashboard: React.FC = () => {
   
   // --- Город ---
   // const cities = [ ... ];
-  const [selectedCity, setSelectedCity] = React.useState<string>(() => localStorage.getItem("selectedCity") || "Кременчук");
+  // const [selectedCity, setSelectedCity] = React.useState<string>(() => localStorage.getItem("selectedCity") || "Кременчук");
   // Удаляем выбор города, оставляем только один город
   const cityLabel = "Инвентаризация";
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;

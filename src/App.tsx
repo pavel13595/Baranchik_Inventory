@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Dashboard } from "./components/dashboard";
 import { ThemeProvider } from "./contexts/theme-context";
 
-// Remove ProtectedRoute component that uses useAuth
 export default function App() {
   React.useEffect(() => {
     document.addEventListener('touchmove', function(event) {
@@ -22,8 +21,9 @@ export default function App() {
     <ThemeProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/" element={<Navigate to="/city/Кременчук" replace />} />
+          <Route path="/city/:cityName" element={<Dashboard />} />
+          <Route path="*" element={<Navigate to="/city/Кременчук" replace />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

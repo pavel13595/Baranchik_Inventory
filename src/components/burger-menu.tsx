@@ -76,6 +76,13 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
     };
   }, [open]);
 
+  const handleCityChange = (city: string) => {
+    setSelectedCity(city);
+    localStorage.setItem("selectedCity", city);
+    if (typeof onCityChange === 'function') onCityChange(city);
+    setOpen(false);
+  };
+
   return (
     <div className="relative" ref={menuRef}>
       <Button isIconOnly variant="flat" onPress={() => setOpen(v => !v)} aria-label="Меню">
@@ -92,12 +99,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
               id="city-select"
               className="w-full rounded-lg border border-default-200 px-2 py-1 text-base focus:outline-none focus:ring-2 focus:ring-primary-400 bg-white dark:bg-zinc-900"
               value={selectedCity}
-              onChange={e => {
-                setSelectedCity(e.target.value);
-                localStorage.setItem("selectedCity", e.target.value);
-                if (typeof onCityChange === 'function') onCityChange(e.target.value);
-                setOpen(false);
-              }}
+              onChange={e => handleCityChange(e.target.value)}
             >
               {cities.map(city => (
                 <option key={city} value={city}>{city}</option>
