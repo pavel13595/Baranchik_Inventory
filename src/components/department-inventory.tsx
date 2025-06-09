@@ -36,6 +36,7 @@ interface DepartmentInventoryProps {
   addModalRef?: React.Ref<{ open: () => void }>;
   deleteModalRef?: React.Ref<{ open: () => void }>;
   resetModalRef?: React.Ref<{ open: () => void }>;
+  isBurgerMenuOpen?: boolean;
 }
 
 export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, ref) => {
@@ -51,7 +52,8 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
     setGlobalSearchQuery,
     addModalRef,
     deleteModalRef,
-    resetModalRef
+    resetModalRef,
+    isBurgerMenuOpen = false
   } = props;
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const resetModalDisclosure = useDisclosure();
@@ -225,17 +227,19 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
 
   return (
     <div className="py-4">
-      <div className="flex flex-row gap-2 mb-4 w-full justify-center">
-        <Button color="primary" variant="flat" onPress={onOpen}>
-          <Icon icon="lucide:plus" className="mr-1" /> Додати
-        </Button>
-        <Button color="danger" variant="flat" onPress={() => setDeleteModal(true)}>
-          <Icon icon="lucide:trash" className="mr-1" /> Видалити
-        </Button>
-        <Button color="warning" variant="flat" onPress={resetModalDisclosure.onOpen}>
-          <Icon icon="lucide:refresh-cw" className="mr-1" /> Скинути
-        </Button>
-      </div>
+      {!isBurgerMenuOpen && (
+        <div className="flex flex-row gap-2 mb-4 w-full justify-center">
+          <Button color="primary" variant="flat" onPress={onOpen}>
+            <Icon icon="lucide:plus" className="mr-1" /> Додати
+          </Button>
+          <Button color="danger" variant="flat" onPress={() => setDeleteModal(true)}>
+            <Icon icon="lucide:trash" className="mr-1" /> Видалити
+          </Button>
+          <Button color="warning" variant="flat" onPress={resetModalDisclosure.onOpen}>
+            <Icon icon="lucide:refresh-cw" className="mr-1" /> Скинути
+          </Button>
+        </div>
+      )}
       <div className="w-full">
         <Autocomplete
           defaultItems={autocompleteItems}

@@ -8,6 +8,7 @@ interface BurgerMenuProps {
   onAdd: () => void;
   onDelete: () => void;
   onReset: () => void;
+  onMenuOpenChange?: (open: boolean) => void;
 }
 
 export const BurgerMenu: React.FC<BurgerMenuProps> = ({
@@ -15,10 +16,15 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
   onSend,
   onAdd,
   onDelete,
-  onReset
+  onReset,
+  onMenuOpenChange
 }) => {
   const [open, setOpen] = React.useState(false);
   const menuRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    onMenuOpenChange?.(open);
+  }, [open, onMenuOpenChange]);
 
   // Закрытие по клику вне меню
   React.useEffect(() => {
@@ -73,53 +79,48 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
       </Button>
       {open && (
         <div
-          className="absolute right-0 mt-2 min-w-[150px] w-[70vw] max-w-xs rounded-2xl shadow-2xl bg-white dark:bg-zinc-900 border border-default-200 z-50 animate-fade-in flex flex-col p-2 gap-1 transition-all duration-200"
+          className="absolute right-0 mt-2 min-w-0 w-auto rounded-2xl shadow-2xl bg-white dark:bg-zinc-900 border border-default-200 z-50 animate-fade-in flex flex-col px-0 py-0 gap-2 transition-all duration-200"
           style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)' }}
         >
-          <div className="flex justify-end w-full mb-1">
-            <Button isIconOnly size="sm" variant="light" onPress={() => setOpen(false)} aria-label="Закрити меню">
-              <Icon icon="lucide:x" className="text-xl" />
-            </Button>
-          </div>
           <Button
             startContent={<Icon icon="lucide:file-spreadsheet" />}
             variant="light"
             onPress={() => { setOpen(false); onDownload(); }}
-            className="flex flex-row-reverse justify-end w-full text-base py-2 px-2 rounded-lg hover:bg-primary/10 transition-colors text-right gap-2"
+            className="flex flex-row justify-center w-full text-base py-2 px-4 rounded-lg hover:bg-primary/10 transition-colors text-center gap-2 min-w-32"
           >
-            <span className="w-full text-right">Завантажити</span>
+            Завантажити
           </Button>
           <Button
             startContent={<Icon icon="logos:telegram" />}
             variant="light"
             onPress={() => { setOpen(false); onSend(); }}
-            className="flex flex-row-reverse justify-end w-full text-base py-2 px-2 rounded-lg hover:bg-secondary/10 transition-colors text-right gap-2"
+            className="flex flex-row justify-center w-full text-base py-2 px-4 rounded-lg hover:bg-secondary/10 transition-colors text-center gap-2 min-w-32"
           >
-            <span className="w-full text-right">Відправити</span>
+            Відправити
           </Button>
           <Button
             startContent={<Icon icon="lucide:plus" />}
             variant="light"
             onPress={() => { setOpen(false); onAdd(); }}
-            className="flex flex-row-reverse justify-end w-full text-base py-2 px-2 rounded-lg hover:bg-success/10 transition-colors text-right gap-2"
+            className="flex flex-row justify-center w-full text-base py-2 px-4 rounded-lg hover:bg-success/10 transition-colors text-center gap-2 min-w-32"
           >
-            <span className="w-full text-right">Додати</span>
+            Додати
           </Button>
           <Button
             startContent={<Icon icon="lucide:trash" />}
             variant="light"
             onPress={() => { setOpen(false); onDelete(); }}
-            className="flex flex-row-reverse justify-end w-full text-base py-2 px-2 rounded-lg hover:bg-danger/10 transition-colors text-right gap-2"
+            className="flex flex-row justify-center w-full text-base py-2 px-4 rounded-lg hover:bg-danger/10 transition-colors text-center gap-2 min-w-32"
           >
-            <span className="w-full text-right">Видалити</span>
+            Видалити
           </Button>
           <Button
             startContent={<Icon icon="lucide:refresh-cw" />}
             variant="light"
             onPress={() => { setOpen(false); onReset(); }}
-            className="flex flex-row-reverse justify-end w-full text-base py-2 px-2 rounded-lg hover:bg-warning/10 transition-colors text-right gap-2"
+            className="flex flex-row justify-center w-full text-base py-2 px-4 rounded-lg hover:bg-warning/10 transition-colors text-center gap-2 min-w-32"
           >
-            <span className="w-full text-right">Скинути</span>
+            Скинути
           </Button>
         </div>
       )}
