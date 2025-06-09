@@ -30,6 +30,7 @@ export const Dashboard: React.FC = () => {
 
   // Для передачи действий бургер-меню используем рефы и прокси-функции
   const inventoryRef = React.useRef<any>(null);
+  const [isBurgerMenuOpen, setIsBurgerMenuOpen] = React.useState(false);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -53,12 +54,13 @@ export const Dashboard: React.FC = () => {
               onAdd={() => inventoryRef.current?.openAddModal?.()}
               onDelete={() => inventoryRef.current?.openDeleteModal?.()}
               onReset={() => inventoryRef.current?.openResetModal?.()}
+              onMenuOpenChange={setIsBurgerMenuOpen}
             />
           </NavbarItem>
         </NavbarContent>
       </Navbar>
       <div className="flex-grow pt-16">
-        <InventoryManagement ref={inventoryRef} />
+        <InventoryManagement ref={inventoryRef} isBurgerMenuOpen={isBurgerMenuOpen} />
       </div>
       <footer className="w-full text-center text-xs text-default-400 py-2 border-t border-default-200 bg-background">
         © 2025

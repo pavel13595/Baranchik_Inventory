@@ -9,8 +9,9 @@ import type { Item } from "../types/inventory";
 import { useTheme } from "../contexts/theme-context";
 import { BurgerMenu } from "./burger-menu";
 
-export const InventoryManagement = forwardRef((props, ref) => {
-  const { 
+export const InventoryManagement = forwardRef((props: any, ref) => {
+  const {
+    isBurgerMenuOpen = false, // new prop for burger menu state
     departments, 
     inventoryData, 
     updateItemCount, 
@@ -21,7 +22,7 @@ export const InventoryManagement = forwardRef((props, ref) => {
     isOnline,
     syncStatus,
     checkOnlineStatus
-  } = useInventoryData();
+  } = props;
   
   const { theme } = useTheme();
 
@@ -29,7 +30,6 @@ export const InventoryManagement = forwardRef((props, ref) => {
   const [selectedTabKey, setSelectedTabKey] = React.useState<string | null>(null);
   const [supportsSharing, setSupportsSharing] = React.useState<boolean>(false);
   const [showScrollTop, setShowScrollTop] = React.useState(false);
-  const [isBurgerMenuOpen, setIsBurgerMenuOpen] = React.useState(false);
 
   // Set default tab without user role check
   React.useEffect(() => {
