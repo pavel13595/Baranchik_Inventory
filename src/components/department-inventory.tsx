@@ -67,13 +67,13 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
   const [sortZeroToBottom, setSortZeroToBottom] = React.useState(false);
 
   // Показывать кнопки только если НЕ мобильное устройство и НЕ showBurgerMenu
-  const [isMobile, setIsMobile] = React.useState(false);
-
-  React.useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+  // Исправление: определять isMobile только один раз на маунте, и использовать showBurgerMenu только из props
+  // Это предотвратит "мигание" кнопок при смене таба
+  const isMobile = React.useMemo(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth <= 768;
+    }
+    return false;
   }, []);
 
   // Sync local search with global search
@@ -235,10 +235,17 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
   useImperativeHandle(deleteModalRef, () => ({ open: () => setDeleteModal(true) }), []);
   useImperativeHandle(resetModalRef, () => ({ open: resetModalDisclosure.onOpen }), [resetModalDisclosure]);
 
+  // Группа управления (добавить, удалить, сбросить, экспорт, отправить)
+  const showActionButtons = React.useMemo(() => {
+    // Кнопки видны только на десктопе и планшете, если не открыт бургер-меню
+    return !isMobile && !showBurgerMenu;
+  }, [isMobile, showBurgerMenu]);
+
   return (
     <div className="py-4">
-      {(!isMobile && !showBurgerMenu) && (
-        <div className="flex flex-row gap-2 mb-4 w-full justify-center">
+      {showActionButtons && (
+        <div className="flex flex-row flex-wrap gap-2 w-full justify-center mb-4">
+          {/* Управление товарами */}
           <Button color="primary" variant="flat" onPress={onOpen}>
             <Icon icon="lucide:plus" className="mr-1" /> Додати
           </Button>
