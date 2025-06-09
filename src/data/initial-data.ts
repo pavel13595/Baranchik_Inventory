@@ -266,3 +266,6 @@ export const lvivInitialItems: Item[] = [
   { id: "65151297", name: "Виделка столова персонал", category: "dept-1" },
   { id: "65151298", name: "Ложка столова персонал", category: "dept-1" }
 ];
+
+// Стартовый список для Кременчука (Посуда)
+export const initialItemsKremenchuk: Item[] = initialItems;

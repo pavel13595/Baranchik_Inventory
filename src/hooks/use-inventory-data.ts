@@ -1,6 +1,6 @@
 import React from "react";
 import { Department, Item, InventoryData, InventoryHistory } from "../types/inventory";
-import { initialDepartments, initialItems, lvivInitialItems } from "../data/initial-data";
+import { initialDepartments, initialItemsKremenchuk, lvivInitialItems } from "../data/initial-data";
 import { syncWithGoogleSheets } from "../utils/google-sheets";
 
 export const useInventoryData = (city: string = "Кременчук") => {
@@ -24,11 +24,13 @@ export const useInventoryData = (city: string = "Кременчук") => {
     setAllItems(prev => {
       // Если уже есть массив для города — не трогаем
       if (prev[city] && prev[city].length > 0) return prev;
-      // Для Львова — стартовый список только если его ещё нет
+      if (city === "Кременчук") {
+        return { ...prev, [city]: initialItemsKremenchuk };
+      }
       if (city === "Львів") {
         return { ...prev, [city]: lvivInitialItems };
       }
-      // Для других городов — пустой массив
+      // Для других городов — пустой массив (или добавьте аналогично)
       return { ...prev, [city]: [] };
     });
   }, [city]);
