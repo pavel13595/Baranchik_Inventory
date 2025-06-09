@@ -22,7 +22,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
   onMenuOpenChange,
   onCityChange
 }) => {
-  const navigate = typeof window !== 'undefined' ? require('react-router-dom').useNavigate() : () => {};
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [selectedCity, setSelectedCity] = React.useState<string>(() => localStorage.getItem("selectedCity") || "Кременчук");
   const cities = ["Кременчук", "Харків", "Львів"];
