@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { useNavigate } from "react-router-dom";
 
 interface BurgerMenuProps {
   onDownload: () => void;
@@ -21,6 +22,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
   onMenuOpenChange,
   onCityChange
 }) => {
+  const navigate = typeof window !== 'undefined' ? require('react-router-dom').useNavigate() : () => {};
   const [open, setOpen] = React.useState(false);
   const [selectedCity, setSelectedCity] = React.useState<string>(() => localStorage.getItem("selectedCity") || "Кременчук");
   const cities = ["Кременчук", "Харків", "Львів"];
@@ -152,6 +154,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
             onPress={() => {
               if (window.confirm("Очистити всі дані пам'яті для тесту? Це видалить всі інвентаризации для всіх міст!")) {
                 localStorage.clear();
+                navigate && navigate('/city/Кременчук', { replace: true });
                 window.location.reload();
               }
             }}
