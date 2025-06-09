@@ -167,6 +167,36 @@ export const useInventoryData = (city: string = "Кременчук") => {
     });
   };
 
+  // Сохраняем выбранный город
+  React.useEffect(() => {
+    localStorage.setItem("selectedCity", city);
+  }, [city]);
+
+  // При инициализации читаем данные для города из localStorage
+  React.useEffect(() => {
+    try {
+      const savedAllInventoryData = localStorage.getItem("allInventoryData");
+      const savedAllItems = localStorage.getItem("allItems");
+      const savedAllHistory = localStorage.getItem("allHistory");
+      if (savedAllInventoryData) setAllInventoryData(JSON.parse(savedAllInventoryData));
+      if (savedAllItems) setAllItems(JSON.parse(savedAllItems));
+      if (savedAllHistory) setAllHistory(JSON.parse(savedAllHistory));
+    } catch (error) {
+      // ignore
+    }
+  }, []);
+
+  // Сохраняем все изменения по городам
+  React.useEffect(() => {
+    localStorage.setItem("allInventoryData", JSON.stringify(allInventoryData));
+  }, [allInventoryData]);
+  React.useEffect(() => {
+    localStorage.setItem("allItems", JSON.stringify(allItems));
+  }, [allItems]);
+  React.useEffect(() => {
+    localStorage.setItem("allHistory", JSON.stringify(allHistory));
+  }, [allHistory]);
+
   return {
     departments,
     items,

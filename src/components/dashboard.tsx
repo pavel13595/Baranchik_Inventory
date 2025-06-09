@@ -23,7 +23,7 @@ export const Dashboard: React.FC = () => {
   
   // --- Город ---
   // const cities = [ ... ];
-  const [selectedCity, setSelectedCity] = React.useState<string>("Кременчук");
+  const [selectedCity, setSelectedCity] = React.useState<string>(() => localStorage.getItem("selectedCity") || "Кременчук");
   // Удаляем выбор города, оставляем только один город
   const cityLabel = "Инвентаризация";
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
