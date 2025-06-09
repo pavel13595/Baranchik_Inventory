@@ -124,7 +124,7 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
       <Card className="shadow-md">
         <CardHeader className="flex flex-col justify-between items-start gap-4 px-2 sm:px-6">
           <h1 className="text-2xl sm:text-4xl font-bold text-center mb-4 w-full">
-            {`Той Самий Баранчик ${city}`}
+            {`Той самий Баранчик ${city}`}
           </h1>
           <div className="flex w-full items-center gap-2 justify-between">
             {/* Удалён бургер-меню из CardHeader */}
