@@ -17,16 +17,22 @@ export const useInventoryData = (city: string = "Кременчук") => {
   const items = allItems[city] || [];
   const history = allHistory[city] || [];
 
-  // При смене города инициализируем только если нет данных
+  // При смене города инициализируем только если нет данных ИЛИ если в cityItems больше позиций, чем в локальном хранилище
   React.useEffect(() => {
     setAllInventoryData(prev => prev[city] ? prev : { ...prev, [city]: {} });
     setAllHistory(prev => prev[city] ? prev : { ...prev, [city]: [] });
     setAllItems(prev => {
+      const fileItems = cityItems[city] || [];
+      const localItems = prev[city] || [];
+      // Если в файле больше позиций, чем в локальном хранилище — обновляем
+      if (fileItems.length > localItems.length) {
+        return { ...prev, [city]: fileItems };
+      }
       // Если уже есть массив для города — не трогаем
-      if (prev[city] && prev[city].length > 0) return prev;
+      if (localItems.length > 0) return prev;
       // Если есть уникальный список для города — используем его
-      if (cityItems[city]) {
-        return { ...prev, [city]: cityItems[city] };
+      if (fileItems.length > 0) {
+        return { ...prev, [city]: fileItems };
       }
       // Для других городов — пустой массив
       return { ...prev, [city]: [] };
