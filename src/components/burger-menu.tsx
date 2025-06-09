@@ -79,14 +79,14 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
       </Button>
       {open && (
         <div
-          className="absolute right-0 mt-2 w-auto rounded-2xl shadow-2xl bg-white dark:bg-zinc-900 border border-default-200 z-50 animate-fade-in flex flex-col items-center px-0 py-0 gap-0 transition-all duration-200"
+          className="absolute right-0 mt-2 min-w-[140px] w-max rounded-2xl shadow-2xl bg-white dark:bg-zinc-900 border border-default-200 z-50 animate-fade-in flex flex-col items-center px-0 py-0 gap-0 transition-all duration-200"
           style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)' }}
         >
           <Button
             startContent={<Icon icon="lucide:file-spreadsheet" />}
             variant="light"
             onPress={() => { setOpen(false); onDownload(); }}
-            className="flex flex-row justify-center min-w-[140px] w-full text-base py-2 px-4 rounded-lg hover:bg-primary/10 transition-colors text-center gap-2 border-b border-default-100 last:border-b-0"
+            className="flex flex-row justify-center min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-primary/10 transition-colors text-center gap-2 border-b border-default-100 last:border-b-0"
           >
             Завантажити
           </Button>
@@ -94,7 +94,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
             startContent={<Icon icon="logos:telegram" />}
             variant="light"
             onPress={() => { setOpen(false); onSend(); }}
-            className="flex flex-row justify-center min-w-[140px] w-full text-base py-2 px-4 rounded-lg hover:bg-secondary/10 transition-colors text-center gap-2 border-b border-default-100 last:border-b-0"
+            className="flex flex-row justify-center min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-secondary/10 transition-colors text-center gap-2 border-b border-default-100 last:border-b-0"
           >
             Відправити
           </Button>
@@ -102,7 +102,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
             startContent={<Icon icon="lucide:plus" />}
             variant="light"
             onPress={() => { setOpen(false); onAdd(); }}
-            className="flex flex-row justify-center min-w-[140px] w-full text-base py-2 px-4 rounded-lg hover:bg-success/10 transition-colors text-center gap-2 border-b border-default-100 last:border-b-0"
+            className="flex flex-row justify-center min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-success/10 transition-colors text-center gap-2 border-b border-default-100 last:border-b-0"
           >
             Додати
           </Button>
@@ -110,7 +110,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
             startContent={<Icon icon="lucide:trash" />}
             variant="light"
             onPress={() => { setOpen(false); onDelete(); }}
-            className="flex flex-row justify-center min-w-[140px] w-full text-base py-2 px-4 rounded-lg hover:bg-danger/10 transition-colors text-center gap-2 border-b border-default-100 last:border-b-0"
+            className="flex flex-row justify-center min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-danger/10 transition-colors text-center gap-2 border-b border-default-100 last:border-b-0"
           >
             Видалити
           </Button>
@@ -118,7 +118,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
             startContent={<Icon icon="lucide:refresh-cw" />}
             variant="light"
             onPress={() => { setOpen(false); onReset(); }}
-            className="flex flex-row justify-center min-w-[140px] w-full text-base py-2 px-4 rounded-lg hover:bg-warning/10 transition-colors text-center gap-2 last:border-b-0"
+            className="flex flex-row justify-center min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-warning/10 transition-colors text-center gap-2 last:border-b-0"
           >
             Скинути
           </Button>
