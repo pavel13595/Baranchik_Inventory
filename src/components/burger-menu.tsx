@@ -22,7 +22,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
   onCityChange
 }) => {
   const [open, setOpen] = React.useState(false);
-  const [selectedCity, setSelectedCity] = React.useState<string>("Кременчук");
+  const [selectedCity, setSelectedCity] = React.useState<string>(() => localStorage.getItem("selectedCity") || "Кременчук");
   const cities = ["Кременчук", "Харків", "Львів"];
   const menuRef = React.useRef<HTMLDivElement>(null);
 
@@ -94,6 +94,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
               value={selectedCity}
               onChange={e => {
                 setSelectedCity(e.target.value);
+                localStorage.setItem("selectedCity", e.target.value);
                 if (typeof onCityChange === 'function') onCityChange(e.target.value);
                 setOpen(false);
               }}
