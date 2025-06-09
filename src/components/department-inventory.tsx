@@ -307,7 +307,8 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         color="default"
                         className="p-0.5 rounded-full"
                         onPress={() => {
-                          const currentValue = Number(inputValues[item.id] ?? 0);
+                          let currentValue = Number(inputValues[item.id]);
+                          if (isNaN(currentValue)) currentValue = 0;
                           const newValue = Math.max(0, currentValue - 1);
                           setInputValues(prev => ({ ...prev, [item.id]: String(newValue) }));
                           updateItemCount(department.id, item.id, newValue);
@@ -338,7 +339,8 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         color="default"
                         className="p-0.5 rounded-full"
                         onPress={() => {
-                          const currentValue = Number(inputValues[item.id] ?? 0);
+                          let currentValue = Number(inputValues[item.id]);
+                          if (isNaN(currentValue)) currentValue = 0;
                           const newValue = currentValue + 1;
                           setInputValues(prev => ({ ...prev, [item.id]: String(newValue) }));
                           updateItemCount(department.id, item.id, newValue);
