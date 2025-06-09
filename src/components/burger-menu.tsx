@@ -154,7 +154,11 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
             onPress={() => {
               if (window.confirm("Очистити всі дані пам'яті для тесту? Це видалить всі інвентаризации для всіх міст!")) {
                 localStorage.clear();
-                window.location.replace('/city/Кременчук');
+                // Попытка закрыть приложение (работает для PWA и некоторых браузеров)
+                window.location.replace("/");
+                setTimeout(() => {
+                  window.close();
+                }, 300);
               }
             }}
             className="flex flex-row justify-center min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-danger/10 transition-colors text-center gap-2 border-t border-default-100 mt-2"
