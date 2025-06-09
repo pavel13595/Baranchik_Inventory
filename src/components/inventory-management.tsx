@@ -11,6 +11,7 @@ import { BurgerMenu } from "./burger-menu";
 
 export const InventoryManagement = forwardRef((props: any, ref) => {
   const { city = "Кременчук", ...rest } = props;
+  // Передаем город в useInventoryData
   const { 
     departments, 
     inventoryData, 
@@ -22,7 +23,7 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
     isOnline,
     syncStatus,
     checkOnlineStatus
-  } = useInventoryData();
+  } = useInventoryData(city);
   
   const { theme } = useTheme();
 
@@ -35,9 +36,6 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
   React.useEffect(() => {
     setSelectedTabKey(departments[0]?.id || null);
   }, [departments]);
-
-  // Используем только один список товаров (Кременчуг)
-  const items = initialItems;
 
   // Check if device supports sharing files - fix the error with navigator.canShare
   React.useEffect(() => {
@@ -73,7 +71,7 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
       if (selectedDepartment) {
         exportToExcel(
           [selectedDepartment],
-          items,
+          initialItems,
           { [selectedDepartment.id]: inventoryData[selectedDepartment.id] || {} },
           sendToTelegram
         );
@@ -183,7 +181,7 @@ export const InventoryManagement = forwardRef((props: any, ref) => {
               }>
                 <DepartmentInventory
                   department={department}
-                  items={items.filter(item => item.category === department.id)}
+                  items={initialItems.filter(item => item.category === department.id)}
                   inventoryData={inventoryData[department.id] || {}}
                   updateItemCount={updateItemCount}
                   resetDepartmentCounts={() => resetDepartmentCounts(department.id)}

@@ -3,11 +3,27 @@ import { Department, Item, InventoryData, InventoryHistory } from "../types/inve
 import { initialDepartments, initialItems } from "../data/initial-data";
 import { syncWithGoogleSheets } from "../utils/google-sheets";
 
-export const useInventoryData = () => {
+export const useInventoryData = (city: string = "Кременчук") => {
+  // Для каждого города — отдельные данные
+  const [allInventoryData, setAllInventoryData] = React.useState<{[city: string]: InventoryData}>({});
+  const [allItems, setAllItems] = React.useState<{[city: string]: Item[]}>({});
+  const [allHistory, setAllHistory] = React.useState<{[city: string]: InventoryHistory[]}>({});
+
+  // Глобальные отделы (одинаковые для всех городов)
   const [departments, setDepartments] = React.useState<Department[]>(initialDepartments);
-  const [items, setItems] = React.useState<Item[]>(initialItems);
-  const [inventoryData, setInventoryData] = React.useState<InventoryData>({});
-  const [history, setHistory] = React.useState<InventoryHistory[]>([]);
+
+  // Получаем данные для текущего города
+  const inventoryData = allInventoryData[city] || {};
+  const items = allItems[city] || [];
+  const history = allHistory[city] || [];
+
+  // При смене города инициализируем пустыми, если нет
+  React.useEffect(() => {
+    setAllInventoryData(prev => prev[city] ? prev : { ...prev, [city]: {} });
+    setAllItems(prev => prev[city] ? prev : { ...prev, [city]: [] });
+    setAllHistory(prev => prev[city] ? prev : { ...prev, [city]: [] });
+  }, [city]);
+
   const [isOnline, setIsOnline] = React.useState<boolean>(navigator.onLine);
   const [syncStatus, setSyncStatus] = React.useState<"idle" | "syncing" | "success" | "error">("idle");
   
@@ -54,15 +70,15 @@ export const useInventoryData = () => {
       }
 
       if (savedItems) {
-        setItems(JSON.parse(savedItems));
+        setAllItems(prev => ({ ...prev, [city]: JSON.parse(savedItems) }));
       }
 
       if (savedInventoryData) {
-        setInventoryData(JSON.parse(savedInventoryData));
+        setAllInventoryData(prev => ({ ...prev, [city]: JSON.parse(savedInventoryData) }));
       }
       
       if (savedHistory) {
-        setHistory(JSON.parse(savedHistory));
+        setAllHistory(prev => ({ ...prev, [city]: JSON.parse(savedHistory) }));
       }
     } catch (error) {
       console.error("Error loading data from localStorage:", error);
@@ -107,41 +123,21 @@ export const useInventoryData = () => {
     }
   }, [isOnline, departments, items, inventoryData, history]);
 
+  // Методы для работы с текущим городом
   const updateItemCount = (departmentId: string, itemId: string, count: number) => {
-    setInventoryData(prev => {
-      const newData = { ...prev };
-      if (!newData[departmentId]) newData[departmentId] = {};
-      const oldValue = newData[departmentId][itemId] || 0;
-      if (oldValue !== count) {
-        (newData[departmentId] as any)[itemId] = count;
-        (newData[departmentId] as any)[`${itemId}_timestamp`] = Date.now();
-        const itemObj = items.find(i => i.id === itemId);
-        const deptObj = departments.find(d => d.id === departmentId);
-        if (itemObj && deptObj) {
-          setHistory(prev => [
-            {
-              timestamp: Date.now(),
-              departmentId,
-              departmentName: deptObj.name,
-              itemId,
-              itemName: itemObj.name,
-              oldValue: typeof oldValue === 'number' ? oldValue : 0,
-              newValue: count,
-              userName: "Система"
-            },
-            ...prev.slice(0, 99)
-          ]);
-        }
-      }
-      return newData;
+    setAllInventoryData(prev => {
+      const cityData = { ...(prev[city] || {}) };
+      if (!cityData[departmentId]) cityData[departmentId] = {};
+      cityData[departmentId][itemId] = count;
+      return { ...prev, [city]: cityData };
     });
   };
 
   const resetDepartmentCounts = (departmentId: string) => {
-    setInventoryData(prev => {
-      const newData = { ...prev };
-      newData[departmentId] = {};
-      return newData;
+    setAllInventoryData(prev => {
+      const cityData = { ...(prev[city] || {}) };
+      cityData[departmentId] = {};
+      return { ...prev, [city]: cityData };
     });
   };
 
@@ -151,17 +147,23 @@ export const useInventoryData = () => {
       name,
       category: categoryId
     };
-    setItems(prev => [...prev, newItem]);
+    setAllItems(prev => {
+      const cityItems = prev[city] ? [...prev[city]] : [];
+      return { ...prev, [city]: [...cityItems, newItem] };
+    });
   };
 
   const deleteItem = (itemId: string, departmentId: string) => {
-    setItems(prev => prev.filter(item => item.id !== itemId));
-    setInventoryData(prev => {
-      const newData = { ...prev };
-      if (newData[departmentId]) {
-        delete (newData[departmentId] as any)[itemId];
+    setAllItems(prev => {
+      const cityItems = prev[city] ? prev[city].filter(item => item.id !== itemId) : [];
+      return { ...prev, [city]: cityItems };
+    });
+    setAllInventoryData(prev => {
+      const cityData = { ...(prev[city] || {}) };
+      if (cityData[departmentId]) {
+        delete cityData[departmentId][itemId];
       }
-      return newData;
+      return { ...prev, [city]: cityData };
     });
   };
 
