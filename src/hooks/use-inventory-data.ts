@@ -17,15 +17,18 @@ export const useInventoryData = (city: string = "Кременчук") => {
   const items = allItems[city] || [];
   const history = allHistory[city] || [];
 
-  // При смене города инициализируем пустыми, если нет
+  // При смене города инициализируем только если нет данных
   React.useEffect(() => {
     setAllInventoryData(prev => prev[city] ? prev : { ...prev, [city]: {} });
     setAllHistory(prev => prev[city] ? prev : { ...prev, [city]: [] });
     setAllItems(prev => {
+      // Если уже есть массив для города — не трогаем
       if (prev[city] && prev[city].length > 0) return prev;
+      // Если есть уникальный список для города — используем его
       if (cityItems[city]) {
         return { ...prev, [city]: cityItems[city] };
       }
+      // Для других городов — пустой массив
       return { ...prev, [city]: [] };
     });
   }, [city]);
@@ -178,7 +181,7 @@ export const useInventoryData = (city: string = "Кременчук") => {
     localStorage.setItem("selectedCity", city);
   }, [city]);
 
-  // При инициализации читаем данные для города из localStorage
+  // При инициализации читаем данные для всех городов из localStorage
   React.useEffect(() => {
     try {
       const savedAllInventoryData = localStorage.getItem("allInventoryData");
