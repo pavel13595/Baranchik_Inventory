@@ -149,7 +149,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
             >
               Скинути
             </Button>
-            <div className="w-full border-t border-default-100 my-2"></div>
+            <div className="w-full border-t border-default-100 my-0"></div>
             <Button
               startContent={<Icon icon="lucide:eraser" className="w-6 h-6" />}
               variant="light"
