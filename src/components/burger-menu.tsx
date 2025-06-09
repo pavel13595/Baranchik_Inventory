@@ -144,6 +144,19 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
           >
             Скинути
           </Button>
+          <Button
+            startContent={<Icon icon="lucide:eraser" className="w-6 h-6" />}
+            variant="light"
+            onPress={() => {
+              if (window.confirm("Очистити всі дані пам'яті для тесту? Це видалить всі інвентаризации для всіх міст!")) {
+                localStorage.clear();
+                window.location.reload();
+              }
+            }}
+            className="flex flex-row justify-center min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-danger/10 transition-colors text-center gap-2 border-t border-default-100 mt-2"
+          >
+            Очистити пам'ять
+          </Button>
         </div>
       )}
     </div>
