@@ -83,7 +83,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({
           style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)' }}
         >
           <Button
-            startContent={<Icon icon="lucide:file-spreadsheet" className="text-2xl" style={{width: '1.5em', height: '1.5em'}} />}
+            startContent={<Icon icon="lucide:file-spreadsheet" style={{ width: 32, height: 32 }} />}
             variant="light"
             onPress={() => { setOpen(false); onDownload(); }}
             className="flex flex-row justify-center min-w-[140px] text-base py-2 px-4 rounded-lg hover:bg-primary/10 transition-colors text-center gap-2 border-b border-default-100 last:border-b-0"
