@@ -101,8 +101,12 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
     filteredItems.forEach(item => {
       const count = inventoryData[item.id] ?? 0;
       if (department.id === "dept-2") {
-        // Для хозтоваров: отображаем как есть (строка), чтобы поддерживать дробные числа
-        values[item.id] = typeof count === 'string' ? count : String(count).replace('.', ',');
+        // Для хозтоваров: если 0 — показываем 0,00, иначе как есть (строка)
+        if (count === 0 || count === "0" || count === "0.00" || count === 0.0) {
+          values[item.id] = "0,00";
+        } else {
+          values[item.id] = typeof count === 'string' ? count : String(count).replace('.', ',');
+        }
       } else {
         values[item.id] = String(Math.floor(Number(count)));
       }
