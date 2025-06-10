@@ -133,18 +133,13 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
 
   // Add a function to handle input value changes
   const handleValueChange = (itemId: string, value: string) => {
-    let numericValue: number;
     if (department.id === "dept-2") {
-      // Для хозтоваров: разрешаем дробные числа
-      let normalized = value.replace(',', '.').replace(/[^\d.]/g, '');
-      const parts = normalized.split('.');
-      if (parts.length > 2) normalized = parts[0] + '.' + parts.slice(1).join('');
-      numericValue = parseFloat(normalized);
-      if (isNaN(numericValue)) numericValue = 0;
+      // Для хозтоваров: разрешаем любой ввод, просто сохраняем строку
+      updateItemCount(department.id, itemId, value.replace(',', '.'));
     } else {
-      numericValue = parseInt(value.replace(/[^\d]/g, "")) || 0;
+      const numericValue = parseInt(value.replace(/[^\d]/g, "")) || 0;
+      updateItemCount(department.id, itemId, numericValue);
     }
-    updateItemCount(department.id, itemId, numericValue);
   };
 
   // Add function to handle input focus
@@ -198,7 +193,7 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
     handleValueChange(itemId, value);
   }, [handleValueChange]);
 
-  // handleInputBlur теперь не вызывает setInputValues, только обновляет inventoryData
+  // handleInputBlur теперь парсит и округляет только при потере фокуса
   const handleInputBlur = useCallback((itemId: string) => {
     const value = inputValues[itemId] ?? "";
     let numericValue: number | null = null;
