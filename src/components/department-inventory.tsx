@@ -343,7 +343,15 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         className="text-center font-semibold"
                         value={inputValues[item.id] ?? ""}
                         onFocus={handleInputFocus}
-                        onChange={(e) => handleInputChange(item.id, e.target.value)}
+                        onChange={(e) => {
+                          // Для хозтоваров разрешаем ввод точки и запятой, не фильтруем их на лету
+                          if (department.id === "dept-2") {
+                            const val = e.target.value.replace(/[^0-9.,]/g, "");
+                            handleInputChange(item.id, val);
+                          } else {
+                            handleInputChange(item.id, e.target.value);
+                          }
+                        }}
                         onBlur={() => handleInputBlur(item.id)}
                         aria-label={`Количество для ${item.name}`}
                         classNames={{ input: "text-center font-semibold" }}
