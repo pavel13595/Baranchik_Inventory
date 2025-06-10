@@ -130,22 +130,27 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
 
   // Add a function to handle input value changes
   const handleValueChange = (itemId: string, value: string) => {
-    // Parse the input value
     let numericValue: number;
-    
-    if (department.id === "dept-1" || department.id === "dept-3") { // Посуда и Упаковка - only whole numbers
-      // Convert to integer
-      numericValue = parseInt(value.replace(/[^\d]/g, '')) || 0;
+    if (department.id === "dept-1" || department.id === "dept-3") {
+      numericValue = parseInt(value.replace(/[^\d]/g, "")) || 0;
+    } else if (department.id === "dept-2") {
+      // Для хозтоваров: разрешаем только числа с одной цифрой после запятой
+      let normalized = value.replace(',', '.').replace(/[^\d.]/g, '');
+      // Оставляем только одну точку
+      const parts = normalized.split('.');
+      if (parts.length > 2) normalized = parts[0] + '.' + parts.slice(1).join('');
+      numericValue = parseFloat(normalized);
+      if (isNaN(numericValue)) numericValue = 0;
+      numericValue = Number(numericValue.toFixed(1));
     } else {
-      // For other departments, allow decimal values
-      // Replace comma with dot for proper parsing
-      const normalizedValue = value.replace(',', '.');
-      numericValue = parseFloat(normalizedValue) || 0;
-      // Round to 2 decimal places
+      // Для других отделов: до двух знаков после запятой
+      let normalized = value.replace(',', '.').replace(/[^\d.]/g, '');
+      const parts = normalized.split('.');
+      if (parts.length > 2) normalized = parts[0] + '.' + parts.slice(1).join('');
+      numericValue = parseFloat(normalized);
+      if (isNaN(numericValue)) numericValue = 0;
       numericValue = Number(numericValue.toFixed(2));
     }
-    
-    // Update the inventory data
     updateItemCount(department.id, itemId, numericValue);
   };
 
@@ -320,6 +325,7 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                   <TableCell className="max-w-[150px] sm:max-w-none truncate">{item.name}</TableCell>
                   <TableCell className="w-[120px] text-center align-middle">
                     <div className="flex items-center justify-center gap-1">
+                      {/* Удаляем setInputValues из onPress у кнопок +/- (теперь только updateItemCount) */}
                       <Button 
                         isIconOnly
                         variant="bordered"
@@ -334,7 +340,6 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                           } else if (department.id === "dept-2") {
                             newValue = Math.max(0, Number(newValue.toFixed(1)));
                           }
-                          setInputValues(prev => ({ ...prev, [item.id]: String(newValue) }));
                           updateItemCount(department.id, item.id, newValue);
                         }}
                         aria-label="Уменьшить количество"
@@ -371,7 +376,6 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                           } else if (department.id === "dept-2") {
                             newValue = Number(newValue.toFixed(1));
                           }
-                          setInputValues(prev => ({ ...prev, [item.id]: String(newValue) }));
                           updateItemCount(department.id, item.id, newValue);
                         }}
                         aria-label="Увеличить количество"

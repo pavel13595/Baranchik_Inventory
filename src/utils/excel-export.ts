@@ -157,7 +157,7 @@ const createDepartmentSheet = (
     ["Організація:", `Той самий Баранчик ${city}`],
     ["Бланк інвентаризації", ""],
     ["", ""],
-    ["На дату:", new Date().toLocaleDateString()],
+    ["Дата:", new Date().toLocaleDateString()],
     ["Склад", `Той самий Баранчик ${city} (${department.name})`],
     ["", ""],
     ["Товар", "", "", "Од. вим.", "Залишок фактичний", "Позначки"],
@@ -211,6 +211,9 @@ const createDepartmentSheet = (
 
   XLSX.utils.book_append_sheet(wb, ws, department.name);
 };
+
+
+
 
 // -----------------------------------------------------------------------------
 // 🧮 Optional summary sheet (all departments) – unused by default
@@ -384,8 +387,8 @@ const applyDepartmentStyles = (
 
   // Column widths
   ws["!cols"] = [
-    { width: 10 }, // Код
-    { width: 12 }, // Штрих‑код
+    { width: 15 }, // Код
+    { width: 5 }, // Штрих‑код
     { width: 40 }, // Найменування
     { width: 8 },  // Од. вим.
     { width: 15 }, // Залишок фактичний
