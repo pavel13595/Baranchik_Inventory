@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { Dashboard } from "./components/dashboard";
 import { ThemeProvider } from "./contexts/theme-context";
+import { AddToHomeButton } from "./components/add-to-home-button";
 
 const cities = ["Кременчук", "Харків", "Львів"];
 
@@ -50,6 +51,7 @@ function CitySelect() {
         >
           Перейти
         </button>
+        <AddToHomeButton />
       </div>
     </div>
   );
