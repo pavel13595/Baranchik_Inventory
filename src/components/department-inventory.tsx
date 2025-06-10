@@ -335,7 +335,9 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         <Icon icon="lucide:minus" width={16} height={16} />
                       </Button>
                       <Input
-                        type={department.id === "dept-2" ? "text" : "number"}
+                        type="text"
+                        inputMode={department.id === "dept-2" ? "decimal" : "numeric"}
+                        pattern={department.id === "dept-2" ? "[0-9.,]*" : "[0-9]*"}
                         variant="bordered"
                         style={{ width: '2.5em', minWidth: '2.5em', maxWidth: '2.5em', textAlign: 'center', fontWeight: 600, textAlignLast: 'center' }}
                         className="text-center font-semibold"
