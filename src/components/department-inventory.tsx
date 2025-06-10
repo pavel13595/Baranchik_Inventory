@@ -356,7 +356,6 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                       <Input
                         type={department.id === "dept-1" || department.id === "dept-3" ? "number" : "text"}
                         inputMode={department.id === "dept-1" || department.id === "dept-3" ? "numeric" : "decimal"}
-                        pattern={department.id === "dept-1" || department.id === "dept-3" ? "[0-9]*" : undefined} // убираем ограничение на pattern для хозтоваров
                         variant="bordered"
                         style={{ width: '2.5em', minWidth: '2.5em', maxWidth: '2.5em', textAlign: 'center', fontWeight: 600, textAlignLast: 'center' }}
                         className="text-center font-semibold"
