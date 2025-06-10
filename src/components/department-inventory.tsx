@@ -370,11 +370,13 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         onPress={() => {
                           let currentValue = Number(inputValues[item.id]);
                           if (isNaN(currentValue)) currentValue = 0;
-                          let newValue = currentValue + 1;
+                          let newValue;
                           if (department.id === "dept-1" || department.id === "dept-3") {
-                            newValue = Math.round(newValue);
+                            newValue = Math.round(currentValue + 1);
                           } else if (department.id === "dept-2") {
-                            newValue = Number(newValue.toFixed(1));
+                            newValue = Number((currentValue + 0.1).toFixed(1));
+                          } else {
+                            newValue = currentValue + 1;
                           }
                           updateItemCount(department.id, item.id, newValue);
                         }}
