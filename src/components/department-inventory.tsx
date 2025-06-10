@@ -355,7 +355,8 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                       </Button>
                       <Input
                         type={department.id === "dept-1" || department.id === "dept-3" ? "number" : "text"}
-                        inputMode={department.id === "dept-1" || department.id === "dept-3" ? "numeric" : "decimal"}
+                        inputMode={department.id === "dept-1" || department.id === "dept-3" ? "numeric" : undefined}
+                        // Для хозтоваров полностью убираем inputMode, чтобы не мешать ручному вводу дробных чисел на всех устройствах
                         variant="bordered"
                         style={{ width: '2.5em', minWidth: '2.5em', maxWidth: '2.5em', textAlign: 'center', fontWeight: 600, textAlignLast: 'center' }}
                         className="text-center font-semibold"
