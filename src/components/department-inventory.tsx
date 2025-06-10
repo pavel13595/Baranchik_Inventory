@@ -134,11 +134,10 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
     if (department.id === "dept-1" || department.id === "dept-3") {
       numericValue = parseInt(value.replace(/[^\d]/g, "")) || 0;
     } else if (department.id === "dept-2") {
-      // Для хозтоваров: разрешаем ввод до двух знаков после запятой, округляем только при onBlur
+      // Для хозтоваров: разрешаем ввод с любым количеством знаков после запятой, округляем только при onBlur
       let normalized = value.replace(',', '.').replace(/[^\d.]/g, '');
       const parts = normalized.split('.');
       if (parts.length > 2) normalized = parts[0] + '.' + parts.slice(1).join('');
-      // Не округляем здесь, просто парсим
       numericValue = parseFloat(normalized);
       if (isNaN(numericValue)) numericValue = 0;
     } else {
