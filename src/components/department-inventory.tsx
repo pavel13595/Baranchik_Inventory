@@ -100,11 +100,15 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
     const values: {[itemId: string]: string} = {};
     filteredItems.forEach(item => {
       const count = inventoryData[item.id] ?? 0;
-      // Для всех отделов теперь одинаково: только целые числа
-      values[item.id] = String(Math.floor(Number(count)));
+      if (department.id === "dept-2") {
+        // Для хозтоваров: отображаем как есть (строка), чтобы поддерживать дробные числа
+        values[item.id] = typeof count === 'string' ? count : String(count).replace('.', ',');
+      } else {
+        values[item.id] = String(Math.floor(Number(count)));
+      }
     });
     return values;
-  }, [filteredItems, inventoryData]);
+  }, [filteredItems, inventoryData, department.id]);
 
   // Для сортировки всей строки: формируем массив объектов {item, count}
   const itemsWithCount = useMemo(() =>
@@ -125,8 +129,17 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
 
   // Add a function to handle input value changes
   const handleValueChange = (itemId: string, value: string) => {
-    // Для всех отделов теперь одинаково: только целые числа
-    const numericValue = parseInt(value.replace(/[^\d]/g, "")) || 0;
+    let numericValue: number;
+    if (department.id === "dept-2") {
+      // Для хозтоваров: разрешаем дробные числа
+      let normalized = value.replace(',', '.').replace(/[^\d.]/g, '');
+      const parts = normalized.split('.');
+      if (parts.length > 2) normalized = parts[0] + '.' + parts.slice(1).join('');
+      numericValue = parseFloat(normalized);
+      if (isNaN(numericValue)) numericValue = 0;
+    } else {
+      numericValue = parseInt(value.replace(/[^\d]/g, "")) || 0;
+    }
     updateItemCount(department.id, itemId, numericValue);
   };
 
@@ -185,15 +198,22 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
   const handleInputBlur = useCallback((itemId: string) => {
     const value = inputValues[itemId] ?? "";
     let numericValue: number | null = null;
-    if (/^\d+$/.test(value)) {
-      numericValue = parseInt(value, 10);
+    if (department.id === "dept-2") {
+      const normalized = value.replace(',', '.');
+      if (/^\d+(\.|,)?\d*$/.test(value) && !isNaN(Number(normalized))) {
+        numericValue = Number(Number(normalized).toFixed(2));
+      }
+    } else {
+      if (/^\d+$/.test(value)) {
+        numericValue = parseInt(value, 10);
+      }
     }
     if (numericValue !== null && !isNaN(numericValue)) {
       updateItemCount(department.id, itemId, numericValue);
     } else if (value === "") {
       updateItemCount(department.id, itemId, 0);
     }
-  }, [inputValues, updateItemCount]);
+  }, [inputValues, department.id, updateItemCount]);
 
   // Фильтр для поиска в модальном окне удаления
   const deleteFilteredItems = items.filter(item =>
@@ -296,14 +316,17 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         color="default"
                         className="p-0.5 rounded-full"
                         onPress={() => {
+                          // Кнопки +/- для хозтоваров теперь работают с дробными числами (до 2 знаков после запятой)
                           let rawValue = inputValues[item.id] ?? "";
                           let currentValue = department.id === "dept-2" ? Number(rawValue.replace(',', '.')) : Number(rawValue);
                           if (isNaN(currentValue)) currentValue = 0;
-                          let newValue = currentValue - 1;
+                          let newValue;
                           if (department.id === "dept-1" || department.id === "dept-3") {
-                            newValue = Math.max(0, Math.round(newValue));
+                            newValue = Math.max(0, Math.round(currentValue - 1));
                           } else if (department.id === "dept-2") {
-                            newValue = Math.max(0, Number((currentValue - 0.1).toFixed(1)));
+                            newValue = Math.max(0, Number((currentValue - 0.1).toFixed(2)));
+                          } else {
+                            newValue = Math.max(0, currentValue - 1);
                           }
                           updateItemCount(department.id, item.id, newValue);
                         }}
@@ -312,9 +335,9 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         <Icon icon="lucide:minus" width={16} height={16} />
                       </Button>
                       <Input
-                        type="number"
-                        inputMode="numeric"
-                        pattern="[0-9]*"
+                        type={department.id === "dept-2" ? "text" : "number"}
+                        inputMode={department.id === "dept-2" ? undefined : "numeric"}
+                        pattern={department.id === "dept-2" ? undefined : "[0-9]*"}
                         variant="bordered"
                         style={{ width: '2.5em', minWidth: '2.5em', maxWidth: '2.5em', textAlign: 'center', fontWeight: 600, textAlignLast: 'center' }}
                         className="text-center font-semibold"
@@ -325,7 +348,7 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         aria-label={`Количество для ${item.name}`}
                         classNames={{ input: "text-center font-semibold" }}
                         min={0}
-                        step={1}
+                        step={department.id === "dept-2" ? 0.01 : 1}
                       />
                       <Button 
                         isIconOnly
@@ -340,7 +363,7 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                           if (department.id === "dept-1" || department.id === "dept-3") {
                             newValue = Math.round(currentValue + 1);
                           } else if (department.id === "dept-2") {
-                            newValue = Number((currentValue + 0.1).toFixed(1));
+                            newValue = Number((currentValue + 0.1).toFixed(2));
                           } else {
                             newValue = currentValue + 1;
                           }
