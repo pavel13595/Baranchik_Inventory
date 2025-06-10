@@ -340,22 +340,14 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                       </Button>
                       <Input
                         type="text"
-                        inputMode={department.id === "dept-2" ? "decimal" : "numeric"}
-                        pattern={department.id === "dept-2" ? "[0-9.,]*" : "[0-9]*"}
+                        inputMode="decimal" // всегда decimal, чтобы открывалась цифровая клавиатура с точкой/запятой
+                        // pattern не задаём, чтобы не мешать ручному вводу
                         variant="bordered"
                         style={{ width: '2.5em', minWidth: '2.5em', maxWidth: '2.5em', textAlign: 'center', fontWeight: 600, textAlignLast: 'center' }}
                         className="text-center font-semibold"
                         value={inputValues[item.id] ?? ""}
                         onFocus={handleInputFocus}
-                        onChange={(e) => {
-                          // Для хозтоваров разрешаем ввод точки и запятой, не фильтруем их на лету
-                          if (department.id === "dept-2") {
-                            const val = e.target.value.replace(/[^0-9.,]/g, "");
-                            handleInputChange(item.id, val);
-                          } else {
-                            handleInputChange(item.id, e.target.value);
-                          }
-                        }}
+                        onChange={(e) => handleInputChange(item.id, e.target.value)}
                         onBlur={() => handleInputBlur(item.id)}
                         aria-label={`Количество для ${item.name}`}
                         classNames={{ input: "text-center font-semibold" }}
