@@ -100,17 +100,11 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
     const values: {[itemId: string]: string} = {};
     filteredItems.forEach(item => {
       const count = inventoryData[item.id] ?? 0;
-      if (department.id === "dept-1" || department.id === "dept-3") {
-        values[item.id] = String(Math.floor(Number(count)));
-      } else if (department.id === "dept-2") {
-        // Для хозтоваров: показываем как есть (строка), чтобы пользователь мог вводить дробные числа
-        values[item.id] = typeof count === 'string' ? count : String(count).replace('.', ',');
-      } else {
-        values[item.id] = Number(count).toFixed(2).replace('.', ',');
-      }
+      // Для всех отделов теперь одинаково: только целые числа
+      values[item.id] = String(Math.floor(Number(count)));
     });
     return values;
-  }, [filteredItems, inventoryData, department.id]);
+  }, [filteredItems, inventoryData]);
 
   // Для сортировки всей строки: формируем массив объектов {item, count}
   const itemsWithCount = useMemo(() =>
@@ -131,24 +125,8 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
 
   // Add a function to handle input value changes
   const handleValueChange = (itemId: string, value: string) => {
-    let numericValue: number;
-    if (department.id === "dept-1" || department.id === "dept-3") {
-      numericValue = parseInt(value.replace(/[^\d]/g, "")) || 0;
-    } else if (department.id === "dept-2") {
-      // Для хозтоваров: разрешаем ввод с любым количеством знаков после запятой, округляем только при onBlur
-      let normalized = value.replace(',', '.').replace(/[^\d.]/g, '');
-      const parts = normalized.split('.');
-      if (parts.length > 2) normalized = parts[0] + '.' + parts.slice(1).join('');
-      numericValue = parseFloat(normalized);
-      if (isNaN(numericValue)) numericValue = 0;
-    } else {
-      let normalized = value.replace(',', '.').replace(/[^\d.]/g, '');
-      const parts = normalized.split('.');
-      if (parts.length > 2) normalized = parts[0] + '.' + parts.slice(1).join('');
-      numericValue = parseFloat(normalized);
-      if (isNaN(numericValue)) numericValue = 0;
-      numericValue = Number(numericValue.toFixed(2));
-    }
+    // Для всех отделов теперь одинаково: только целые числа
+    const numericValue = parseInt(value.replace(/[^\d]/g, "")) || 0;
     updateItemCount(department.id, itemId, numericValue);
   };
 
@@ -207,35 +185,15 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
   const handleInputBlur = useCallback((itemId: string) => {
     const value = inputValues[itemId] ?? "";
     let numericValue: number | null = null;
-    if (department.id === "dept-1" || department.id === "dept-3") {
-      if (/^\d+$/.test(value)) {
-        numericValue = parseInt(value, 10);
-      }
-    } else if (department.id === "dept-2") {
-      // Для хозтоваров: разрешаем любое число, округляем только если есть дробная часть
-      const normalized = value.replace(',', '.');
-      if (/^\d+(\.|,)?\d*$/.test(value) && !isNaN(Number(normalized))) {
-        numericValue = Number(normalized);
-        // Округлять до 1 знака только если дробная часть есть и больше 1 знака
-        if (String(numericValue).includes('.')) {
-          const [, fraction] = String(numericValue).split('.');
-          if (fraction && fraction.length > 1) {
-            numericValue = Number(numericValue.toFixed(1));
-          }
-        }
-      }
-    } else {
-      const normalized = value.replace(',', '.');
-      if (/^\d+(\.|,)?\d*$/.test(value) && !isNaN(Number(normalized))) {
-        numericValue = Number(Number(normalized).toFixed(2));
-      }
+    if (/^\d+$/.test(value)) {
+      numericValue = parseInt(value, 10);
     }
     if (numericValue !== null && !isNaN(numericValue)) {
       updateItemCount(department.id, itemId, numericValue);
     } else if (value === "") {
       updateItemCount(department.id, itemId, 0);
     }
-  }, [inputValues, department.id, updateItemCount]);
+  }, [inputValues, updateItemCount]);
 
   // Фильтр для поиска в модальном окне удаления
   const deleteFilteredItems = items.filter(item =>
@@ -354,9 +312,9 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         <Icon icon="lucide:minus" width={16} height={16} />
                       </Button>
                       <Input
-                        type={department.id === "dept-1" || department.id === "dept-3" ? "number" : "text"}
-                        inputMode={department.id === "dept-1" || department.id === "dept-3" ? "numeric" : undefined}
-                        // Для хозтоваров полностью убираем inputMode, чтобы не мешать ручному вводу дробных чисел на всех устройствах
+                        type="number"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         variant="bordered"
                         style={{ width: '2.5em', minWidth: '2.5em', maxWidth: '2.5em', textAlign: 'center', fontWeight: 600, textAlignLast: 'center' }}
                         className="text-center font-semibold"
@@ -367,7 +325,7 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         aria-label={`Количество для ${item.name}`}
                         classNames={{ input: "text-center font-semibold" }}
                         min={0}
-                        step={department.id === "dept-1" || department.id === "dept-3" ? 1 : 0.1}
+                        step={1}
                       />
                       <Button 
                         isIconOnly
