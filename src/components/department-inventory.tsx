@@ -103,7 +103,7 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
       if (department.id === "dept-1" || department.id === "dept-3") {
         values[item.id] = String(Math.floor(Number(count)));
       } else if (department.id === "dept-2") {
-        // Для хозтоваров: всегда отображаем как есть (строкой), чтобы не мешать ручному вводу
+        // Для хозтоваров: показываем как есть (строка), чтобы пользователь мог вводить дробные числа
         values[item.id] = String(count).replace('.', ',');
       } else {
         values[item.id] = Number(count).toFixed(2).replace('.', ',');
