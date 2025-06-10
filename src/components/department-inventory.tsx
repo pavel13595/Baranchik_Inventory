@@ -103,7 +103,8 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
       if (department.id === "dept-1" || department.id === "dept-3") {
         values[item.id] = String(Math.floor(Number(count)));
       } else if (department.id === "dept-2") {
-        values[item.id] = Number(count).toFixed(1).replace('.', ',');
+        // Для хозтоваров: всегда отображаем как есть (строкой), чтобы не мешать ручному вводу
+        values[item.id] = String(count).replace('.', ',');
       } else {
         values[item.id] = Number(count).toFixed(2).replace('.', ',');
       }
@@ -211,9 +212,17 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
         numericValue = parseInt(value, 10);
       }
     } else if (department.id === "dept-2") {
+      // Для хозтоваров: разрешаем любое число, округляем только если есть дробная часть
       const normalized = value.replace(',', '.');
       if (/^\d+(\.|,)?\d*$/.test(value) && !isNaN(Number(normalized))) {
-        numericValue = Number(Number(normalized).toFixed(1));
+        numericValue = Number(normalized);
+        // Округлять до 1 знака только если дробная часть есть и больше 1 знака
+        if (String(numericValue).includes('.')) {
+          const [, fraction] = String(numericValue).split('.');
+          if (fraction && fraction.length > 1) {
+            numericValue = Number(numericValue.toFixed(1));
+          }
+        }
       }
     } else {
       const normalized = value.replace(',', '.');
