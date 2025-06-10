@@ -332,13 +332,14 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         color="default"
                         className="p-0.5 rounded-full"
                         onPress={() => {
-                          let currentValue = Number(inputValues[item.id]);
+                          let rawValue = inputValues[item.id] ?? "";
+                          let currentValue = department.id === "dept-2" ? Number(rawValue.replace(',', '.')) : Number(rawValue);
                           if (isNaN(currentValue)) currentValue = 0;
                           let newValue = currentValue - 1;
                           if (department.id === "dept-1" || department.id === "dept-3") {
                             newValue = Math.max(0, Math.round(newValue));
                           } else if (department.id === "dept-2") {
-                            newValue = Math.max(0, Number(newValue.toFixed(1)));
+                            newValue = Math.max(0, Number((currentValue - 0.1).toFixed(1)));
                           }
                           updateItemCount(department.id, item.id, newValue);
                         }}
@@ -368,7 +369,8 @@ export const DepartmentInventory = forwardRef((props: DepartmentInventoryProps, 
                         color="default"
                         className="p-0.5 rounded-full"
                         onPress={() => {
-                          let currentValue = Number(inputValues[item.id]);
+                          let rawValue = inputValues[item.id] ?? "";
+                          let currentValue = department.id === "dept-2" ? Number(rawValue.replace(',', '.')) : Number(rawValue);
                           if (isNaN(currentValue)) currentValue = 0;
                           let newValue;
                           if (department.id === "dept-1" || department.id === "dept-3") {
