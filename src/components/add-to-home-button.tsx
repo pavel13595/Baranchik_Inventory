@@ -26,20 +26,20 @@ export const AddToHomeButton: React.FC = () => {
   };
 
   if (!visible) {
-    // Показываем инструкцию для ручного добавления ярлыка (iOS/Android)
+    // Показуємо інструкцію для ручного додавання ярлика (iOS/Android)
     return (
       <div className="mt-4 text-center text-sm text-default-500 max-w-xs">
         <div className="mb-2 font-semibold text-default-700">
-          Как добавить ярлык на главный экран:
+          Як додати ярлик на головний екран:
         </div>
         <div className="mb-1">
-          • <b>Android:</b> Откройте меню браузера (<b>⋮</b> или <b>≡</b>) и
-          выберите <b>"Добавить на главный экран"</b>.
+          • <b>Android:</b> Відкрийте меню браузера (<b>⋮</b> або <b>≡</b>) і
+          виберіть <b>"Додати на головний екран"</b>.
         </div>
         <div>
-          • <b>iPhone/iPad:</b> Нажмите <b>Поделиться</b>{" "}
-          <span style={{ fontWeight: 600 }}>&#8679;</span> и выберите
-          <b>"На экран — Домой"</b>.
+          • <b>iPhone/iPad:</b> Натисніть <b>Поділитися</b>{" "}
+          <span style={{ fontWeight: 600 }}>&#8679;</span> і виберіть
+          <b>"На екран — Додому"</b>.
         </div>
       </div>
     );
@@ -51,7 +51,7 @@ export const AddToHomeButton: React.FC = () => {
       onClick={handleAdd}
       style={{ zIndex: 1000 }}
     >
-      Добавить ярлык на главный экран
+      Добавити ярлик на головний екран
     </button>
   );
 };
