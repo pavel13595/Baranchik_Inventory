@@ -47,8 +47,8 @@ export const Dashboard: React.FC = () => {
   const inventoryRef = React.useRef<any>(null);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Navbar isBordered maxWidth="xl" className="bg-background">
+    <div className="h-screen flex flex-col bg-background">
+      <Navbar isBordered maxWidth="xl" className="fixed top-0 left-0 w-full z-50 bg-background">
         <NavbarBrand>
           <div className="flex items-center gap-2">
             <Icon icon="lucide:clipboard-list" className="text-primary text-2xl sm:text-3xl" style={{ minWidth: 32, minHeight: 32 }} />
@@ -74,7 +74,8 @@ export const Dashboard: React.FC = () => {
           </NavbarItem>
         </NavbarContent>
       </Navbar>
-      <div className="flex-grow pt-[32px] sm:pt-12">
+      {/* Контент под Navbar — скролл только для него, Navbar всегда закреплён */}
+      <div className="flex-grow overflow-y-auto pt-[80px] sm:pt-16 hide-scrollbar">
         <InventoryManagement ref={inventoryRef} city={selectedCity} showBurgerMenu={showBurgerMenu} />
       </div>
       <footer className="w-full text-center text-xs text-default-400 py-2 border-t border-default-200 bg-background">
