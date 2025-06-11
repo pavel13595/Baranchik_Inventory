@@ -74,8 +74,11 @@ export const Dashboard: React.FC = () => {
           </NavbarItem>
         </NavbarContent>
       </Navbar>
-      {/* Увеличенный отступ сверху для компенсации фиксированного Navbar и статус-бара */}
-      <div className="flex-grow pt-[80px] sm:pt-16">
+      {/* Увеличенный отступ сверху для компенсации фиксированного Navbar и статус-бара с учетом safe-area-inset-top */}
+      <div
+        className="flex-grow"
+        style={{ paddingTop: 'calc(80px + env(safe-area-inset-top, 0px))' }}
+      >
         <InventoryManagement ref={inventoryRef} city={selectedCity} showBurgerMenu={showBurgerMenu} />
       </div>
       <footer className="w-full text-center text-xs text-default-400 py-2 border-t border-default-200 bg-background">
