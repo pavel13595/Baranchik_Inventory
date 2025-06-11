@@ -32,10 +32,6 @@ function CitySelect() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background">
       <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl p-8 flex flex-col gap-6 items-center border border-default-200 relative" style={{minWidth: 340}}>
-        {/* Кнопка добавления ярлыка — справа сверху */}
-        <div style={{position: 'absolute', top: 16, right: 16}}>
-          <AddToHomeButton />
-        </div>
         <h1 className="text-2xl font-bold mb-2">Ласкаво просимо!</h1>
         <p className="text-default-600 mb-4">Оберіть місто для інвентаризації:</p>
         <select
@@ -55,6 +51,7 @@ function CitySelect() {
         >
           Перейти
         </button>
+        <AddToHomeButton />
       </div>
     </div>
   );

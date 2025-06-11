@@ -24,14 +24,15 @@ export const AddToHomeButton: React.FC = () => {
   };
 
   return (
-    <div style={{ position: "fixed", bottom: 16, right: 16, zIndex: 1000 }}>
+    <div className="w-full flex flex-col items-center">
       <button
-        className="flex items-center gap-2 px-3 py-2 rounded-full bg-success text-white text-xs font-semibold shadow-lg hover:bg-success/80 transition-all"
+        className="mt-2 px-5 py-2 rounded-lg bg-yellow-400 text-black font-semibold shadow hover:bg-yellow-300 transition-all text-sm flex items-center gap-2"
         style={{ minWidth: 0, minHeight: 0 }}
         onClick={handleAdd}
         aria-label="Додати ярлик на головний екран"
       >
-        <span style={{ fontSize: 16 }}>★</span>
+        <span style={{ fontSize: 18 }}>★</span>
+        Додати ярлик на головний екран
       </button>
       {showHint && (
         <div
