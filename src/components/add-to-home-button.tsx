@@ -51,23 +51,17 @@ export const AddToHomeButton: React.FC = () => {
           color: "#FFD600",
           display: "block",
           lineHeight: 1,
-          background: "#fff",
-          borderRadius: "100px",
-          boxShadow: "0 2px 8px 0 #eee",
-          padding: 8,
           cursor: "pointer",
-          transition: "background 0.2s",
+          userSelect: "none",
         }}
-        onMouseOver={(e) => (e.currentTarget.style.background = "#fef7e0")}
-        onMouseOut={(e) => (e.currentTarget.style.background = "#fff")}
       >
         ★
       </span>
       {showHint && (
         <div
           ref={hintRef}
-          className="absolute right-0 mt-2 p-3 rounded-xl bg-white/95 shadow-xl border border-default-200 text-xs text-left max-w-[340px] z-50"
-          style={{ color: "#222", top: "110%" }}
+          className="absolute right-0 mt-2 p-3 rounded-xl bg-white/95 shadow-xl border border-default-200 text-xs text-left z-50"
+          style={{ color: "#222", top: "110%", maxWidth: 420 }}
         >
           <div className="mb-1">
             <b>Android:</b> Відкрийте меню браузера (<b>⋮</b> або <b>≡</b>) і виберіть <b>"Додати на головний екран"</b>.
