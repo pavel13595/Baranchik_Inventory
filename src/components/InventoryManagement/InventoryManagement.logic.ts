@@ -1,7 +1,7 @@
 import { useImperativeHandle, useRef, useState, useEffect } from "react";
-import { useInventoryData } from "../hooks/use-inventory-data";
-import { exportToExcel } from "../utils/excel-export";
-import { useTheme } from "../contexts/theme-context";
+import { useInventoryData } from "../../hooks/use-inventory-data";
+import { exportToExcel } from "../../utils/excel-export";
+import { useTheme } from "../../contexts/theme-context";
 
 export function useInventoryManagementLogic(props: any, ref: any) {
   const { city = "Кременчук", showBurgerMenu = false } = props;
