@@ -67,7 +67,7 @@ export const AddToHomeButton: React.FC = () => {
           <div className="mb-1">
             <b>Android:</b> Відкрийте меню браузера (⋮ або ≡) і виберіть "Додати на головний екран".
             <br />
-            <span style={{ display: "block", margin: "4px 0", color: "#bbb" }}>&mdash;</span>
+            <hr style={{ border: 0, borderTop: "1px solid #bbb", margin: "10px 0" }} />
             <b>iPhone/iPad:</b> Відкрийте сайт у Safari, натисніть Поділитися{" "}
             <span style={{ fontWeight: 600 }}>&#8679;</span> і виберіть "На екран — Додому".
           </div>
