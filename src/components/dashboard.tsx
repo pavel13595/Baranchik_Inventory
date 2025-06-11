@@ -75,12 +75,12 @@ export const Dashboard: React.FC = () => {
         </NavbarContent>
       </Navbar>
       {/* Контент под Navbar — скролл только для него, Navbar всегда закреплён */}
-      <div className="flex-grow overflow-y-auto pt-[64px] sm:pt-16">
+      <div className="flex-grow overflow-y-auto pt-[64px] sm:pt-16 hide-scrollbar">
         <InventoryManagement ref={inventoryRef} city={selectedCity} showBurgerMenu={showBurgerMenu} />
       </div>
-      <footer className="w-full text-center text-xs text-default-400 py-2 border-t border-default-200 bg-background">
-        © 2025
-      </footer>
     </div>
+    <footer className="w-full text-center text-xs text-default-400 py-2 border-t border-default-200 bg-background">
+      © 2025
+    </footer>
   );
 };
