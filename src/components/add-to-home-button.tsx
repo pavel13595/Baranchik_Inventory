@@ -41,25 +41,27 @@ export const AddToHomeButton: React.FC = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative" style={{ position: "absolute", top: 4, right: 4 }}>
       <button
         ref={buttonRef}
-        className="p-2 bg-white shadow border-2 border-gray-300 hover:bg-yellow-100 transition-all"
-        style={{ minWidth: 0, minHeight: 0, lineHeight: 1, boxShadow: '0 2px 8px 0 #eee', borderRadius: 100 }}
+        className="p-2 bg-white shadow rounded-full hover:bg-gray-100 transition-all"
+        style={{ minWidth: 0, minHeight: 0, lineHeight: 1, border: "none", boxShadow: "0 2px 8px 0 #eee" }}
         onClick={handleAdd}
         aria-label="Додати ярлик на головний екран"
       >
-        <span style={{ fontSize: 24, color: '#FFD600', display: 'block', lineHeight: 1 }}>★</span>
+        <span style={{ fontSize: 24, color: "#FFD600", display: "block", lineHeight: 1 }}>★</span>
       </button>
       {showHint && (
         <div
           ref={hintRef}
           className="absolute right-0 mt-2 p-3 rounded-xl bg-white/95 shadow-xl border border-default-200 text-xs text-left max-w-[260px] z-50"
-          style={{ color: "#222", top: '110%' }}
+          style={{ color: "#222", top: "110%" }}
         >
           <div className="mb-1">
-            <b>Android:</b> Відкрийте меню браузера (<b>⋮</b> або <b>≡</b>) і виберіть <b>"Додати на головний екран"</b>.<br />
-            <b>iPhone/iPad:</b> Відкрийте сайт у <b>Safari</b>, натисніть <b>Поділитися</b> <span style={{fontWeight:600}}>&#8679;</span> і виберіть <b>"На екран — Додому"</b>.
+            <b>Android:</b> Відкрийте меню браузера (<b>⋮</b> або <b>≡</b>) і виберіть <b>"Додати на головний екран"</b>.
+            <br />
+            <b>iPhone/iPad:</b> Відкрийте сайт у <b>Safari</b>, натисніть <b>Поділитися</b>{" "}
+            <span style={{ fontWeight: 600 }}>&#8679;</span> і виберіть <b>"На екран — Додому"</b>.
           </div>
         </div>
       )}
