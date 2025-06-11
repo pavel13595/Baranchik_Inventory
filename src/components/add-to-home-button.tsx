@@ -41,7 +41,7 @@ export const AddToHomeButton: React.FC = () => {
   };
 
   return (
-    <div className="relative" style={{ position: "absolute", top: 4, right: 4 }}>
+    <div className="relative" style={{ position: "absolute", top: 15, right: 15 }}>
       <button
         ref={buttonRef}
         className="p-2 bg-white shadow rounded-full hover:bg-gray-100 transition-all"
@@ -49,7 +49,7 @@ export const AddToHomeButton: React.FC = () => {
         onClick={handleAdd}
         aria-label="Додати ярлик на головний екран"
       >
-        <span style={{ fontSize: 24, color: "#FFD600", display: "block", lineHeight: 1 }}>★</span>
+        <span style={{ fontSize: 34, color: "#FFD600", display: "block", lineHeight: 1 }}>★</span>
       </button>
       {showHint && (
         <div
