@@ -2,13 +2,11 @@ import React from "react";
 
 export const AddToHomeButton: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = React.useState<any>(null);
-  const [visible, setVisible] = React.useState(false);
 
   React.useEffect(() => {
     const handler = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      setVisible(true);
     };
     window.addEventListener("beforeinstallprompt", handler);
     return () => window.removeEventListener("beforeinstallprompt", handler);
@@ -18,32 +16,13 @@ export const AddToHomeButton: React.FC = () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === "accepted") {
-        setVisible(false);
-      }
       setDeferredPrompt(null);
+    } else {
+      alert(
+        "Щоб додати ярлик, скористайтеся стандартною функцією браузера: 'Додати на головний екран' у меню (⋮ або ≡) на Android, або спочатку відкрийте сайт у браузері Safari на iPhone/iPad, потім через 'Поділитися' → 'На екран — Додому'."
+      );
     }
   };
-
-  if (!visible) {
-    // Показуємо інструкцію для ручного додавання ярлика (iOS/Android)
-    return (
-      <div className="mt-4 text-center text-sm text-default-500 max-w-xs">
-        <div className="mb-2 font-semibold text-default-700">
-          Як додати ярлик на головний екран:
-        </div>
-        <div className="mb-1">
-          • <b>Android:</b> Відкрийте меню браузера (<b>⋮</b> або <b>≡</b>) і
-          виберіть <b>"Додати на головний екран"</b>.
-        </div>
-        <div>
-          • <b>iPhone/iPad:</b> Натисніть <b>Поділитися</b>{" "}
-          <span style={{ fontWeight: 600 }}>&#8679;</span> і виберіть
-          <b>"На екран — Додому"</b>.
-        </div>
-      </div>
-    );
-  }
 
   return (
     <button
@@ -51,7 +30,7 @@ export const AddToHomeButton: React.FC = () => {
       onClick={handleAdd}
       style={{ zIndex: 1000 }}
     >
-      Добавити ярлик на головний екран
+      Додати ярлик на головний екран
     </button>
   );
 };
