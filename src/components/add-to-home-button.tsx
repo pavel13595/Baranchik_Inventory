@@ -3,7 +3,7 @@ import React from "react";
 export const AddToHomeButton: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = React.useState<any>(null);
   const [showHint, setShowHint] = React.useState(false);
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const iconRef = React.useRef<HTMLSpanElement>(null);
   const hintRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -18,7 +18,7 @@ export const AddToHomeButton: React.FC = () => {
   React.useEffect(() => {
     if (!showHint) return;
     const handleClick = (e: MouseEvent) => {
-      if (buttonRef.current && buttonRef.current.contains(e.target as Node)) {
+      if (iconRef.current && iconRef.current.contains(e.target as Node)) {
         return;
       }
       if (hintRef.current && hintRef.current.contains(e.target as Node)) {
@@ -41,20 +41,32 @@ export const AddToHomeButton: React.FC = () => {
   };
 
   return (
-    <div className="relative" style={{ position: "absolute", top: 15, right: 15 }}>
-      <button
-        ref={buttonRef}
-        className="p-2 bg-white shadow rounded-full hover:bg-gray-100 transition-all"
-        style={{ minWidth: 0, minHeight: 0, lineHeight: 1, border: "none", boxShadow: "0 2px 8px 0 #eee" }}
+    <div className="relative" style={{ position: "absolute", top: -16, right: 30 }}>
+      <span
+        ref={iconRef}
         onClick={handleAdd}
         aria-label="Додати ярлик на головний екран"
+        style={{
+          fontSize: 34,
+          color: "#FFD600",
+          display: "block",
+          lineHeight: 1,
+          background: "#fff",
+          borderRadius: "100px",
+          boxShadow: "0 2px 8px 0 #eee",
+          padding: 8,
+          cursor: "pointer",
+          transition: "background 0.2s",
+        }}
+        onMouseOver={(e) => (e.currentTarget.style.background = "#fef7e0")}
+        onMouseOut={(e) => (e.currentTarget.style.background = "#fff")}
       >
-        <span style={{ fontSize: 34, color: "#FFD600", display: "block", lineHeight: 1 }}>★</span>
-      </button>
+        ★
+      </span>
       {showHint && (
         <div
           ref={hintRef}
-          className="absolute right-0 mt-2 p-3 rounded-xl bg-white/95 shadow-xl border border-default-200 text-xs text-left max-w-[260px] z-50"
+          className="absolute right-0 mt-2 p-3 rounded-xl bg-white/95 shadow-xl border border-default-200 text-xs text-left max-w-[340px] z-50"
           style={{ color: "#222", top: "110%" }}
         >
           <div className="mb-1">
