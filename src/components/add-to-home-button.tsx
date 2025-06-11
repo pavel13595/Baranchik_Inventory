@@ -45,17 +45,18 @@ export const AddToHomeButton: React.FC = () => {
       <span
         ref={iconRef}
         onClick={handleAdd}
-        aria-label="Додати ярлик на головний екран"
+        aria-label="Підказка про додавання ярлика"
         style={{
           fontSize: 34,
-          color: "#FFD600",
+          color: "rgba(120,120,120,0.5)",
           display: "block",
           lineHeight: 1,
           cursor: "pointer",
           userSelect: "none",
+          fontWeight: 700,
         }}
       >
-        ★
+        ?
       </span>
       {showHint && (
         <div
