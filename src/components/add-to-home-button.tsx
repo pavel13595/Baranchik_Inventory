@@ -44,8 +44,8 @@ export const AddToHomeButton: React.FC = () => {
     <div className="relative">
       <button
         ref={buttonRef}
-        className="p-2 bg-white shadow border-2 border-yellow-400 rounded-full hover:bg-yellow-100 transition-all"
-        style={{ minWidth: 0, minHeight: 0, lineHeight: 1, boxShadow: '0 2px 8px 0 #ffe06680' }}
+        className="p-2 bg-white shadow border-2 border-gray-300 hover:bg-yellow-100 transition-all"
+        style={{ minWidth: 0, minHeight: 0, lineHeight: 1, boxShadow: '0 2px 8px 0 #eee', borderRadius: 100 }}
         onClick={handleAdd}
         aria-label="Додати ярлик на головний екран"
       >
