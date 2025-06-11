@@ -41,7 +41,7 @@ export const AddToHomeButton: React.FC = () => {
   };
 
   return (
-    <div className="relative" style={{ position: "absolute", top: -16, right: 30 }}>
+    <div className="relative" style={{ position: "absolute", top: -12, right: 12 }}>
       <span
         ref={iconRef}
         onClick={handleAdd}
@@ -62,7 +62,7 @@ export const AddToHomeButton: React.FC = () => {
         <div
           ref={hintRef}
           className="absolute right-0 mt-2 p-3 rounded-xl bg-white/95 shadow-xl border border-default-200 text-xs text-left z-50"
-          style={{ color: "#222", top: "110%", maxWidth: 420 }}
+          style={{ color: "#222", top: "110%", minWidth: 340, width: 420 }}
         >
           <div className="mb-1">
             <b>Android:</b> Відкрийте меню браузера (<b>⋮</b> або <b>≡</b>) і виберіть <b>"Додати на головний екран"</b>.
