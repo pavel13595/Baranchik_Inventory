@@ -74,8 +74,8 @@ export const Dashboard: React.FC = () => {
           </NavbarItem>
         </NavbarContent>
       </Navbar>
-      {/* Отступ сверху для компенсации фиксированного Navbar, без лишнего пространства */}
-      <div className="flex-grow pt-[64px] sm:pt-16">
+      {/* Отступ сверху для компенсации фиксированного Navbar и статус-бара на iOS/современных устройствах */}
+      <div className="flex-grow with-navbar-safe-area">
         <InventoryManagement ref={inventoryRef} city={selectedCity} showBurgerMenu={showBurgerMenu} />
       </div>
       <footer className="w-full text-center text-xs text-default-400 py-2 border-t border-default-200 bg-background">

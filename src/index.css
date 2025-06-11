@@ -184,3 +184,8 @@ html, body {
   padding: 0;
   height: 100%;
 }
+
+/* Компенсация фиксированного Navbar с учётом safe-area-inset-top для iOS/современных устройств */
+.with-navbar-safe-area {
+  padding-top: calc(64px + env(safe-area-inset-top, 0px));
+}
