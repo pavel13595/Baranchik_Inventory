@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { Dashboard } from "./components/dashboard";
+import { Dashboard } from "./components/Dashboard/Dashboard";
 import { ThemeProvider } from "./contexts/theme-context";
-import { AddToHomeButton } from "./components/add-to-home-button";
+import { AddToHomeButton } from "./components/AddToHomeButton/AddToHomeButton";
 
 const cities = ["Кременчук", "Харків", "Львів"];
 

@@ -1,11 +1,8 @@
 import React from "react";
 import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { useTheme } from "../contexts/theme-context";
 
-export const ThemeToggle: React.FC = () => {
-  const { theme, toggleTheme } = useTheme();
-  
+export function ThemeToggleLayout({ theme, toggleTheme }: { theme: string, toggleTheme: () => void }) {
   return (
     <Button
       isIconOnly
@@ -20,4 +17,4 @@ export const ThemeToggle: React.FC = () => {
       )}
     </Button>
   );
-};
+}
