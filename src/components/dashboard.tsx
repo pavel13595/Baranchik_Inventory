@@ -50,15 +50,7 @@ export const Dashboard: React.FC = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar isBordered maxWidth="xl" className="fixed top-0 left-0 w-full z-50 bg-background">
         <NavbarBrand>
-          <div
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={e => { e.stopPropagation(); e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            title="Прокрутить наверх"
-            tabIndex={0}
-            role="button"
-            style={{ userSelect: "auto" }}
-            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); } }}
-          >
+          <div className="flex items-center gap-2">
             <Icon icon="lucide:clipboard-list" className="text-primary text-2xl sm:text-3xl" style={{ minWidth: 32, minHeight: 32 }} />
             <span className="font-bold text-inherit flex items-center gap-2" style={{ minWidth: 180 }}>
               Інвентаризація
