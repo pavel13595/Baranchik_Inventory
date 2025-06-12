@@ -198,3 +198,17 @@ html, body {
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome/Safari/Webkit */
 }
+
+/* Hide all scrollbars visually */
+::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+::-webkit-scrollbar-thumb {
+  background: transparent !important;
+}
+html, body, * {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE/Edge */
+}

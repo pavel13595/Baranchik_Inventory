@@ -52,9 +52,12 @@ export const Dashboard: React.FC = () => {
         <NavbarBrand>
           <div
             className="flex items-center gap-2 cursor-pointer"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={e => { e.stopPropagation(); e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             title="Прокрутить наверх"
+            tabIndex={0}
+            role="button"
             style={{ userSelect: "auto" }}
+            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); } }}
           >
             <Icon icon="lucide:clipboard-list" className="text-primary text-2xl sm:text-3xl" style={{ minWidth: 32, minHeight: 32 }} />
             <span className="font-bold text-inherit flex items-center gap-2" style={{ minWidth: 180 }}>
