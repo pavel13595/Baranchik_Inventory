@@ -1,17 +1,3 @@
-/**
- * Получить данные с листа Google Sheets
- */
-export async function fetchSheetData(spreadsheetId: string, sheetName: string): Promise<any[][]> {
-  await initGapi();
-  if (!window.gapi.auth2.getAuthInstance().isSignedIn.get()) {
-    await window.gapi.auth2.getAuthInstance().signIn();
-  }
-  const response = await window.gapi.client.sheets.spreadsheets.values.get({
-    spreadsheetId,
-    range: `${sheetName}!A:Z`,
-  });
-  return response.result.values || [];
-}
 import { Department, Item, InventoryData } from "../types/inventory";
 
 // Google API Client ID - you would need to replace this with your own
