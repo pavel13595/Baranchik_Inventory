@@ -1,7 +1,7 @@
 import React from "react";
 import { Department, Item, InventoryData, InventoryHistory } from "../types/inventory";
 import { initialDepartments, cityItems } from "../data/initial-data";
-import { syncWithGoogleSheets } from "../utils/google-sheets";
+import { syncWithGoogleSheets, fetchSheetData } from "../utils/google-sheets";
 
 export const useInventoryData = (city: string = "Кременчук") => {
   // Для каждого города — отдельные данные
@@ -24,19 +24,51 @@ export const useInventoryData = (city: string = "Кременчук") => {
     setAllItems(prev => {
       const fileItems = cityItems[city] || [];
       const localItems = prev[city] || [];
-      // Если в файле больше позиций, чем в локальном хранилище — обновляем
       if (fileItems.length > localItems.length) {
         return { ...prev, [city]: fileItems };
       }
-      // Если уже есть массив для города — не трогаем
       if (localItems.length > 0) return prev;
-      // Если есть уникальный список для города — используем его
       if (fileItems.length > 0) {
         return { ...prev, [city]: fileItems };
       }
-      // Для других городов — пустой массив
       return { ...prev, [city]: [] };
     });
+
+    // --- Загрузка данных из Google Sheets ---
+    async function loadFromSheets() {
+      const spreadsheetId = localStorage.getItem("spreadsheetId") || "";
+      if (!spreadsheetId) return;
+      const types = ["posuda", "hoz", "upakovka"];
+      let allItemsArr: Item[] = [];
+      let allInventory: InventoryData = {};
+      for (const type of types) {
+        const sheetName = `${city}_${type}`;
+        try {
+          const rows = await fetchSheetData(spreadsheetId, sheetName);
+          // Преобразуем строки в массив Item и InventoryData
+          if (rows.length > 1) {
+            const header = rows[0];
+            for (let i = 1; i < rows.length; i++) {
+              const row = rows[i];
+              if (!row[1]) continue; // пропуск пустых
+              const item: Item = {
+                id: `${type}_${i}`,
+                name: row[1],
+                category: type,
+              };
+              allItemsArr.push(item);
+              if (!allInventory[type]) allInventory[type] = {};
+              allInventory[type][item.id] = Number(row[2]) || 0;
+            }
+          }
+        } catch (e) {
+          console.error(`Ошибка загрузки ${sheetName}:`, e);
+        }
+      }
+      setAllItems(prev => ({ ...prev, [city]: allItemsArr }));
+      setAllInventoryData(prev => ({ ...prev, [city]: allInventory }));
+    }
+    loadFromSheets();
   }, [city]);
 
   const [isOnline, setIsOnline] = React.useState<boolean>(navigator.onLine);

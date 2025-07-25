@@ -49,7 +49,7 @@ function startBot() {
         // Очищаем все типы для выбранного города
         for (const type of ['posuda', 'hoz', 'upakovka']) {
           try {
-            await handleExcelFile(null, `${session.city}_${type}`, true); // true = только очистка
+            await clearSheet(`${session.city}_${type}`);
           } catch (e) {}
         }
         bot.sendMessage(chatId, 'Старые бланки переучета очищены.');
