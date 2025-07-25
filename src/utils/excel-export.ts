@@ -1,4 +1,4 @@
-import * as XLSX from "xlsx";
+// import * as XLSX from "xlsx";
 import { Department, Item } from "../types/inventory";
 import { shareTelegramMessage, createInventoryReportMessage } from "./telegram-service";
 
